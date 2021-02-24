@@ -11,9 +11,13 @@ so we don't see any urgent need to protect it from him.
 We also found open source CLI app made for local time-tracking with Git, so we decided to base our app on the already existing code and add more functionality.
 There is always an option to switch to external database for storing this kind of data but there is no reason to so at the moment.
 
-Partly enforced by the usage of git, the general design is shown on Figure TODO.
+Partly enforced by the usage of git, the general design is shown on Figure
+\ref{fig:project-archidecture}.
+
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{figures/project_archidecture}\label{fig:project-archidecture}
+    \includegraphics[width=\textwidth]{figures/project_archidecture}
+    \caption{Application general design}
+    \label{fig:project-archidecture}
 \end{figure}
 
 The general time-tracking application can be divided into three different kind of smaller applications:
@@ -37,14 +41,49 @@ Therefore, actual code never leaves an internal network.
 All the applications that are installed on either client machine or client server are open source so that the client can easily verify,
 they only do what they are meant to do.
 
+To properly manage numerous apps in different programming languages we decided to have each app source code in separate git repository.
+This reduces the amount of merge conflicts and also makes building CI/CD easier.
+
 \section{Client CLI app}\label{sec:cli-app}
-%TODO(Tavo): ...
+%TODO(Tavo): We should somewhere state what are gtm-core, gtm-api, gtm-*
+This is the main app on client machine.
+The app is responsible for storing events sent by an editor to files and then later also combining the stored information into Git Note.
+You can also see all main stats, such as time spent on a commit via CLI app.
+
+The app is based on open source time tracking app \href{https://github.com/git-time-metric/gtm}{Git-Time-Metric} written in Go and licenced under MIT licence.
+We decided to base our app on Git-Time-Metric solution because their app was working the way we wanted to, it had plenty of users meaning plenty of testing done,
+and the Git-Time-Metric app had good code style.
+
+Although the app was already working we still needed to do many bug fixes and add some features it didn't have.
+The biggest change in design was that we removed copied in dependencies to git submodules.
+Although this seems like a small step it turned out to be very complex to build go linked with C library dynamically.
+As we didn't manage to get on dependency to properly work in Windows environments we decided to leave it separately fetched and built in ci/cd workflow file.
+Nonetheless, all "snapshot" dependencies were removed.
 
 \section{IDE plugins}\label{sec:ide-plugins}
-%TODO(Tavo): ...
+IDE plugins installed on developer IDE, and they execute CLI app commands on specific editor events.
+Plugins are needed to listen for editor events such as typing without having to give CLI app extensive permissions to run in background.
+They also provide a simple way to display some information in IDE.
+For example time since last commit is show to user inside IDE.
+
+Currently, we only have one plugin that is compatible with all Jetbrains IDE's.
+The gtm-jetbrains plugin is written in Kotlin and uploaded to Jetbrains plugin repository so that you can easily install it in your Jetbrains IDE.
+Kotlin was chosen as the plugin was limited to JVM based language and only Java and Kotlin were widely supported.
+We have experience in both Java and Kotlin, but we both preferred Kotlin to Java due to its null safety and functional patterns.
 
 \section{Sync client}\label{sec:sync-client}
-%TODO(Tavo): ...
+Sync client is run on a network, where it can access git repositories.
+On git push, hook sends request to gtm-sync via HTTP request.
+Then gtm-sync fetches git repository with its time data, extracts required data and syncs it up to Backend.
+
+The gtm-sync application was written in Rust as it had more up to date library for libgit2 than both Java and Go, required for interacting with git.
+Although we did not have prior experience with Rust we preferred it to C/C++ as it is memory safe and it has higher level libraries that can be
+used for building a web server and API client.
+Python and NodeJS were ruled out because they produce very big memory footprint compared to Rust, and they also run a lot slower.
+Neither of them also gives a type safety.
+
+For the code design, we followed domain based architecture.
+%TODO(Tavo): Folders description?
 
 \section{Backend}\label{sec:backend}
 %TODO(Marten): ...
