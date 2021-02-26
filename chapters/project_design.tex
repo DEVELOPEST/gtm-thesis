@@ -1,4 +1,4 @@
-We decided to have time tracking data stored in Git Notes for every repo so that it can be tightly tied to code.
+ We decided to have time tracking data stored in Git Notes for every repo so that it can be tightly tied to code.
 This gives us opportunity to have more complete overview when and on what issue / branch the time was spent.
 It also gives access to a features such as git diff that can be used for measuring writing speed.
 Furthermore, it lifts a job from our shoulders by handling complex cases such as rebase and merge for us.
@@ -85,8 +85,19 @@ Neither of them also gives a type safety.
 For the code design, we followed domain based architecture.
 %TODO(Tavo): Folders description?
 
-\section{Backend}\label{sec:backend}
-%TODO(Marten): ...
+\section{Back-end}\label{sec:backend}
+Back-end is a collection of code which runs on the server.
+It receives requests from clients and sends appropriate data back to the clients based on the business logic.
+Back-end also has database which stores all the necessary data for the application.
 
-\section{Frontend}\label{sec:frontend}
+In our case back-end receives data from sync client via HTTP requests and stores the data in the database.
+End users can only fetch necessary data via HTTP requests and back-end application provides appropriate data to the clients.
+
+Back-end application was built with Rust using Rocket framework.
+Since Rust is a low-level statically-typed multi-paradigm programming language that’s focused on performance and safety, it overweighted Java, Python, NodeJS, C# and C/C++.
+
+Back-end code base is built following DDD because it helps to keep application maintainable, extendable and organized.
+DDD has been around over 17 years and means that the code structure should match the business domain.
+
+\section{Front-end}\label{sec:frontend}
 %TODO(Marten): ...
