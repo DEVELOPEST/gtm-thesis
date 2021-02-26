@@ -85,7 +85,7 @@ Neither of them also gives a type safety.
 For the code design, we followed domain based architecture.
 %TODO(Tavo): Folders description?
 
-\section{Back-end}\label{sec:backend}
+\section{Backend}\label{sec:backend}
 Back-end is a collection of code which runs on the server.
 It receives requests from clients and sends appropriate data back to the clients based on the business logic.
 Back-end also has database which stores all the necessary data for the application.
@@ -93,11 +93,20 @@ Back-end also has database which stores all the necessary data for the applicati
 In our case back-end receives data from sync client via HTTP requests and stores the data in the database.
 End users can only fetch necessary data via HTTP requests and back-end application provides appropriate data to the clients.
 
-Back-end application was built with Rust using Rocket framework.
+Back-end application has been built with Rust using Rocket framework.
 Since Rust is a low-level statically-typed multi-paradigm programming language that’s focused on performance and safety, it overweighted Java, Python, NodeJS, C# and C/C++.
 
-Back-end code base is built following DDD because it helps to keep application maintainable, extendable and organized.
+Back-end code base has been built following DDD because it helps to keep application maintainable, extendable and organized.
 DDD has been around over 17 years and means that the code structure should match the business domain.
 
-\section{Front-end}\label{sec:frontend}
-%TODO(Marten): ...
+\section{Frontend}\label{sec:frontend}
+ The frontend of a software program or website is everything with which the user interacts.
+ From a user standpoint, the frontend is synonymous with the user interface.
+ From a developer standpoint, it is the interface design and the programming that makes the interface function.
+ One of the primary goals of frontend development is to create a smooth or "frictionless" user experience.
+ In other words, the front end of an application or website should be intuitive and easy to use.
+
+ Frontend has been built with Javascript using React JS framework as React JS is the most widely used frontend framework.
+ React is a lightweight framework unlike others like Angular or Ember.
+ React provides a component based structure which means components are like lego pieces which can be reused.
+
