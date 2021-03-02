@@ -1,3 +1,5 @@
+% TODO: Exsisting solutions comparison here?
+
 We decided to have time tracking data stored in Git Notes for every repo so that it can be tightly tied to code.
 This gives us opportunity to have more complete overview when and on what issue / branch the time was spent.
 It also gives access to a features such as git diff that can be used for measuring writing speed.
@@ -44,6 +46,7 @@ they only do what they are meant to do.
 To properly manage numerous apps in different programming languages we decided to have each app source code in separate git repository.
 This reduces the amount of merge conflicts and also makes building CI/CD easier.
 
+
 \section{Client CLI app}\label{sec:cli-app}
 %TODO(Tavo): We should somewhere state what are gtm-core, gtm-api, gtm-*
 This is the main app on client machine.
@@ -54,11 +57,61 @@ The app is based on open source time tracking app \href{https://github.com/git-t
 We decided to base our app on Git-Time-Metric solution because their app was working the way we wanted to, it had plenty of users meaning plenty of testing done,
 and the Git-Time-Metric app had good code style.
 
+Gtm-core folder structure is displayed in Table
+\ref{tab:gtm-core-folder-structure}.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{3cm} | p{10cm} |}
+        \hline
+        Folder & Purpose\\
+        \hline
+        .github & Github related files (Workflows for CI/CD, issues and pull requests templates)\\
+        \hline
+        deploy & Deploying related files.
+        Currently, only Windows installer files and Licence packed with installer.\\
+        \hline
+        command & Every command has files <command>.go and <command>\_test.go which respectively are controller for command, and it's tests.
+        The controller is responsible for parsing arguments, calling appropriate services and printing out results.\\
+        \hline
+        docs & Documentation files.\\
+        \hline
+        epoch & Unix epoch helper functions and their tests.\\
+        \hline
+        event & Events files serialization and deserialization related services and tests.\\
+        \hline
+        metric & Metric file serialization, deserialization services and tests.
+        Metric files are used for storing time data of files added to git, but not committed.\\
+        \hline
+        note & Git notes serialization, deserialization and tests.\\
+        \hline
+        project & Gtm initialization and uninitialization related services with tests.
+        These services are responsible for calling appropriate functions from scm package to git hooks and modifying git config.\\
+        \hline
+        report & Report generation services used by report command.\\
+        \hline
+        scm & Git related services.
+        These services are used to wrap libgit2-go services into more usable form.\\
+        \hline
+        test & Python files for running stress tests for gtm-core.\\
+        \hline
+        util & Various string, datetime and math helper functions.\\
+        \hline
+        vendor & Directory containing dependencies listed in git submodules.\\
+        \hline
+        <root> & Program entry point, git related files, README and gofmt style lint configuration .\\
+        \hline
+    \end{tabular}
+    \caption{Gtm-core folder structure.}
+    \label{tab:gtm-core-folder-structure}
+\end{table}
+
 Although the app was already working we still needed to do many bug fixes and add some features it didn't have.
 The biggest change in design was that we removed copied in dependencies to git submodules.
 Although this seems like a small step it turned out to be very complex to build go linked with C library dynamically.
 As we didn't manage to get on dependency to properly work in Windows environments we decided to leave it separately fetched and built in ci/cd workflow file.
 Nonetheless, all "snapshot" dependencies were removed.
+We also added stress tests to verify effect of using gtm-core with large amounts of commits.
 
 \section{IDE plugins}\label{sec:ide-plugins}
 IDE plugins installed on developer IDE, and they execute CLI app commands on specific editor events.
@@ -71,6 +124,36 @@ The gtm-jetbrains plugin is written in Kotlin and uploaded to Jetbrains plugin r
 Kotlin was chosen as the plugin was limited to JVM based language and only Java and Kotlin were widely supported.
 We have experience in both Java and Kotlin, but we both preferred Kotlin to Java due to its null safety and functional patterns.
 
+Gtm-jetbrains folder structure is described in Table
+\ref{tab:gtm-jetbrains-folder-structure}.
+Namespace ee.developest.gtm is shortened to <ns> for readability.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{3cm} | p{10cm} |}
+        \hline
+        Folder & Purpose\\
+        \hline
+        .gradle & Gradle related files\\
+        \hline
+        src/<ns>/listener & Editor event listeners.\\
+        \hline
+        src/<ns>/popup & Popups related controllers.
+        Used for getting user input\\
+        \hline
+        src/<ns>/service & Service files such as ConfigService.kt\\
+        \hline
+        src/<ns>/widget & Widget factories used to display time since last commit and some feedback about initialization.\\
+        \hline
+        src/<ns> & Gtm-core wrapper used to forward commands from listeners to gtm-core and gtm-core to popup / widget.\\
+        \hline
+        <root> & Gradle configuration, README and LICENCE.\\
+        \hline
+    \end{tabular}
+    \caption{Gtm-core folder structure.}
+    \label{tab:gtm-jetbrains-folder-structure}
+\end{table}
+
 \section{Sync client}\label{sec:sync-client}
 Sync client is run on a network, where it can access git repositories.
 On git push, hook sends request to gtm-sync via HTTP request.
@@ -80,33 +163,67 @@ The gtm-sync application was written in Rust as it had more up to date library f
 Although we did not have prior experience with Rust we preferred it to C/C++ as it is memory safe and it has higher level libraries that can be
 used for building a web server and API client.
 Python and NodeJS were ruled out because they produce very big memory footprint compared to Rust, and they also run a lot slower.
-Neither of them also gives a type safety.
+Neither of them also gives a type safety that was a must for us.
 
 For the code design, we followed domain based architecture.
-%TODO(Tavo): Folders description?
+Folder structure for gtm-sync is displayed in Table
+\ref{tab:gtm-sync-folder-structure}.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{3cm} | p{10cm} |}
+        \hline
+        Folder & Purpose\\
+        \hline
+        .github & Github workflows.\\
+        \hline
+        src/config & Config serialization, deserialization and config helper functions.\\
+        \hline
+        src/gtm & Gtm notes parsing and git related services.\\
+        \hline
+        src/repo & Tracked repository managing services.\\
+        \hline
+        src/server & Rocket controllers used for IO.\\
+        \hline
+        src/sync & Syncing data with gtm-api related services.\\
+        \hline
+        <root> & Git related files, Cargo package manager files, README and LICENCE.\\
+        \hline
+    \end{tabular}
+    \caption{Gtm-sync folder structure.}
+    \label{tab:gtm-sync-folder-structure}
+\end{table}
 
 \section{Backend}\label{sec:backend}
 Back-end is a collection of code which runs on the server.
 It receives requests from clients and sends appropriate data back to the clients based on the business logic.
-Back-end also has database which stores all the necessary data for the application.
+Back-end also has a database which stores all the necessary data for the application.
+% TODO: Some info about db
 
-In our case back-end receives data from sync client via HTTP requests and stores the data in the database.
-End users can only fetch necessary data via HTTP requests and back-end application provides appropriate data to the clients.
+In our case back-end receives data from sync client via REST API requests and stores the data in the database.
+End users can only fetch necessary data via REST API requests and back-end application provides appropriate data to the clients.
 
+% TODO: More explanation
 Back-end application has been built with Rust using Rocket framework.
-Since Rust is a low-level statically-typed multi-paradigm programming language that’s focused on performance and safety, it overweighted Java, Python, NodeJS, C\# and C/C++.
+Since Rust is a low-level statically-typed multi-paradigm programming language that's focused on performance and safety, it overweighted Java, Python, NodeJS, C\# and C/C++.
 
+% TODO: More explanation
 Back-end code base has been built following DDD because it helps to keep application maintainable, extendable and organized.
 DDD has been around over 17 years and means that the code structure should match the business domain.
 
+% TODO Folder structure
+
+
 \section{Frontend}\label{sec:frontend}
- The frontend of a software program or website is everything with which the user interacts.
- From a user standpoint, the frontend is synonymous with the user interface.
- From a developer standpoint, it is the interface design and the programming that makes the interface function.
- One of the primary goals of frontend development is to create a smooth or "frictionless" user experience.
- In other words, the front end of an application or website should be intuitive and easy to use.
+The frontend of a software program or website is everything with which the user interacts.
+From a user standpoint, the frontend is synonymous with the user interface.
+From a developer standpoint, it is the interface design and the programming that makes the interface function.
+One of the primary goals of frontend development is to create a smooth or "frictionless" user experience.
+In other words, the front end of an application or website should be intuitive and easy to use.
 
- Frontend has been built with Javascript using React JS framework as React JS is the most widely used frontend framework.
- React is a lightweight framework unlike others like Angular or Ember.
- React provides a component based structure which means components are like lego pieces which can be reused.
+Frontend has been built with Javascript using React JS framework as React JS is the most widely used frontend framework.
+React is a lightweight framework unlike others like Angular or Ember.
+React provides a component based structure which means components are like lego pieces which can be reused.
+%TODO: Some actual comaprison
 
+% TODO: Folder structure
