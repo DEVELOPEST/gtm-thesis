@@ -1,32 +1,48 @@
-In programs development it is very important to have an estimate of how long developing different parts of application takes as
-developer work hours make up big part of application cost.
-This estimate can be calculated from time spent on writing similar tasks from past.
+The time spent on a programming task can be divided into two parts: time spent on writing code and supportive activities.
+As the time spent on writing actual code directly contributes towards solution, but time spent on supportive activities does not,
+many companies seek to analyze this kind of data.
 
-Similarly, it is important to have general idea of how much time students spend on different subjects in university.
-All subjects have some time estimate but subjects with similar time estimate still tend to be very different in actual
-time needed for completion.
-Therefore, a solution is needed to track actual time spent on subjects.
+For working people, time spent on both writing code and all supportive activities will add up to total working hours.
+As the total consist of only two components, if we manage to measure one we can easily calculate the other.
+Measuring time on supportive activities is rather hard as they vary a lot in their nature.
+Different time management tools can be used, but they usually rely on manual user input making them impractical.
+Therefore, it is easiest to measure time spent on writing code.
 
-In subjects mostly consisting of programming exercises this can be achieved by tracking time spent on writing and testing programs.
-As it is very common to use Git for code management both at universities and companies linking time tracking to git commits
-gives opportunity to also have statistics such as time spent per commit and lines written per commit.
+Similarly, students time put in to complete practical programming subject at university can be divided into three: time spent in lectures / labs,
+time spent on doing research on your own and time spent on writing actual programs / solutions.
+Time spent in lectures and labs can be easily measured as the have strict time schedule.
+Similarly to supportive activities at work, measuring time spent on research has to rely on manual user input as research can be done in various way some not involving computer at all.
+Once again, an application for measuring time spent on writing code is needed.
 
-To protect source code in non-public repositories it is important to have architecture in which parts accessing code are
-installed into client server and are open source so that client can ensure there is no sensible data leaked.
+As both companies and universities measure developers performance on tasks completed / amount of code written it is also important to measure
+developers efficiency in writing code.
+Measuring statistics such as problems solved is hard as problems vary a lot, and their difficulty is complex to measure.
+To simplify measuring developer efficiency we can look at the amount of code written as more code written usually results in a more work done.
 
-Due to Git being command line tool also a separate graphical application is needed for visualizing data collected
-from Git projects.
+Amount of code written is usually measured in lines added and lines removed.
+To have access statistics such as lines added and lines removed, some kind of access to version control system is needed.
 
-???
+The goal of this project is to develop an application capable of both measuring time spent on writing code and also
+displaying it in a readable format to a user.
+The application must work with a minimal amount of manual input as manual input both discourages people to use it and may produce
+unrealistic results as people may give input based on their feelings, not actions.
+
 
 \section{Project scope}\label{sec:project-scope}
+The scope of this project is to build an application that solves the problem of measuring the time spent on writing programs for TalTech.
+Although the application is developed for TalTech it should be possible to set it up for tracking time on personal or work projects.
+
 The scope of this project consists of three main parts.
 The goal of a first phase is to have a working app to track and save programmers time.
 The second phase focuses on collecting the data together and storing it in a more accessible format.
 The third phase is to visualize collected data to both lecturers and students.
 
-This project is developed to be used in university, but the goal is not to tie it tightly together.
-Rather it is supposed to be an application that could be later easily used for also personal and work projects.
+As most TalTech subjects use Git as version control system, the application developed must be able to work with
+projects that use Git as their version control system.
 
-All the apps that are installed on client machine / server are open source so that their user can easily reassure in their safety.
-Parts of program, that are not hosted on client machine are kept private for now.
+It was discussed with client that research needs to be done on already existing solutions for the problem and if possible,
+the project should extend the already existing solution rather than building a new one.
+It was also discussed that at least parts of the application that are installed on client machine should me made open source.
+%TODO: Open source thingy discussion
+
+%TODO: Alternative scope?
