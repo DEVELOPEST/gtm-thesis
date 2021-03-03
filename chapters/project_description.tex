@@ -17,3 +17,75 @@ As a communication channel, Discord was used for both text and sound/video commu
 The main reason was that we were both used to using Discord, it is free, and it allows reasonably well formatted code pastes / pinning.
 
 Meetings with TalTech mentor were organized weekly on Teams to have continuous feedback on project.
+
+\section{Existing solutions}\label{sec:existing-solutions}
+Before application design, some research was done to find already existing solutions.
+The purpose of this task was to find out, if we could partially use some other programs and also get better understanding how
+this kind of application could be built.
+
+
+\subsection{Wakatime}\label{subsec:wakatime}
+\href{https://wakatime.com/about}{Wakatime} is one of most popular applications used for tracking your work.
+It supports variety of Integrated Development Environments (IDEs) including JetBrains IDEs required by TalTech.
+It has both it's IDE plugins and Command Line Interface (CLI) app licenced under BSD-3 licence.
+It also has a public API that allows fetching time data from their servers.
+The downside of using Wakatime is that firstly it costs to see data older than 2 weeks and as it only temporarily
+stores data on client machine, there is no easy way to access data without modifying already existent CLI app.
+Wakatime also does not make use git statistics such as lines added and lines removed.
+It only reads branch name, commit message and author data.
+The reason behind this is likely it's architecture - it continuously sends heartbeats with required data to it's backed.
+If no internet connection exists, it stores these heartbeats locally in rather cryptic format.
+As a result there is not much data stored locally meaning that the backend has to bundle time data to commits which becomes a very complicated task
+once users start rewriting history, especially given that Git is a distributed version control system.
+
+
+\subsection{Git-Time-Metric}\label{subsec:git-time-metric}
+\href{https://github.com/git-time-metric/gtm}{Git-Time-Metric} is a popular open source time tracking plugin licenced under MIT licence.
+It has plugins for most commonly used IDEs including JetBrains IDEs, VSCode, Vim and more.
+It is closely tied to git as it stores it's time tracking data in git notes.
+This allows it to access more Git data such as lines added and lines removed for each commit.
+Git-Time-Metric does not have a web interface (there are some half done projects meant to run only locally).
+On the other hand, it has a very powerful and pretty CLI also capable of displaying data in a human-readable format.
+
+One of the biggest downsides of Git-Time-Metric is that its active development has stopped in August 2019 and also it's plugins haven't received many updates.
+Since JetBrains IDEs have changed a lot since that time it doesn't work on newest IDE versions making it tricky to use.
+
+The biggest design difference between~\nameref{subsec:wakatime} and Git-Time-Metric is that Git-Time-Metric stores all it's data locally.
+This makes the Git repository own it's time tracking data and not to worry about external companies policies.
+There is always a CLI app capable of continuing to record and also display the data tracked.
+
+
+\subsection{DarkyenusTimeTracker}\label{subsec:darkyenus-time-tracker}
+\href{https://github.com/Darkyenus/DarkyenusTimeTracker}{DarkyenusTimeTracker} is also an open source time tracker licenced under The Unlicensed.
+It is only a plugin built for JetBrains IDEs, but it does support automatic recording.
+It only stores time since last commit, but it does support automatic time logging to commit messages meaning that this data can be possibly collected via Jira or some other software.
+Sadly Gitlab, nor Github currently support parsing time data from git commit messages (Gitlab only support time logging directly under issue).
+The other downside is that it only logs the total amount of time spent, no per file statistics.
+
+Similarly to
+\ref{subsec:git-time-metric}, it does not have a web interface, and it would be very hard to make one as the time date is not clearly separated from Git commit messages.
+It also doesn't have a CLI interface due to similar reasons as web app.
+
+\subsection{Existing plugin analysis results}\label{subsec:existing-plugin-analysis-results}
+During the analysis there were two main ideas which way to go:
+\begin{enumerate}
+    \item Build a Git statistics support for~\nameref{subsec:wakatime}.
+    \item Add some features to~\nameref{subsec:git-time-metric} and rebuild (some of) its plugins.
+\end{enumerate}
+
+\nameref{subsec:darkyenus-time-tracker} was ruled out as it lacked features useful for us.
+Non the less, it was decided that we can use it as a base for building JetBrains plugin.
+
+Building a Git statistics support for~\nameref{subsec:wakatime} also requires us to build our own backed for all the data or pay to access~\nameref{subsec:wakatime} API.
+Either way an external database is needed to store all its Git related statistics.
+Whilst it has great benefits, it is very hard to implement as it would require adding extra features to all most all it's plugins.
+As Git history rewrites may cause conflicts it also needs either a complex system to solve these conflicts or just ignore history overwrites.
+The second option would mean that whilst the time data saved would very closely reflect developer work in the short term it might get
+confusing in the long run.
+As a result of numerous rebases and squashes in different branches it becomes difficult to understand where the time data belongs.
+The question arises: Why would we want to have time data attached to manny commits if don't really care about the commits and just squash them?
+For us the answer was that we should also squash the time data to only "point" to single squashed commit, but it is too complex to achieve.
+
+Adding features such as automatic notes fetching and pushing to~\nameref{subsec:git-time-metric} on the other hand is way simpler.
+Whilst the rewriting of IDE plugins is a lot of work it's still less than building a system for~\nameref{subsec:wakatime} capable of handling git rebases.
+% TODO: More discussion
