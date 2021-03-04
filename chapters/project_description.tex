@@ -18,6 +18,76 @@ The main reason was that we were both used to using Discord, it is free, and it 
 
 Meetings with TalTech mentor were organized weekly on Teams to have continuous feedback on project.
 
+
+\section{Use cases}\label{sec:use-cases}
+To have more clear understanding of what are the problems for our potential users and how we can solve them three main use cases were discussed.
+These use cases are:
+\begin{enumerate}
+    \item Time tracking for universities - measuring students work on programming subjects.
+    \item Time tracking for companies - using time tracking at work to maximise developers efficiency.
+    \item Time tracking for personal usage.
+\end{enumerate}
+
+For all of the use cases main benefits and concerns ere discussed.
+
+\subsection{Time tracking for universities}\label{subsec:time-tracking-for-universities}
+For universities the needs for time tracking are:
+\begin{itemize}
+    \item It has to be possible to have an overview of numerous students.
+    \item The time tracking shall not be easily tricked to display bigger / smaller numbers.
+    \item Application has to work on all commonly used operating systems (Windows 10, macOS and Linux).
+    \item Application has to be easy to use and work with minimal user input.
+    \item Application shall have clear purpose and access rights.
+\end{itemize}
+
+Possibility to have an overview of a group of students is needed to get feedback on subjects.
+The only sensible way to have an overview of a volume of study in subject is to measure it on multiple students.
+This leads us to a next requirement, that it shall not be easy for students to distort their time data.
+Students commonly like to magnify their effort put into subjects and if it is easy to do, we have no idea if the data is distorted or not.
+As there is a big number of students in some subjects and students have multiple subjects to attend it has to be easy to install the app.
+There simply is no time to waste on helping all the students with more complex manual installation.
+As universities have no right to enforce usage of some operating system, the app also has to work on all commonly used platforms.
+Lastly it has to be clear for students, what is the application doing.
+Otherwise, they may be afraid of invasion of privacy and not install the application.
+
+\subsection{Time tracking for companies}\label{subsec:time-tracking-for-companies}
+For companies the needs for time tracking are:
+\begin{itemize}
+    \item It needs to be clear, that no source code is leaked outside the company.
+    \item The time tracking application has to work with repositories containing tens thousands of commits.
+    \item Time tracking data has to be persisted through complex Git operations such as rebasing.
+    \item It has to be possible to filter time by issue.
+    \item It has to be possible to filter time data in single repository by user.
+    \item It shall be possible to dynamically group different repositories.
+\end{itemize}
+
+For companies more security concerns arise.
+It is very important to protect source code, therefore they highly prefer the code to never leave their own hardware.
+As companies have numerous developers working on same project simultaneously for a long periods of time the application has to
+remain working efficiently when used in repositories containing a big number of commits.
+Furthermore, as there are many people working on same repository the time data has to persisted through all git operations.
+Otherwise, it will start limiting developers, and they will not use it.
+To have clear overview of both work done by user and work done on certain issue it has to be possible to join time data over
+multiple repositories and filter it by users and issues.
+
+\subsection{Time tracking for personal use}\label{subsec:time-tracking-for-personal-use}
+For personal usage, the main requirements for time tracking are:
+\begin{itemize}
+    \item Application has to work on all commonly used operating systems.
+    \item Application has to be easy to install / use.
+    \item Application has to be low cost, preferably free.
+    \item Application needs to work with commonly used Git servers (Github, Gitlab.com)
+\end{itemize}
+
+For personal usage, similarly to universities the application has to work on all commonly used operating systems as otherwise we
+would by greatly limiting the amount of potential users.
+As there is usually no-one to help, the application installation has to be simple enough people with basic computer usage skills can do it.
+One of the most important requirements for personal use is that the application has to be either very low cost or completely free.
+Since people work on their personal projects only as much as they like, and they do it inconsistently they are not interested in paying for an app they might not even use.
+As different developers have personal preferences for which Git server to use, we have to support all the most common ones.
+As of beginning of 2021 they are Github.com anf Gitlab.com.
+
+
 \section{Existing solutions}\label{sec:existing-solutions}
 Before application design, some research was done to find already existing solutions.
 The purpose of this task was to find out, if we could partially use some other programs and also get better understanding how
@@ -88,4 +158,8 @@ For us the answer was that we should also squash the time data to only "point" t
 
 Adding features such as automatic notes fetching and pushing to~\nameref{subsec:git-time-metric} on the other hand is way simpler.
 Whilst the rewriting of IDE plugins is a lot of work it's still less than building a system for~\nameref{subsec:wakatime} capable of handling git rebases.
-% TODO: More discussion
+It is also important to mention thant~\nameref{subsec:git-time-metric} architecture makes it difficult to record indirectly programming related tasks time
+such as searching for help online.
+The reason for it is that it is very inconsistent to tie time spent outside editing Git repository files to certain git repository.
+In this project context we don't seem this as a big problem as we are mainly targeting time spent inside IDE.
+Trying to record internet browsing data or time spent on other programs may be seen as invasion of privacy, and it might greatly reduce the amount of users interested in our app.
