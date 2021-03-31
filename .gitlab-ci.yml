@@ -1,0 +1,16 @@
+image: registry.gitlab.com/islandoftex/images/texlive:latest
+
+build:
+  tags:
+    - docker
+  script:
+    - pdflatex main.tex
+    - biber main
+    - pdflatex main.tex
+    - pdflatex main.tex
+  after_script:
+    - cat main.log
+  artifacts:
+    paths:
+      - main.pdf
+    expire_in: 1 week
