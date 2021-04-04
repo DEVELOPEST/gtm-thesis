@@ -1,4 +1,4 @@
-\section{Group system}\label{sec:group-system}
+\section{Groups system}\label{sec:group-system}
 
 One of the requirements for our app was that it should be possible to group repositories together.
 The grouping is needed to view statistics for multiple repositories at once and also compare groups of repositories.
@@ -32,3 +32,17 @@ If we want to change access from only parent group to also all subgroups access,
 variable.
 If we remove one particular group access, all other accesses remain in place, meaning that you some group was accessible
 also via some other group access, you still have the access.
+
+\section{Security}\label{sec:scurity}
+Our application holds data, that shall not be visible to all client and therefore some kind of authentication and authorization methods are required.
+For the data stored in Git notes we decided no extra security is required, as the time data isn't more sensitive than the actual code.
+The security of source code stored in git repository is handled by a client himself and Git providers.
+If they wish to have some more protection for git notes, they can configure it themselves.
+We only provide the option to have notes only stored locally (not pushed to origin).
+
+For the web application we need to implement our own security measures.
+For most basic usage we have simple username and password authentication.
+Accounts that only have password authentication are not authorized to access any groups nor repositories unless Admin user
+explicitly gives them access to any.
+
+To automatically get access to repositories you are contributor of you need to authenticate yourself via OAuth2.
