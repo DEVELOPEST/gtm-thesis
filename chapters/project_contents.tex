@@ -45,4 +45,24 @@ For most basic usage we have simple username and password authentication.
 Accounts that only have password authentication are not authorized to access any groups nor repositories unless Admin user
 explicitly gives them access to any.
 
-To automatically get access to repositories you are contributor of you need to authenticate yourself via OAuth2.
+To automatically get access to repositories you are contributor of you need to authenticate yourself via OAuth2 standard.
+This way we can verify, that the user signing in to our application is the same user that has access to some git repository.
+
+\subsection{OAuth2}\label{subsec:oauth2}
+For OAuth2 authorization rocket\_oauth2 library is used, that follows RFC-6749 standard.
+\cite{rocket-oauth2, oauth2}
+We support authentication via Github.com, Gitlab.com, Bitbucket.org, Azure (Microsoft account) and TalTech gitlab server.
+First three were chosen as they are the most common git server providers as of 2021.
+Authentication via Microsoft was added as TalTech (and also numerous other universities / companies) use it and therefore
+all students have already registered account there.
+Also, it provides access to user emails, that can be later used to filter out user commits.
+TalTech gitlab server was added, as the application is currently developed for TalTech and therefore it was a requirement
+that everything shall also work on TalTech gitlab server.
+
+From all OAuth2 providers at least user read access is required to get access to user emails.
+For OAuth2 providers, that are also a Git server providers also permissions to read user repositories data is required.
+User repositories data is used to give user automatically access to his own repositories and also display repositories
+not currently tracked by gtm.
+It also allows more easily adding automatic data collection to user repositories, as user can browse through
+repositories from different git server providers.
+
