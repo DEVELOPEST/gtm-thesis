@@ -202,7 +202,7 @@ As a database system PostgresSQL was chosen as it is capable of reading and writ
 PostgresSQL also provides better data integrity as it protects the data at transaction level.
 
 In our case backend receives data from sync client via REST API requests and stores the data in the database.
-End clients can only fetch necessary data via REST API requests and backend application provides appropriate data to the clients.
+End users can interact with backend though frontend VIA REST API requests and backend application provides appropriate data to the users.
 
 Backend application has been built with Rust programming language using Rocket framework.
 Rust is a low-level statically-typed multi-paradigm programming language that's focused on performance and safety.
@@ -214,18 +214,33 @@ Backend code base has been built following Domain Driven Design (DDD).
 DDD is a concept that centers the development and code structure around the business domain.
 It helps to keep the code more organized, maintainable and extendable.
 
+% TODO: Folder structure
 
 
 \section{Frontend}\label{sec:frontend}
 The frontend of a software program or website is everything with which the user interacts.
 From a user standpoint, the frontend is synonymous with the user interface.
 From a developer standpoint, it is the interface design and the programming that makes the interface function.
-One of the primary goals of frontend development is to create a smooth or "frictionless" user experience.
-In other words, the frontend of an application or website should be intuitive and easy to use.
+In our case frontend is a website where users can interact with our backend.
+Users can register/login with username/password or with OAuth.
+They can see their data from graphs.
 
-Frontend has been built with Javascript using React JS framework as React JS is the most widely used frontend framework.
-React is a lightweight framework unlike others like Angular or Ember.
-React provides a component based structure which means components are like lego pieces which can be reused.
+Frontend has been built with TypeScript using React JS library.
+React is Javascript library for creating user interfaces.
+Choosing correct frontend framework/library is not as important as choosing correct backend programming language and framework since all the main frameworks/libraries (Angular, React, Vue, Aurelia, etc) are very good.
+Choosing the correct framework/library comes more down to personal preference.
+We chose React JS because it is ligthter than others and it gives more freedom.
+
+Therefore choosing TypeScript over JavaScript was not just personal preference.
+TypeScript is nothing else than JavaScript.
+TypeScript code is converted into JavaScript but it is strongly-typed language which is very important feature to keep code organized and easy to read.
+This decision was not made in the beginning of this project but since the code kept growing and growing we understood that strongly-typed language is needed to keep everything organized so we decided to convert everything to TypeScript.
+
+State management is another area that does not have a certain winner.
+Choosing a state management library comes again down to personal preference.
+We decided to use Easy Peasy which is built on the most popular state management library Redux.
+Easy Peasy was chosen over Redux because Redux has steep learning curve but Easy Peasy is easy to use.
+
 %TODO: Some actual comaprison
 
 % TODO: Folder structure
