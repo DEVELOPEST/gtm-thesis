@@ -66,3 +66,33 @@ not currently tracked by gtm.
 It also allows more easily adding automatic data collection to user repositories, as user can browse through
 repositories from different git server providers.
 
+\subsection{Adding tracking to repositories}\label{subsec:adding-tracking}
+We have added three levels to view time data:
+\begin{enumerate}
+    \item Add tracking (locally), view data via gtm CLI app.
+    \item Add tracking (locally), log data to commit messages.
+    \item Add tracking, sync data to gtm Web App.
+\end{enumerate}
+
+All smaller level can be included while using higher level option.
+Viewing data via CLI app is always possible, as it is the same app that is responsible for recording data.
+This can be done both only locally or with pushing and pulling notes from remotes.
+You can also add logging time spent to commit messages in both of the scenarios as it simply works on top of the already
+existing system and only modifies commit message.
+To use auto logging option you simply need to add --auto-log=\{gitlab/jira\} option when initiating tracking for repository.
+
+To view data from web interface, some more steps are required.
+User flow for making repository visible on gtm web application is shown on Figure~\ref{fig:add-tracking-user-flow}.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/add_repo_user_flow}
+    \caption{Add tracking user flow}
+    \label{fig:add-tracking-user-flow}
+\end{figure}
+
+Firstly, to have our sync client access the data, you cannot have time data only stored locally.
+Then to add a repository, you need to have linked appropriate git server provider account via OAuth so that we can
+verify that you have the access to repository.
+After that you need to search for the repository from web interface and click add tracking button.
+With that the tracking is technically added, but to also automatically sync time data on every push to remote,
+you also need to add webhook.
