@@ -195,23 +195,25 @@ Folder structure for gtm-sync is displayed in Table
 \end{table}
 
 \section{Backend}\label{sec:backend}
-Back-end is a collection of code which runs on the server.
+Backend is a collection of code which runs on the server.
 It receives requests from clients and sends appropriate data back to the clients based on the business logic.
-Back-end also has a database which stores all the necessary data for the application.
-% TODO: Some info about db
+Backend also has a database which stores all the necessary data for the application.
+As a database system PostgresSQL was chosen as it is capable of reading and writing large amounts of data efficiently and we already have considerable amount of experience with it.
+PostgresSQL also provides better data integrity as it protects the data at transaction level.
 
-In our case back-end receives data from sync client via REST API requests and stores the data in the database.
-End users can only fetch necessary data via REST API requests and back-end application provides appropriate data to the clients.
+In our case backend receives data from sync client via REST API requests and stores the data in the database.
+End clients can only fetch necessary data via REST API requests and backend application provides appropriate data to the clients.
+
+Backend application has been built with Rust programming language using Rocket framework.
+Rust is a low-level statically-typed multi-paradigm programming language that's focused on performance and safety.
+Since we needed a fast and lightweight backend for processing large datasets Rust was the best choice.
+Java, C/C++ and GO were also considered but the lightweightness of Rust overweighted Java, memory safety overweighted C/C++ and since Rust was chosen for sync client we decided to choose it for backend as well.
 
 % TODO: More explanation
-Back-end application has been built with Rust using Rocket framework.
-Since Rust is a low-level statically-typed multi-paradigm programming language that's focused on performance and safety, it overweighted Java, Python, NodeJS, C\# and C/C++.
+Backend code base has been built following Domain Driven Design (DDD).
+DDD is a concept that centers the development and code structure around the business domain.
+It helps to keep the code more organized, maintainable and extendable.
 
-% TODO: More explanation
-Back-end code base has been built following DDD because it helps to keep application maintainable, extendable and organized.
-DDD has been around over 17 years and means that the code structure should match the business domain.
-
-% TODO Folder structure
 
 
 \section{Frontend}\label{sec:frontend}
@@ -219,7 +221,7 @@ The frontend of a software program or website is everything with which the user 
 From a user standpoint, the frontend is synonymous with the user interface.
 From a developer standpoint, it is the interface design and the programming that makes the interface function.
 One of the primary goals of frontend development is to create a smooth or "frictionless" user experience.
-In other words, the front end of an application or website should be intuitive and easy to use.
+In other words, the frontend of an application or website should be intuitive and easy to use.
 
 Frontend has been built with Javascript using React JS framework as React JS is the most widely used frontend framework.
 React is a lightweight framework unlike others like Angular or Ember.
