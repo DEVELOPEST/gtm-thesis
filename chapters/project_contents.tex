@@ -1,5 +1,40 @@
-\section{Groups system}\label{sec:group-system}
+\section{CLI app improvements}\label{sec:cli-app-improvements}
+Our CLI app is based on~\nameref{subsec:git-time-metric}, an already working open source time tracking app.
+Although it already had all the basic features, some improvements and fixes were required.
 
+Firstly \textit{--cwd=\{some/path\}} option was added to allow easier integration of plugins.
+Option to pass current directory as option is required, as IDEs not launched from terminal sometimes have their working
+directory elsewhere and setting custom working directory every time we call CLI app is more complicated than passing an argument.
+
+To clean up user home directories, global config files were moved from \textit{~/.git-time-metrics/} to \textit{~/.config/gtm/}.
+For windows a new installer was built to make installing easier.
+Also, it was chosen to switch from statically compiling SSH2 Libraries into our application to dynamic linking.
+For Debian Linux, a build script for debian packages was set up to also provide debian packages with every release.
+
+The application was updated to automatically add a fetch refspecs to fetch data from remotes on git fetch.
+Also, a pre-push git hook was added to automatically push data to origin.
+With these two hooks, the time data is automatically fetched pushed whenever git push is made requiring user no extra effort.
+
+To still allow users to only track time locally, a \textit{--local} option was added to \textit{init} command.
+Also \textit{--auto-log=[jira|gitlab]} option was added to support automatic time logging to commit messages.
+Currently, this time can only be collected in Jira, but there is also and \href{https://gitlab.com/gitlab-org/gitlab/-/issues/16543}{issue}
+open for Gitlab to implement this.
+
+To view data based branch the checked out branch name when the commit was made is also now stored to data.
+This couldn't be avoided because the branch is simply a pointer to commit and due to git being distributed control system,
+it isn't guaranteed.
+
+For students, it is important to view time spent on specific tasks.
+In most subjects the tasks are placed in separate subdirectories for better files management.
+To allow users to view time spent on specific tasks, a \textit{--subdir="sub/dir/name"} option was added to filter out
+data based on directories.
+
+Although the Git supports automatic merging/rewriting of the notes, it was inconsistent in some cases, especially when the user
+wants to also rewrite manually added notes.
+To keep time data after Git rebases, a new command \textit{rewrite} was introduced.
+This command is ran by git post-rewrite hook, and it rewrites notes so that they still point to correct commit.
+
+\section{Groups system}\label{sec:group-system}
 One of the requirements for our app was that it should be possible to group repositories together.
 The grouping is needed to view statistics for multiple repositories at once and also compare groups of repositories.
 The grouping system should be also capable of controlling user access rights to different repositories.
@@ -79,7 +114,7 @@ Viewing data via CLI app is always possible, as it is the same app that is respo
 This can be done both only locally or with pushing and pulling notes from remotes.
 You can also add logging time spent to commit messages in both of the scenarios as it simply works on top of the already
 existing system and only modifies commit message.
-To use auto logging option you simply need to add --auto-log=\{gitlab/jira\} option when initiating tracking for a repository.
+To use auto logging option you simply need to add --auto-log=[gitlab|jira] option when initiating tracking for a repository.
 
 To view data from web interface, some more steps are required.
 User flow for making repository visible on gtm web application is shown on Figure~\ref{fig:add-tracking-user-flow}.
