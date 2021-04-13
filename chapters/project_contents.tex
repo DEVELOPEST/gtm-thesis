@@ -131,3 +131,66 @@ verify that you have the access to repository.
 After that you need to search for the repository from web interface and click add tracking button.
 With that the tracking is technically added, but to also automatically sync time data on every push to remote,
 you also need to add webhook.
+
+
+\section{Backend}\label{sec:backend-content}
+backend
+
+\section{Frontend}\label{sec:frontend-content}
+Frontend is one-page web application.
+Users can log in and see their data according to their privileges.
+This application has two main parts - profile and data visualization.
+Under profile users can change password, link OAuth accounts and delete account.
+Data visualization is divided into 3 parts - dashboard, leaderboard and timeline comparison.
+In those tabs users can see their/others data as graphs and tables.
+
+\subsection{Authentication and authorization}\label{subsec:authentication-and-authorization}
+Authentication and authorization is implemented using bearer token system.
+User gets token from api and stores it to the localstorage and adds to every request header.
+User has to log in from log in page.
+On success client receives json web token from backend and client stores it in localstorage.
+Then user is automatically redirected to main page.
+Users can log in with OAuth or username/password.
+In case of OAuth user is redirected to according OAuth platform for authentication.
+When successful, user is redirected to frontend with json web token.
+Json web token is saved on localstorage and user is redirected to main page where he/she can access their data.
+Login and register user flows are described on Figure
+\ref{fig:login-signup-diagram}.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/login_signup_diagram}
+    \caption{Log in and sign up flows}
+    \label{fig:login-signup-diagram}
+\end{figure}
+
+\subsection{Profile}\label{subsec:profile}
+\subsubsection{OAuth linking}\label{subsubsec:oauth-linking}
+It is also possible to link multiple OAuth platforms to one account.
+In that case user has to log in and head to the profile page where he/she can find link accounts tab.
+If OAuth platform is already linked then backend unlinks it from this account, otherwise user is redirected to OAuth platform for authentication.
+On success user will be redirected to frontend and user can access new repositories that this OAuth platform account has.
+OAuth linking flow is described on Figure
+\ref{fig:account-linking}.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/account_linking.png}
+    \caption{OAuth linking with user}
+    \label{fig:account-linking}
+\end{figure}
+
+\subsubsection{Change password}\label{subsubsec:change-password}
+Users can also change password.
+In profile view under change password tab user has to fill all the fields correctly and password will be changed.
+If user does not have a password (OAuth registration), only new password fields have to be filled.
+
+\subsubsection{Delete account}\label{subsubsec:delete-account}
+Account deletion is under delete account tab.
+To keep away accidental account deletion user has to write their name to the input box and then can submit.
+If account is deleted, user is redirected to the login page.
+
+
+\subsection{Data visualization}\label{subsec:data-visualization}
+Data visualization
+
+\subsection{State management}\label{subsec:state-management-content}
+State management
