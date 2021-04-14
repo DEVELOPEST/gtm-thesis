@@ -84,9 +84,8 @@ To automatically get access to repositories you are contributor of you need to a
 This way we can verify, that the user signing in to our application is the same user that has access to some git repository.
 
 \subsection{OAuth2}\label{subsec:oauth2}
-For OAuth2 authorization rocket{\_}oauth2 library is used, that follows RFC-6749 standard.
-\cite{rocket-oauth2, oauth2}
-We support authentication via Github.com, Gitlab.com, Bitbucket.org, Azure (Microsoft account) and TalTech gitlab server.
+For OAuth2 authorization rocket{\_}oauth2 library is used, that follows RFC-6749 standard~\cite{rocket-oauth2, oauth2}.
+We support authentication via Github.com, Gitlab.com, Bitbucket.org, Azure (Microsoft account) and TalTech gitlab server. % TODO: Add urls
 First three were chosen as they are the most common git server providers as of 2021.
 Authentication via Microsoft was added as TalTech (and also numerous other universities / companies) use it and therefore
 all students have already registered account there.
@@ -109,7 +108,7 @@ We have added three levels to view time data:
     \item Add tracking, sync data to gtm Web App.
 \end{enumerate}
 
-All smaller level can be included while using higher level option.
+All smaller level can be included while using higher level option.  % TODO: koodi terminid spets fonti vms
 Viewing data via CLI app is always possible, as it is the same app that is responsible for recording data.
 This can be done both only locally or with pushing and pulling notes from remotes.
 You can also add logging time spent to commit messages in both of the scenarios as it simply works on top of the already
