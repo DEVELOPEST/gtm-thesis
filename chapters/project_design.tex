@@ -10,6 +10,10 @@ They can also be externally edited, and they might cause issues with git usage i
 Nonetheless, we decided to go this way as the space used by git notes is fractional compared to file sizes, and our app is a tool for the developer,
 so we don't see any urgent need to protect it from him.
 
+Later it was brought out in gitlab time tracking issue discussion, that storing time data in git notes is a very clean approach.
+However, they have not yet decided to implement it themselves as it requires major changes in their current business logic.
+\cite{gitlab-time-issue}
+
 We also found open source Command Line Interface (CLI) app made for local time-tracking with Git, so we decided to base our app on the already existing code and add more functionality.
 There is always an option to switch to external database for storing this kind of data but there is no reason to so at the moment.
 
@@ -126,7 +130,7 @@ We have experience in both Java and Kotlin, but we both preferred Kotlin to Java
 
 Gtm-jetbrains folder structure is described in Table
 \ref{tab:gtm-jetbrains-folder-structure}.
-Namespace ee.developest.gtm is shortened to <ns> for readability.
+Namespace \textit{ee.developest.gtm} is shortened to \textit{<ns>} for readability.
 
 \begin{table}[h]
     \centering
@@ -199,17 +203,20 @@ Backend is a collection of code which runs on the server.
 It receives requests from clients and sends appropriate data back to the clients based on the business logic.
 Backend also has a database which stores all the necessary data for the application.
 As a database system PostgresSQL was chosen as it is capable of reading and writing large amounts of data efficiently and we already have considerable amount of experience with it.
-PostgresSQL also provides better data integrity as it protects the data at transaction level.
+PostgresSQL also provides better data integrity as it protects the data at transaction level. %TODO: Better than what? maybe speed comparison etc.
 
 In our case backend receives data from sync client via REST API requests and stores the data in the database.
-End users can interact with backend though frontend VIA REST API requests and backend application provides appropriate data to the users.
+End users can interact with backend though frontend via REST API requests.
+%TODO: Kas peaks märkima, et paar endpointi (sync omad) on ka token authiga n-ö programmidele kättesaadavad?
 
 Backend application has been built with Rust programming language using Rocket framework.
-Rust is a low-level statically-typed multi-paradigm programming language that's focused on performance and safety.
-Since we needed a fast and lightweight backend for processing large datasets Rust was the best choice.
-Java, C/C++ and GO were also considered but the lightweightness of Rust overweighted Java, memory safety overweighted C/C++ and since Rust was chosen for sync client we decided to choose it for backend as well.
+Rust is a relatively new low-level statically-typed programming language that's focused on performance and safety.
+It gives all most the same speed as C++, but guarantees both memory and thread safety.
+Since we needed a fast backend with minimal overhead for processing large datasets Rust was the best choice.
+Java, C/C++ and GO were also considered, but the lightweightness of Rust overweight Java whilst memory safety overweight C/C++
+and since Rust was chosen for sync client we decided to choose it for backend as well.
 
-% TODO: More explanation
+% TODO: More explanation for DDD, some reference
 Backend code base has been built following Domain Driven Design (DDD).
 DDD is a concept that centers the development and code structure around the business domain.
 It helps to keep the code more organized, maintainable and extendable.
@@ -220,10 +227,12 @@ It helps to keep the code more organized, maintainable and extendable.
 \section{Frontend}\label{sec:frontend}
 Frontend is a software program or website which the user interacts with.
 In our case frontend is a website where user can see time tracking data according to the privileges.
+Although technically also CLI app can be considered frontend when we refer to frontend we only mean website.
 
 Frontend has been build using ReactJS library.
 According to the State of Frontend 2020 report ReactJS is the most used JavaScript framework and also the framework which developers want to learn or keep using the most.
-It was an obvious choice since we also had some experience with it.
+It is faster than Angular, and it's somewhat functional style was more pealing for us than the style of Vue.
+It was chosen as Marten, who's mostly responsible for frontend development has some experience with it.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/frontend_framework_popularity.png}
@@ -233,10 +242,12 @@ It was an obvious choice since we also had some experience with it.
 
 \subsection{Code design}\label{subsec:code-design}
 Frontend code is written following the main principles promoted by ReactJS community and documentation.
-For an example component’s names use PascalCase, helper files use camelCase, folders use camelCase.
+For an example component's names use PascalCase, helper files use camelCase, folders use camelCase.
 Code is divided into multiple files/components to prevent code repetition, inline CSS is avoided, liner is used to make code easier to use, service calls are in the separate file, etc.
 To prove code quality and readability TypeScript was chosen as it is strongly typed language which JavaScript is not.
 This decision was not made in the beginning of the project but as the code kept growing and readability suffered the decision was made.
+One of the biggest reasons to switch from JavaScript to Typescript was that due to being strongly typed language,
+TypeScript has better IDE support.
 Folder structure is displayed in Table
 \ref{tab:gtm-front-folder-structure}.
 
@@ -283,8 +294,10 @@ The design and easy usability were the decisive factors choosing CoreUI.
 
 However, easy usability has its own downsides as the graphs were not as customizable.
 For graphs Recharts was chosen.
-Recharts is a composable charting library built on React components.
+Recharts is a composable charting library built on React components and D3.
 It is much more customizable than CoreUI charts as it allows combining different bar charts, line charts, etc.
+\cite{recharts-readme}
+
 At this point the design problem arose again.
 Designing graphs were done in the following manner:
 \begin{itemize}

@@ -18,7 +18,7 @@ With these two hooks, the time data is automatically fetched pushed whenever git
 To still allow users to only track time locally, a \textit{--local} option was added to \textit{init} command.
 Also \textit{--auto-log=[jira|gitlab]} option was added to support automatic time logging to commit messages.
 Currently, this time can only be collected in Jira, but there is also and \href{https://gitlab.com/gitlab-org/gitlab/-/issues/16543}{issue}
-open for Gitlab to implement this.
+open for Gitlab to implement this.\cite{gitlab-time-issue}
 
 To view data based branch the checked out branch name when the commit was made is also now stored to data.
 This couldn't be avoided because the branch is simply a pointer to commit and due to git being distributed control system,
@@ -50,7 +50,7 @@ Requirements for grouping system
 As the groups may consist of both groups and repositories we decided to automatically create group for every repository.
 This means now groups can only consist of zero or more other groups.
 If we need te get the repository we can fetch all the group ids that are accessible and then query from repositories database by
-comparing repositories group id against previously fetched ids;
+comparing repositories group id against previously fetched ids.
 To fetch group with all of its subgroups a recursive Structured Query Language (SQL) query was needed as the groups'
 hierarchy formulates a tree like structure.
 Our database provider PostgreSQL supports recursive queries so there were no technical problems with implementing it on SQL database.
@@ -85,7 +85,9 @@ This way we can verify, that the user signing in to our application is the same 
 
 \subsection{OAuth2}\label{subsec:oauth2}
 For OAuth2 authorization rocket{\_}oauth2 library is used, that follows RFC-6749 standard~\cite{rocket-oauth2, oauth2}.
-We support authentication via Github.com, Gitlab.com, Bitbucket.org, Azure (Microsoft account) and TalTech gitlab server. % TODO: Add urls
+We support authentication via \href{https://github.com/}{Github.com}, \href{https://about.gitlab.com/}{Gitlab.com},
+\href{https://bitbucket.org/}{Bitbucket.org}, \href{https://azure.microsoft.com/}{Azure} (Microsoft account) and
+TalTech \href{https://gitlab.cs.ttu.ee/}{gitlab server}.
 First three were chosen as they are the most common git server providers as of 2021.
 Authentication via Microsoft was added as TalTech (and also numerous other universities / companies) use it and therefore
 all students have already registered account there.
@@ -108,12 +110,12 @@ We have added three levels to view time data:
     \item Add tracking, sync data to gtm Web App.
 \end{enumerate}
 
-All smaller level can be included while using higher level option.  % TODO: koodi terminid spets fonti vms
+All smaller level can be included while using higher level option.
 Viewing data via CLI app is always possible, as it is the same app that is responsible for recording data.
 This can be done both only locally or with pushing and pulling notes from remotes.
 You can also add logging time spent to commit messages in both of the scenarios as it simply works on top of the already
 existing system and only modifies commit message.
-To use auto logging option you simply need to add --auto-log=[gitlab|jira] option when initiating tracking for a repository.
+To use auto logging option you simply need to add \textit{--auto-log=[gitlab|jira]} option when initiating tracking for a repository.
 
 To view data from web interface, some more steps are required.
 User flow for making repository visible on gtm web application is shown on Figure~\ref{fig:add-tracking-user-flow}.
@@ -139,7 +141,7 @@ backend
 Frontend is one-page web application.
 Users can log in and see their data according to their privileges.
 This application has two main parts - profile and data visualization.
-Under profile users can change password, link OAuth accounts and delete account.
+Under profile users can change password, link OAuth accounts and delete account and add repositories.
 Data visualization is divided into 3 parts - dashboard, leaderboard and timeline comparison.
 In those tabs users can see their/others data as graphs and tables.
 
@@ -151,8 +153,8 @@ On success client receives json web token from backend and client stores it in l
 Then user is automatically redirected to main page.
 Users can log in with OAuth or username/password.
 In case of OAuth user is redirected to according OAuth platform for authentication.
-When successful, user is redirected to frontend with json web token.
-Json web token is saved on localstorage and user is redirected to main page where he/she can access their data.
+When successful, user is redirected to frontend with JSON Web Token (JWT).
+JSON web token is saved on localstorage and user is redirected to main page where he/she can access their data.
 Login and register user flows are described on Figure
 \ref{fig:login-signup-diagram}.
 
@@ -181,11 +183,13 @@ OAuth linking flow is described on Figure
 Users can also change password.
 In profile view under change password tab user has to fill all the fields correctly and password will be changed.
 If user does not have a password (OAuth registration), only new password fields have to be filled.
+Once you have already added a password, it's not possible to remove it to avoid possibility to have inaccessible accounts.
 
 \subsubsection{Delete account}\label{subsubsec:delete-account}
 Account deletion is under delete account tab.
 To keep away accidental account deletion user has to write their name to the input box and then can submit.
 If account is deleted, user is redirected to the login page.
+% TODO: Mis siis kui viimase OAuthi unlinkid? ka delete? tegelt vist oleks warning vms parem aga idk
 
 
 \subsection{Data visualization}\label{subsec:data-visualization}
