@@ -218,29 +218,85 @@ It helps to keep the code more organized, maintainable and extendable.
 
 
 \section{Frontend}\label{sec:frontend}
-The frontend of a software program or website is everything with which the user interacts.
-From a user standpoint, the frontend is synonymous with the user interface.
-From a developer standpoint, it is the interface design and the programming that makes the interface function.
-In our case frontend is a website where users can interact with our backend.
-Users can register/login with username/password or with OAuth.
-They can see their data from graphs.
+Frontend is a software program or website which the user interacts with.
+In our case frontend is a website where user can see time tracking data according to the privileges.
 
-Frontend has been built with TypeScript using React JS library.
-React is Javascript library for creating user interfaces.
-Choosing correct frontend framework/library is not as important as choosing correct backend programming language and framework since all the main frameworks/libraries (Angular, React, Vue, Aurelia, etc) are very good.
-Choosing the correct framework/library comes more down to personal preference.
-We chose React JS because it is ligthter than others and it gives more freedom.
+Frontend has been build using ReactJS library.
+According to the State of Frontend 2020 report ReactJS is the most used JavaScript framework and also the framework which developers want to learn or keep using the most.
+It was an obvious choice since we also had some experience with it.
 
-Therefore choosing TypeScript over JavaScript was not just personal preference.
-TypeScript is nothing else than JavaScript.
-TypeScript code is converted into JavaScript but it is strongly-typed language which is very important feature to keep code organized and easy to read.
-This decision was not made in the beginning of this project but since the code kept growing and growing we understood that strongly-typed language is needed to keep everything organized so we decided to convert everything to TypeScript.
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/frontend_framework_popularity.png}
+    \caption{Frontend framework popularity}
+    \label{fig:frontend-framework-popularity}
+\end{figure}
 
-State management is another area that does not have a certain winner.
-Choosing a state management library comes again down to personal preference.
+\subsection{Code design}\label{subsec:code-design}
+Frontend code is written following the main principles promoted by ReactJS community and documentation.
+For an example component’s names use PascalCase, helper files use camelCase, folders use camelCase.
+Code is divided into multiple files/components to prevent code repetition, inline CSS is avoided, liner is used to make code easier to use, service calls are in the separate file, etc.
+To prove code quality and readability TypeScript was chosen as it is strongly typed language which JavaScript is not.
+This decision was not made in the beginning of the project but as the code kept growing and readability suffered the decision was made.
+Folder structure is displayed in Table
+\ref{tab:gtm-front-folder-structure}.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{3cm} | p{10cm} |}
+        \hline
+        Folder & Purpose\\
+        \hline
+        src/api & Service calls .\\
+        \hline
+        src/assets & Images and icons. \\
+        \hline
+        src/containers & Main container structure (Header, Footer, Content, etc.)\\
+        \hline
+        src/models & Easy peasy state management models.\\
+        \hline
+        src/reusable & components that can be reused.\\
+        \hline
+        src/routes & Routes.\\
+        \hline
+        src/scss & Style.\\
+        \hline
+        src/store & Store for state management.\\
+        \hline
+        src/utils & Helpers.\\
+        \hline
+        src/views & Views that are used once.\\
+        \hline
+        <root> & TypeScript configuration, package.json, README and LICENCE.\\
+        \hline
+    \end{tabular}
+    \caption{Gtm-front folder structure.}
+    \label{tab:gtm-front-folder-structure}
+\end{table}
+
+\subsection{User interface design}\label{subsec:user-interface-design}
+User interface must be built keeping user in mind.
+User experience is the most important part of web application.
+If user does not have a good experience with the interface, it might be the end of the interaction between user and the application.
+Since the team did not have any professional designers, CoreUI was a great choice to make design process much easier.
+CoreUI is an Open Source Bootstrap Admin Template which is built on Bootstrap and written with readability in mind.
+The design and easy usability were the decisive factors choosing CoreUI.
+
+However, easy usability has its own downsides as the graphs were not as customizable.
+For graphs Recharts was chosen.
+Recharts is a composable charting library built on React components.
+It is much more customizable than CoreUI charts as it allows combining different bar charts, line charts, etc.
+At this point the design problem arose again.
+Designing graphs were done in the following manner:
+\begin{itemize}
+    \item Understand the functionality and create an initial component.
+    \item Let it settle for some time and then discuss with team.
+    \item Finalize component and release it for test users.
+    \item Make final changes according to the users' feedback.
+\end{itemize}
+Design patterns such as graph sizes, colors, spacings, fonts etc. were chosen in such a way that it would look similar to CoreUI graphs.
+
+\subsection{State management}\label{subsec:state-management}
+State management does not have a certain winner.
+Choosing a state management library comes down to personal preference.
 We decided to use Easy Peasy which is built on the most popular state management library Redux.
 Easy Peasy was chosen over Redux because Redux has steep learning curve but Easy Peasy is easy to use.
-
-%TODO: Some actual comaprison
-
-% TODO: Folder structure
