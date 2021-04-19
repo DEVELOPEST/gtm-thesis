@@ -1,10 +1,4 @@
 \section{CLI app}\label{sec:cli-app-contents}
-TODO
-\begin{figure}[h]
-    \includegraphics[width=\textwidth]{figures/init_tracking}
-    \caption{Initialize tracking}
-    \label{fig:init-tracking}
-\end{figure}
 
 \subsection{CLI app improvements}\label{subsec:cli-app-improvements}
 Our CLI app is based on~\nameref{subsec:git-time-metric}, an already working open source time tracking app.
@@ -41,6 +35,56 @@ Although the Git supports automatic merging/rewriting of the notes, it was incon
 wants to also rewrite manually added notes.
 To keep time data after Git rebases, a new command \textit{rewrite} was introduced.
 This command is ran by git post-rewrite hook, and it rewrites notes so that they still point to correct commit.
+
+\subsection{Initializing tracking}\label{subsec:init-tracking}
+Main flow for initializing tracking for repository is described in Figure~\ref{fig:init-tracking}.
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/init_tracking}
+    \caption{Initialize tracking}
+    \label{fig:init-tracking}
+\end{figure}
+
+First requirement is that you need to have gtm-core installed and added to \textit{PATH} in order to initialize tracking.
+If the user has gtm-core installed he can initialize tracking from command line.
+To do that, it is required to change your current directory to be somewhere within git root directory.
+Time tracking is then initialize with \textit{gtm init} command.
+The command support following arguments:
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{3cm} | p{10cm} |}
+        \hline
+        Argument & Description\\
+        \hline
+        --terminal & Enable time tracking for terminal. (Requires terminal plugin)\\
+        \hline
+        --auto-log & Either \textit{gitlab} or \textit{jira} to automatically log time
+        into commit messages with given format.\\
+        \hline
+        --local & If set, no git fetch nor push hooks are added.
+        Time data is only stored locally.\\
+        \hline
+        --tags & Optionally add tags to project for better local organization.\\
+        \hline
+        --clear-tags & If project already has some tags running it with given flag removes previously added flags.\\
+        \hline
+        --cwd & Useful for specifying working directory for scripts.\\
+        \hline
+    \end{tabular}
+    \caption{Gtm-front folder structure.}
+    \label{tab:gtm-init}
+\end{table}
+It is safe to run \textit{gtm init} multiple times with any of the arguments.
+
+The user can also initialize time tracking from within IDE if he has gtm plugin installed.
+Currently, only Jetbrains IDE plugin support starting tracking.
+To initialize time tracking from Jetbrains IDE the user needs to open/reload project he wishes to add time tracking to.
+Upon doing that he is prompted to choose whether to start tracking or not.
+To initialize tracking, start tracking has to be chosen.
+This initializes tracking for currently open repository with default settings (equal to no argument for CLI).
+If the user chooses not to initialize tracking, his choice is persisted in local project file within \textit{.idea} directory.
+To later add tracking to repository, he needs to do it from command line or by deleting project settings file.
+
 
 \section{Groups system}\label{sec:group-system}
 One of the requirements for our app was that it should be possible to group repositories together.
