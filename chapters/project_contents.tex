@@ -86,6 +86,41 @@ If the user chooses not to initialize tracking, his choice is persisted in local
 To later add tracking to repository, he needs to do it from command line or by deleting project settings file.
 
 
+\section{IDE Plugins}\label{sec:plugins}
+
+IDE plugins are used to capture editor specific events and then execute appropriate commands on gtm-core.
+Basically gtm-core and IDE plugin combo works like a language server and code formatting plugin combo.
+This eliminates need to write duplicate code when writing plugins for multiple IDEs.
+Currently, we have full support for Jetbrains and some support for Vim.
+There are also many more plugins that have been previously written for original Git-Time-Metric, and most of them also work with our app.
+
+\subsection{Jetbrains}\label{subsec:jetbrains-plugin}
+Jetbrains also had plugin for original Git-Time-Metric, but the IDE has gone through lots of changes since the last update to plugin.
+As of 2021 this causes Jetbrains IDEs to crash.
+We decided to fully rewrite the plugin as it heavily used now deprecated Jetbrains components.
+
+The plugin catches following events and forwards the data to gtm-core:
+\begin{enumerate}
+    \item Opening file in editor.
+    \item Mouse pressed inside editor (on file).
+    \item Process run (Mostly build, test, debug or run, but can be any other process you run via IDE)
+    \item File saved.
+    \item Visible area changed (Window resized / split).
+\end{enumerate}
+
+In response, plugin gets time since last commit (uncommitted time), which it show on the bottom status bar.
+
+In addition to silently listening for events and updating time the plugin communicates with user via popup dialog and notification.
+The popup dialog is used to prompt user whether he wants to start tracking time for project as described in~\nameref{subsec:init-tracking}
+Notifications are used to report errors and more important actions results (such as whether adding tracking was successful).
+
+\subsection{Vim}\label{subsec:vim-plugin}
+Already existing \href{https://github.com/git-time-metric/gtm-vim-plugin}{plugin} for vim was forked as it had all the required features.
+Version numbers and update links were changed to comply with our version.
+As the Vim script file to give the support for tracking time and also displaying it on status line is under 80 lines long
+it perfectly describes, why it was necessary to have gtm-core as a separate program instead of writing the business logic inside plugin.
+
+
 \section{Groups system}\label{sec:group-system}
 One of the requirements for our app was that it should be possible to group repositories together.
 The grouping is needed to view statistics for multiple repositories at once and also compare groups of repositories.
@@ -187,7 +222,7 @@ you also need to add webhook.
 
 
 \section{Backend}\label{sec:backend-content}
-backend
+backend % TODO: ...
 
 \section{Frontend}\label{sec:frontend-content}
 Frontend is one-page web application.
