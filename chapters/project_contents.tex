@@ -220,9 +220,18 @@ After that you need to search for the repository from web interface and click ad
 With that the tracking is technically added, but to also automatically sync time data on every push to remote,
 you also need to add webhook.
 
+To make sure that the repository can be accessed by the user the request to appropriate provider is made again
+when user has pressed \textit{"Start tracking"} button.
+This check is required as the user could easily guess other peoples private repository clone urls and then post
+it to our backend with his own JWT.
+This extra check also means you cannot add tracking to self-hosted git servers that do not provide OAuth2.
+However, we could not find any better way to identify that the given user has access to some git repository and
+therefore it was decided to not support any custom setups.
 
 \section{Backend}\label{sec:backend-content}
 backend % TODO: ...
+\subsection{Database}\label{subsec:database}
+\subsubsection{ERD Schema}\label{subsubsec:erd-schema}
 
 \section{Frontend}\label{sec:frontend-content}
 Frontend is one-page web application.
