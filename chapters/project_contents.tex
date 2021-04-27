@@ -232,6 +232,35 @@ therefore it was decided to not support any custom setups.
 backend % TODO: ...
 \subsection{Database}\label{subsec:database}
 \subsubsection{ERD Schema}\label{subsubsec:erd-schema}
+The database holds data about tracked time, registered users and how the users can access time data.
+The structure if the database schema is described in Figure~\ref{subsubsec:erd-schema}
+
+Time data follows the structure of git commits tree and file tree.
+The \textit{repositories} table contains general information about git repository such as name and the sync client
+responsible for tracking it.
+Then the \textit{commits} table has the information about commits such as author, timestamp and commit message.
+Each \textit{commits} table entry has also reference to repository it is committed to.
+Every commit has zero or more files that were edited in it.
+These files are contained in \textit{files} table and they contain information about files added and deleted.
+To have more accurate data about when the time was spent separate table is needed as there is no guarantee that
+the time spent editing files is spent just before commit timestamp.
+For this we have a table called \textit{timeline} which olds timestamps and durations of every consecutive edits as
+well as reference to file in which the time was spent.
+
+The user and roles table are responsible for persisting user login credentials, roles and connected OAuth accounts.
+As we allow user to optionally register only via OAuth the password field is nullable.
+Users that have no password can only log in via OAuth, but they can also add password at any time.
+
+Every user can have multiple rows with role \textit{USER} being added to every user by default.
+There are three roles in total: \textit{USER}, \textit{LECTURER} and \textit{ADMIN}.
+Currently there are no rules in database for any of the roles which means all checks are done in software.
+% TODO: reference roles subsec
+
+Every user also has zero or more OAuth logins stored in \textit{logins} table.
+There is a limit that every user can have at maximum one OAuth login per login type.
+If one already exists, it is updated instead of adding new.
+
+User emails retrieved from OAuth providers are stored in \textit{emails} table to avoid unnecessary web requests.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/erd_schema}
