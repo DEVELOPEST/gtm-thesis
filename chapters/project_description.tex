@@ -107,7 +107,20 @@ The reason behind this is likely it's architecture - it continuously sends heart
 If no internet connection exists, it stores these heartbeats locally in rather cryptic format.
 As a result there is not much data stored locally meaning that the backend has to bundle time data to commits which becomes a very complicated task
 once users start rewriting history, especially given that Git is a distributed version control system.
-% TODO: hakatime and go wakatime backend
+In the end of 2020 Wakatime also launched its git integration that allows to see time spent per commit, but for previously
+described reasons it gets confused after history rewrites and maps it based on timestamp.
+This means that stashed time is added to wrong commit.
+Wakatime git integration also does not support statistics such a lines added and deleted.
+
+Although Wakatime's front and backend are private there are some open source alternatives.
+Two most advanced alternatives are \href{https://github.com/mujx/hakatime}{Hakatime} licenced under Unlicense and
+\href{https://github.com/muety/wakapi}{Wakapi} licenced under GPL-v3.
+Both of them also have some kind of frontend capable of displaying data similarly to Wakatime's front end main page and
+Hakatime has even some more graphs.
+However, neither of them support any groups' system, and they don't have any git integration.
+
+As both of them have received numerous heavy updates since autumn 2020, they would be very strong candidates to base
+our system on their already existing functionality, but that wasn't the case when we started with our project.
 
 
 \subsection{Git-Time-Metric}\label{subsec:git-time-metric}
