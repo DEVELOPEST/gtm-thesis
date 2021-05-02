@@ -231,6 +231,28 @@ therefore it was decided to not support any custom setups.
 \section{Backend}\label{sec:backend-content}
 backend % TODO: ...
 \subsection{Database}\label{subsec:database}
+One requirement whn choosing database was that we needed it to have bindings for our Object-relational mapper (ORM),
+so we could easily use it in our application.
+This requirement narrowed search down to SQLite, MySQL and PostgreSQL.
+SQLite was ruled out as it is not strongly typed, and it does not have the same amount of features PostgreSQL and MySQL have.
+For choosing between MySQL and PostgreSQL it came down to personal preference as both of them are strongly typed and
+support all the required features, including recursive queries.
+Both of them are also open source.
+
+We decided to go with the PostgreSQL as we had prior experience with it.
+
+As we are running the application in "beta" we decided to run database in docker container on our development machine to
+reduce the cost of upkeep.
+For data persistence we have mounted database files volume to host machine.
+
+\subsubsection{Database versioning}\label{subsubsec:database-versioning}
+As we have users data in our database it is important to also persist it through database schema updates.
+For this we use migrations and let diesel handle the updates.
+Every time database change is required, we add new migration with both up and down scripts that can be used by diesel
+to run the migration or revert it.
+Diesel is configured to automatically run updates added to release.
+As reverting database changes can result in a loss of data, it has to be done manually via diesel CLI app.
+
 \subsubsection{ERD Schema}\label{subsubsec:erd-schema}
 The database holds data about tracked time, registered users and how the users can access time data.
 The structure if the database schema is described in Figure~\ref{subsubsec:erd-schema}
@@ -254,7 +276,7 @@ Users that have no password can only log in via OAuth, but they can also add pas
 Every user can have multiple rows with role \textit{USER} being added to every user by default.
 There are three roles in total: \textit{USER}, \textit{LECTURER} and \textit{ADMIN}.
 Currently there are no rules in database for any of the roles which means all checks are done in software.
-% TODO: reference roles subsec
+More detailed description about roles can be found in~\nameref{subsec:roles} subsection.
 
 Every user also has zero or more OAuth logins stored in \textit{logins} table.
 There is a limit that every user can have at maximum one OAuth login per login type.
@@ -262,11 +284,37 @@ If one already exists, it is updated instead of adding new.
 
 User emails retrieved from OAuth providers are stored in \textit{emails} table to avoid unnecessary web requests.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/erd_schema}
     \caption{ERD schema}
     \label{fig:erd-schema}
 \end{figure}
+
+\subsection{Roles}\label{subsec:roles}
+Our application has three different roles to control user permissions.
+Single user can belong to multiple roles and roles and also new roles can be dynamically added to database as they are
+kept in separate table.
+Currently, there are three roles in total: \textit{USER}, \textit{LECTURER} and \textit{ADMIN}.
+Role \textit{USER} is added to every created user, and it has no extra permissions.
+
+People with \textit{USER} role can:
+\begin{enumerate}
+    \item View data from git repositories, they have access to.
+    \item Add new repositories.
+    \item Delete repositories they have access to.
+\end{enumerate}
+
+People with \textit{LECTURER} role can:
+\begin{enumerate}
+    \item TODO: What right should here be?.
+\end{enumerate}
+
+People with \textit{ADMIN} role can:
+\begin{enumerate}
+    \item Assign new roles to other users.
+    \item View data from all the repositories and groups.
+    \item Give other users group accesses.
+\end{enumerate}
 
 \section{Frontend}\label{sec:frontend-content}
 Frontend is one-page web application.
