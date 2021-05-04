@@ -202,8 +202,7 @@ Folder structure for gtm-sync is displayed in Table
 Backend is a collection of code which runs on the server.
 It receives requests from clients and sends appropriate data back to the clients based on the business logic.
 Backend also has a database which stores all the necessary data for the application.
-As a database system PostgresSQL was chosen as it is capable of reading and writing large amounts of data efficiently and we already have considerable amount of experience with it.
-PostgresSQL also provides better data integrity as it protects the data at transaction level. %TODO: Better than what? maybe speed comparison etc.
+As a database system PostgresSQL was chosen as it is capable of reading and writing large amounts of data efficiently, and we already have considerable amount of experience with it.
 
 In our case backend receives data from sync client via REST API requests and stores the data in the database.
 End users can interact with backend though frontend via REST API requests.
@@ -216,13 +215,105 @@ Since we needed a fast backend with minimal overhead for processing large datase
 Java, C/C++ and GO were also considered, but the lightweightness of Rust overweight Java whilst memory safety overweight C/C++
 and since Rust was chosen for sync client we decided to choose it for backend as well.
 
-% TODO: More explanation for DDD, some reference
+\subsection{Backend design}\label{subsec:backend-design}
 Backend code base has been built following Domain Driven Design (DDD).
 DDD is a concept that centers the development and code structure around the business domain.
-It helps to keep the code more organized, maintainable and extendable.
+It helps to keep the code more organized, maintainable and extendable \cite{domain-driven-design}.
+% TODO: More explanation for DDD, some reference
 
-% TODO: Folder structure
+A layered architecture can be found on Figure\ref{fig:backend-layered-diagram}
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/backend_layered_diagram}
+    \caption{Backend architecture}
+    \label{fig:backend-layered-diagram}
+\end{figure}
 
+Folder structure is displayed in Table
+\ref{tab:gtm-api-folder-structure}.
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{3cm} | p{10cm} |}
+        \hline
+        Folder & Purpose\\
+        \hline
+        doc &  .\\ %TODO TAVO
+        \hline
+        migrations & Migrations for diesel. \\
+        \hline
+        src/common & Widely used files.\\
+        \hline
+        src/db & General database connection.\\
+        \hline
+        src/security & Authentication and authorization.\\
+        \hline
+        src/vcs & Version control.\\
+        \hline
+        <root> & Configurations, README and LICENCE.\\
+        \hline
+    \end{tabular}
+    \caption{Gtm-api folder structure.}
+    \label{tab:gtm-api-folder-structure}
+\end{table}
+
+\subsection{Database design}\label{subsec:database-design}
+One requirement when choosing database was that we needed it to have bindings for our Object-relational mapper (ORM),
+so we could easily use it in our application.
+This requirement narrowed search down to SQLite, MySQL and PostgreSQL.
+SQLite was ruled out as it is not strongly typed, and it does not have the same amount of features PostgreSQL and MySQL have.
+For choosing between MySQL and PostgreSQL it came down to personal preference as both of them are strongly typed and
+support all the required features, including recursive queries.
+Both of them are also open source.
+
+We decided to go with the PostgreSQL as we had prior experience with it.
+
+As we are running the application in "beta" we decided to run database in docker container on our development machine to
+reduce the cost of upkeep.
+For data persistence we have mounted database files volume to host machine.
+
+\subsubsection{Database versioning}\label{subsubsec:database-versioning}
+As we have users data in our database it is important to also persist it through database schema updates.
+For this we use migrations and let diesel handle the updates.
+Every time database change is required, we add new migration with both up and down scripts that can be used by diesel
+to run the migration or revert it.
+Diesel is configured to automatically run updates added to release.
+As reverting database changes can result in a loss of data, it has to be done manually via diesel CLI app.
+
+\subsubsection{ERD Schema}\label{subsubsec:erd-schema}
+The database holds data about tracked time, registered users and how the users can access time data.
+The structure if the database schema is described in Figure~\ref{subsubsec:erd-schema}
+
+Time data follows the structure of git commits tree and file tree.
+The \textit{repositories} table contains general information about git repository such as name and the sync client
+responsible for tracking it.
+Then the \textit{commits} table has the information about commits such as author, timestamp and commit message.
+Each \textit{commits} table entry has also reference to repository it is committed to.
+Every commit has zero or more files that were edited in it.
+These files are contained in \textit{files} table and they contain information about files added and deleted.
+To have more accurate data about when the time was spent separate table is needed as there is no guarantee that
+the time spent editing files is spent just before commit timestamp.
+For this we have a table called \textit{timeline} which olds timestamps and durations of every consecutive edits as
+well as reference to file in which the time was spent.
+
+The user and roles table are responsible for persisting user login credentials, roles and connected OAuth accounts.
+As we allow user to optionally register only via OAuth the password field is nullable.
+Users that have no password can only log in via OAuth, but they can also add password at any time.
+
+Every user can have multiple rows with role \textit{USER} being added to every user by default.
+There are three roles in total: \textit{USER}, \textit{LECTURER} and \textit{ADMIN}.
+Currently there are no rules in database for any of the roles which means all checks are done in software.
+More detailed description about roles can be found in~\nameref{subsec:roles} subsection.
+
+Every user also has zero or more OAuth logins stored in \textit{logins} table.
+There is a limit that every user can have at maximum one OAuth login per login type.
+If one already exists, it is updated instead of adding new.
+
+User emails retrieved from OAuth providers are stored in \textit{emails} table to avoid unnecessary web requests.
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/erd_schema}
+    \caption{ERD schema}
+    \label{fig:erd-schema}
+\end{figure}
 
 \section{Frontend}\label{sec:frontend}
 Frontend is a software program or website which the user interacts with.
@@ -236,7 +327,7 @@ It was chosen as Marten, who's mostly responsible for frontend development has s
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/frontend_framework_popularity.png}
-    \caption{Frontend framework popularity}
+    \caption{Frontend framework popularity \cite{state-of-frontend-report}}
     \label{fig:frontend-framework-popularity}
 \end{figure}
 

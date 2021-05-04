@@ -121,73 +121,9 @@ As the Vim script file to give the support for tracking time and also displaying
 it perfectly describes, why it was necessary to have gtm-core as a separate program instead of writing the business logic inside plugin.
 
 
-\section{Groups system}\label{sec:group-system}
-One of the requirements for our app was that it should be possible to group repositories together.
-The grouping is needed to view statistics for multiple repositories at once and also compare groups of repositories.
-The grouping system should be also capable of controlling user access rights to different repositories.
 
-Requirements for grouping system
-\begin{itemize}
-    \item It shall be possible to group both repositories and groups already consisting of repositories.
-    \item Single repository may be possible of multiple groups.
-    \item Group access can be limited to only viewing summary (group total).
-    \item Granting user an access group subgroups and then removing it shall have no side effects. (Accesses to subgroups shall not be persisted)
-\end{itemize}
 
-As the groups may consist of both groups and repositories we decided to automatically create group for every repository.
-This means now groups can only consist of zero or more other groups.
-If we need te get the repository we can fetch all the group ids that are accessible and then query from repositories database by
-comparing repositories group id against previously fetched ids.
-To fetch group with all of its subgroups a recursive Structured Query Language (SQL) query was needed as the groups'
-hierarchy formulates a tree like structure.
-Our database provider PostgreSQL supports recursive queries so there were no technical problems with implementing it on SQL database.
-A simplified version of our group system database tables can be seen of Figure~\ref{fig:group-system}
 
-\begin{figure}[h]
-    \includegraphics[width=\textwidth]{figures/group_system}
-    \caption{Application groups system}
-    \label{fig:group-system}
-\end{figure}
-
-This tree like groups' hierarchy allows us to easily give and take user access to any group.
-If we want to change access from only parent group to also all subgroups access, we can simply toggle access{\_}level{\_}recursive
-variable.
-If we remove one particular group access, all other accesses remain in place, meaning that you some group was accessible
-also via some other group access, you still have the access.
-
-\section{Security}\label{sec:scurity}
-Our application holds data, that shall not be visible to all client and therefore some kind of authentication and authorization methods are required.
-For the data stored in Git notes we decided no extra security is required, as the time data isn't more sensitive than the actual code.
-The security of source code stored in git repository is handled by a client himself and Git providers.
-If they wish to have some more protection for git notes, they can configure it themselves.
-We only provide the option to have notes only stored locally (not pushed to origin).
-
-For the web application we need to implement our own security measures.
-For most basic usage we have simple username and password authentication.
-Accounts that only have password authentication are not authorized to access any groups nor repositories unless Admin user
-explicitly gives them access to any.
-
-To automatically get access to repositories you are contributor of you need to authenticate yourself via OAuth2 standard.
-This way we can verify, that the user signing in to our application is the same user that has access to some git repository.
-
-\subsection{OAuth2}\label{subsec:oauth2}
-For OAuth2 authorization rocket{\_}oauth2 library is used, that follows RFC-6749 standard~\cite{rocket-oauth2, oauth2}.
-We support authentication via \href{https://github.com/}{Github.com}, \href{https://about.gitlab.com/}{Gitlab.com},
-\href{https://bitbucket.org/}{Bitbucket.org}, \href{https://azure.microsoft.com/}{Azure} (Microsoft account) and
-TalTech \href{https://gitlab.cs.ttu.ee/}{gitlab server}.
-First three were chosen as they are the most common git server providers as of 2021.
-Authentication via Microsoft was added as TalTech (and also numerous other universities / companies) use it and therefore
-all students have already registered account there.
-Also, it provides access to user emails, that can be later used to filter out user commits.
-TalTech gitlab server was added, as the application is currently developed for TalTech and therefore it was a requirement
-that everything shall also work on TalTech gitlab server.
-
-From all OAuth2 providers at least user read access is required to get access to user emails.
-For OAuth2 providers, that are also a Git server providers also permissions to read user repositories data is required.
-User repositories data is used to give user automatically access to his own repositories and also display repositories
-not currently tracked by gtm.
-It also allows more easily adding automatic data collection to user repositories, as user can browse through
-repositories from different git server providers.
 
 \subsection{Adding tracking to repositories}\label{subsec:adding-tracking}
 We have added three levels to view time data:
@@ -229,66 +165,130 @@ However, we could not find any better way to identify that the given user has ac
 therefore it was decided to not support any custom setups.
 
 \section{Backend}\label{sec:backend-content}
-backend % TODO: ...
-\subsection{Database}\label{subsec:database}
-One requirement whn choosing database was that we needed it to have bindings for our Object-relational mapper (ORM),
-so we could easily use it in our application.
-This requirement narrowed search down to SQLite, MySQL and PostgreSQL.
-SQLite was ruled out as it is not strongly typed, and it does not have the same amount of features PostgreSQL and MySQL have.
-For choosing between MySQL and PostgreSQL it came down to personal preference as both of them are strongly typed and
-support all the required features, including recursive queries.
-Both of them are also open source.
 
-We decided to go with the PostgreSQL as we had prior experience with it.
+Sync client which has api key registered has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-for-sync}.
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{4cm} | p{4cm} | p{4cm} |}
+        \hline
+        Endpoint & Parameters & Description\\
+        \hline
+        POST /repositories & - & Sync client can send new repo timeline data \\
+        \hline
+        PUT /repositories & - & Sync client can send existing repo updated timeline data\\
+        \hline
+        GET /commits/hash & provider: string, user: string, repo: string & Returns last commit hash\\ % TODO TAVO vaata see ule ja kas on midagi lisada
+        \hline
+    \end{tabular}
+    \caption{Gtm-api endpoints for sync client.}
+    \label{tab:gtm-api-endpoints-for-sync}
+\end{table}
 
-As we are running the application in "beta" we decided to run database in docker container on our development machine to
-reduce the cost of upkeep.
-For data persistence we have mounted database files volume to host machine.
+An authorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-secured}.
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{4cm} | p{4cm} | p{4cm} |}
+        \hline
+        Endpoint & Parameters & Description\\
+        \hline
+        GET /groups & - & Returns all the groups logged-in user has access to. \\
+        \hline
+        GET /\{group\_name\}/activity & start: int, end: int, interval: string, timezone: string & Returns activity for group. \\
+        \hline
+        GET /\{group\_name\}/subdirs-timeline & start: int, end: int, interval: string, timezone: string & Returns sub-directory timeline for group. \\
+        \hline
+        GET /\{group\_name\}/timeline & start: int, end: int, interval: string, timezone: string & Returns timeline for group. \\
+        \hline
+    \end{tabular}
+    \caption{Gtm-api secured public endpoints}
+    \label{tab:gtm-api-endpoints-secured}
+\end{table}
 
-\subsubsection{Database versioning}\label{subsubsec:database-versioning}
-As we have users data in our database it is important to also persist it through database schema updates.
-For this we use migrations and let diesel handle the updates.
-Every time database change is required, we add new migration with both up and down scripts that can be used by diesel
-to run the migration or revert it.
-Diesel is configured to automatically run updates added to release.
-As reverting database changes can result in a loss of data, it has to be done manually via diesel CLI app.
+Unauthorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-public}.
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{4cm} | p{4cm} | p{4cm} |}
+        \hline
+        Endpoint & Parameters & Description\\
+        \hline
+        POST /auth/login & - & For login \\
+        \hline
+        POST /auth/register & - & For registering new account \\
+        \hline
+    \end{tabular}
+    \caption{Gtm-api not secured public endpoints.}
+    \label{tab:gtm-api-endpoints-public}
+\end{table}
 
-\subsubsection{ERD Schema}\label{subsubsec:erd-schema}
-The database holds data about tracked time, registered users and how the users can access time data.
-The structure if the database schema is described in Figure~\ref{subsubsec:erd-schema}
+All the endpoints can be found \href{https://cs.ttu.ee/services/gtm/api/swagger/index.html}{here}.
 
-Time data follows the structure of git commits tree and file tree.
-The \textit{repositories} table contains general information about git repository such as name and the sync client
-responsible for tracking it.
-Then the \textit{commits} table has the information about commits such as author, timestamp and commit message.
-Each \textit{commits} table entry has also reference to repository it is committed to.
-Every commit has zero or more files that were edited in it.
-These files are contained in \textit{files} table and they contain information about files added and deleted.
-To have more accurate data about when the time was spent separate table is needed as there is no guarantee that
-the time spent editing files is spent just before commit timestamp.
-For this we have a table called \textit{timeline} which olds timestamps and durations of every consecutive edits as
-well as reference to file in which the time was spent.
+\subsection{Security}\label{subsec:scurity}
+Our application holds data, that shall not be visible to all client and therefore some kind of authentication and authorization methods are required.
+For the data stored in Git notes we decided no extra security is required, as the time data isn't more sensitive than the actual code.
+The security of source code stored in git repository is handled by a client himself and Git providers.
+If they wish to have some more protection for git notes, they can configure it themselves.
+We only provide the option to have notes only stored locally (not pushed to origin).
 
-The user and roles table are responsible for persisting user login credentials, roles and connected OAuth accounts.
-As we allow user to optionally register only via OAuth the password field is nullable.
-Users that have no password can only log in via OAuth, but they can also add password at any time.
+For the web application we need to implement our own security measures.
+For most basic usage we have simple username and password authentication.
+Accounts that only have password authentication are not authorized to access any groups nor repositories unless Admin user
+explicitly gives them access to any.
 
-Every user can have multiple rows with role \textit{USER} being added to every user by default.
-There are three roles in total: \textit{USER}, \textit{LECTURER} and \textit{ADMIN}.
-Currently there are no rules in database for any of the roles which means all checks are done in software.
-More detailed description about roles can be found in~\nameref{subsec:roles} subsection.
+To automatically get access to repositories you are contributor of you need to authenticate yourself via OAuth2 standard.
+This way we can verify, that the user signing in to our application is the same user that has access to some git repository.
 
-Every user also has zero or more OAuth logins stored in \textit{logins} table.
-There is a limit that every user can have at maximum one OAuth login per login type.
-If one already exists, it is updated instead of adding new.
+\subsubsection{OAuth2}\label{subsubsec:oauth2}
+For OAuth2 authorization rocket{\_}oauth2 library is used, that follows RFC-6749 standard~\cite{rocket-oauth2, oauth2}.
+We support authentication via \href{https://github.com/}{Github.com}, \href{https://about.gitlab.com/}{Gitlab.com},
+\href{https://bitbucket.org/}{Bitbucket.org}, \href{https://azure.microsoft.com/}{Azure} (Microsoft account) and
+TalTech \href{https://gitlab.cs.ttu.ee/}{gitlab server}.
+First three were chosen as they are the most common git server providers as of 2021.
+Authentication via Microsoft was added as TalTech (and also numerous other universities / companies) use it and therefore
+all students have already registered account there.
+Also, it provides access to user emails, that can be later used to filter out user commits.
+TalTech gitlab server was added, as the application is currently developed for TalTech and therefore it was a requirement
+that everything shall also work on TalTech gitlab server.
 
-User emails retrieved from OAuth providers are stored in \textit{emails} table to avoid unnecessary web requests.
+From all OAuth2 providers at least user read access is required to get access to user emails.
+For OAuth2 providers, that are also a Git server providers also permissions to read user repositories data is required.
+User repositories data is used to give user automatically access to his own repositories and also display repositories
+not currently tracked by gtm.
+It also allows more easily adding automatic data collection to user repositories, as user can browse through
+repositories from different git server providers.
 
-\begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/erd_schema}
-    \caption{ERD schema}
-    \label{fig:erd-schema}
+\subsection{Groups system}\label{subsec:group-system}
+One of the requirements for our app was that it should be possible to group repositories together.
+The grouping is needed to view statistics for multiple repositories at once and also compare groups of repositories.
+The grouping system should be also capable of controlling user access rights to different repositories.
+
+Requirements for grouping system
+\begin{itemize}
+    \item It shall be possible to group both repositories and groups already consisting of repositories.
+    \item Single repository may be possible of multiple groups.
+    \item Group access can be limited to only viewing summary (group total).
+    \item Granting user an access group subgroups and then removing it shall have no side effects. (Accesses to subgroups shall not be persisted)
+\end{itemize}
+
+As the groups may consist of both groups and repositories we decided to automatically create group for every repository.
+This means now groups can only consist of zero or more other groups.
+If we need te get the repository we can fetch all the group ids that are accessible and then query from repositories database by
+comparing repositories group id against previously fetched ids.
+To fetch group with all of its subgroups a recursive Structured Query Language (SQL) query was needed as the groups'
+hierarchy formulates a tree like structure.
+Our database provider PostgreSQL supports recursive queries so there were no technical problems with implementing it on SQL database.
+A simplified version of our group system database tables can be seen of Figure~\ref{fig:group-system}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/group_system}
+    \caption{Application groups system}
+    \label{fig:group-system}
 \end{figure}
+
+This tree like groups' hierarchy allows us to easily give and take user access to any group.
+If we want to change access from only parent group to also all subgroups access, we can simply toggle access{\_}level{\_}recursive
+variable.
+If we remove one particular group access, all other accesses remain in place, meaning that you some group was accessible
+also via some other group access, you still have the access.
 
 \subsection{Roles}\label{subsec:roles}
 Our application has three different roles to control user permissions.
@@ -306,7 +306,10 @@ People with \textit{USER} role can:
 
 People with \textit{LECTURER} role can:
 \begin{enumerate}
-    \item TODO: What right should here be?.
+    \item View data from git repositories, they have access to.
+    \item Add new repositories.
+    \item Delete repositories they have access to.
+    \item Give access to others.
 \end{enumerate}
 
 People with \textit{ADMIN} role can:
@@ -326,9 +329,9 @@ In those tabs users can see their/others data as graphs and tables.
 
 \subsection{Authentication and authorization}\label{subsec:authentication-and-authorization}
 Authentication and authorization is implemented using bearer token system.
-User gets token from api and stores it to the localstorage and adds to every request header.
+User gets JSON Web Token from api and stores it to the localstorage and adds to every request header.
 User has to log in from log in page.
-On success client receives json web token from backend and client stores it in localstorage.
+On success client receives JSON Web Token from backend and client stores it in localstorage.
 Then user is automatically redirected to main page.
 Users can log in with OAuth or username/password.
 In case of OAuth user is redirected to according OAuth platform for authentication.
