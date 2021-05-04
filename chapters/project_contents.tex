@@ -364,6 +364,14 @@ In profile view under change password tab user has to fill all the fields correc
 If user does not have a password (OAuth registration), only new password fields have to be filled.
 Once you have already added a password, it's not possible to remove it to avoid possibility to have inaccessible accounts.
 
+\subsubsection{Repositories}\label{subsubsec:repositories}
+Under repositories tab user can see all their repositories.
+User can start tracking new repository by clicking start tracking and then adding webhook to according OAuth platform.
+if start tracking is clicked and everything is successful, a blue info box with instructions for webhook will pop up.
+In case user wants to start tracking again then the repository can be found at the end of the list with button initialize again.
+Tracking can also be stopped by clicking on the red button with trash can.
+% TODO Tavo vaata ule
+
 \subsubsection{Delete account}\label{subsubsec:delete-account}
 Account deletion is under delete account tab.
 To keep away accidental account deletion user has to write their name to the input box and then can submit.
@@ -372,7 +380,53 @@ If account is deleted, user is redirected to the login page.
 
 
 \subsection{Data visualization}\label{subsec:data-visualization}
-Data visualization
+Data visualization is divided into three pages - dashboard, leaderboard and comparison.
+From sidebar user can navigate to necessary page and on top of the page user has selection of properties according to the graphs.
 
-\subsection{State management}\label{subsec:state-management-content}
-State management
+\subsubsection{Dashboard}\label{subsubsec:dashboard}
+Dashboard is the main landing page if user is logged in.
+Dashboard contains three graphs and inputs.
+From inputs user can change group, time period and interval.
+User can choose between all the groups he/she has access to.
+Time period has start and end which cannot be apart more than a year.
+Intervals are days, weeks and months.
+
+First graph is a combination of line and bar charts which describes time spent in time and also shows how many users were active at the interval.
+X axis shows the period of time and y axis on shows the time spent during the period.
+Y axis also shows active users count during the period.
+Line shows time spent and bar shows users count.
+
+Second graph is line chart which describes activity hours during the chosen period.
+According to the interval it shows daily activity, weekly activity or monthly activity.
+X axis shows interval and y axis shows average time spent during this time.
+If interval is day then x axis describes each hour, in case of week, x axis describes each week day, etc.
+Y axis also shows lines added and removed from code.
+This graph brings out the timeframe when users are actively programming.
+
+Third graph is bar chart which describes time spent in folders or files.
+X axis shows the period of time and y axis shows the time spent during the period.
+Bars are stacked on each other and each bar describes one folder or file.
+This graph brings out on which tasks people spend most of their time on and is very useful for lecturers who want to see which homeoworks take more time.
+
+\subsubsection{Leaderboard}\label{subsubsec:leaderboard}
+Leaderboard contains four inputs and two tables where users and files/folders can be easily compared.
+Inputs contain group selection, date selection and depth selection.
+Depth determines how deep will the search go for files and folders.
+
+First table shows info about users in chosen group.
+Data is divided into 7 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour and lines per commit.
+By clicking on the column header the sequence will change accordingly.
+
+Second table shows info about file system.
+Data is divided into 8 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour, lines per commit and users.
+Sequence can also be changed by clicking on the column header.
+
+At the end of the page there is export data button which downloads csv file with data.
+
+\subsubsection{Comparison}\label{subsubsec:comparison}
+Comparison page has four inputs and one graph.
+Inputs again are group selection, date selection and interval selection.
+Multiple groups can be selected to compare them.
+Graph draws out lines charts depending on amount of groups selected.
+X axis shows the period of time and y axis shows time spent.
+Each line has different color as it represents different group and makes the graph more understandable.
