@@ -121,10 +121,6 @@ As the Vim script file to give the support for tracking time and also displaying
 it perfectly describes, why it was necessary to have gtm-core as a separate program instead of writing the business logic inside plugin.
 
 
-
-
-
-
 \subsection{Adding tracking to repositories}\label{subsec:adding-tracking}
 We have added three levels to view time data:
 \begin{enumerate}
@@ -177,7 +173,7 @@ Sync client which has api key registered has access to the endpoints in Table~\r
         \hline
         PUT /repositories & - & Sync client can send existing repo updated timeline data\\
         \hline
-        GET /commits/hash & provider: string, user: string, repo: string & Returns last commit hash\\ % TODO TAVO vaata see ule ja kas on midagi lisada
+        GET /commits/hash & provider: string, user: string, repo: string & Returns last commit hash, timestamp and tracked commit hashes\\
         \hline
     \end{tabular}
     \caption{Gtm-api endpoints for sync client.}
@@ -195,10 +191,10 @@ An authorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoin
         \hline
         GET /\{group\_name\}/activity & start: int, end: int, interval: string, timezone: string & Returns activity for group. \\
         \hline
-        GET /\{group\_name\}/subdirs-timeline & start: int, end: int, interval: string, timezone: string & Returns sub-directory timeline for group. \\
+        GET /\{group\_name\}/subdirs-timeline & start: int, end: int, interval: string, timezone: string, depth: int & Returns sub-directory timeline for group. \\
         \hline
         GET /\{group\_name\}/timeline & start: int, end: int, interval: string, timezone: string & Returns timeline for group. \\
-        \hline
+        \hline  % TODO: Group stats endpoint
     \end{tabular}
     \caption{Gtm-api secured public endpoints}
     \label{tab:gtm-api-endpoints-secured}
@@ -355,8 +351,8 @@ On success user will be redirected to frontend and user can access new repositor
 OAuth linking flow is described on Figure
 \ref{fig:account-linking}.
 
-\begin{figure}[h]
-    \includegraphics[width=\textwidth]{figures/account_linking.png}
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/account_linking}
     \caption{OAuth linking with user}
     \label{fig:account-linking}
 \end{figure}
@@ -370,17 +366,16 @@ Once you have already added a password, it's not possible to remove it to avoid 
 \subsubsection{Repositories}\label{subsubsec:repositories}
 Under repositories tab user can see all their repositories.
 User can start tracking new repository by clicking start tracking and then adding webhook to according OAuth platform.
-if start tracking is clicked and everything is successful, a blue info box with instructions for webhook will pop up.
+If start tracking is clicked and everything is successful, a blue info box with instructions for webhook will pop up.
 In case user wants to start tracking again then the repository can be found at the end of the list with button initialize again.
 Tracking can also be stopped by clicking on the red button with trash can.
-% TODO Tavo vaata ule
+% TODO lisasse screenshot
 
 \subsubsection{Delete account}\label{subsubsec:delete-account}
 Account deletion is under delete account tab.
 To keep away accidental account deletion user has to write their name to the input box and then can submit.
 If account is deleted, user is redirected to the login page.
 % TODO: Mis siis kui viimase OAuthi unlinkid? ka delete? tegelt vist oleks warning vms parem aga idk
-
 
 \subsection{Data visualization}\label{subsec:data-visualization}
 Data visualization is divided into three pages - dashboard, leaderboard and comparison.
@@ -391,23 +386,23 @@ Dashboard is the main landing page if user is logged in.
 Dashboard contains three graphs and inputs.
 From inputs user can change group, time period and interval.
 User can choose between all the groups he/she has access to.
-Time period has start and end which cannot be apart more than a year.
+Time period has start and end which cannot be apart more than a year for performance reasons.
 Intervals are days, weeks and months.
 
 First graph is a combination of line and bar charts which describes time spent in time and also shows how many users were active at the interval.
-X axis shows the period of time and y axis on shows the time spent during the period.
-Y axis also shows active users count during the period.
+X-axis shows the period of time and Y-axis on shows the time spent during the period.
+Y-axis also shows active users count during the period.
 Line shows time spent and bar shows users count.
 
 Second graph is line chart which describes activity hours during the chosen period.
 According to the interval it shows daily activity, weekly activity or monthly activity.
-X axis shows interval and y axis shows average time spent during this time.
-If interval is day then x axis describes each hour, in case of week, x axis describes each week day, etc.
-Y axis also shows lines added and removed from code.
+X-axis shows interval and Y-axis shows average time spent during this time.
+If interval is day then X-axis describes each hour, in case of week, X-axis describes each week day, etc.
+Y-axis also shows lines added and removed from code.
 This graph brings out the timeframe when users are actively programming.
 
 Third graph is bar chart which describes time spent in folders or files.
-X axis shows the period of time and y axis shows the time spent during the period.
+X-axis shows the period of time and Y-axis shows the time spent during the period.
 Bars are stacked on each other and each bar describes one folder or file.
 This graph brings out on which tasks people spend most of their time on and is very useful for lecturers who want to see which homeoworks take more time.
 
@@ -423,6 +418,7 @@ By clicking on the column header the sequence will change accordingly.
 Second table shows info about file system.
 Data is divided into 8 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour, lines per commit and users.
 Sequence can also be changed by clicking on the column header.
+This table can be useful for comparing different tasks in university as they are usually placed in separate folders.
 
 At the end of the page there is export data button which downloads csv file with data.
 
@@ -431,5 +427,5 @@ Comparison page has four inputs and one graph.
 Inputs again are group selection, date selection and interval selection.
 Multiple groups can be selected to compare them.
 Graph draws out lines charts depending on amount of groups selected.
-X axis shows the period of time and y axis shows time spent.
+X-axis shows the period of time and Y-axis shows time spent.
 Each line has different color as it represents different group and makes the graph more understandable.

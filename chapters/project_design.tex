@@ -210,25 +210,26 @@ End users can interact with backend though frontend via REST API requests.
 
 Backend application has been built with Rust programming language using Rocket framework.
 Rust is a relatively new low-level statically-typed programming language that's focused on performance and safety.
-It gives all most the same speed as C++, but guarantees both memory and thread safety.
+It gives all most the same speed as C, but guarantees both memory and thread safety.
+It also follows many more functional patterns than Java/C/C++/Go which makes writing code easier and safer once mastered.
 Since we needed a fast backend with minimal overhead for processing large datasets Rust was the best choice.
-Java, C/C++ and GO were also considered, but the lightweightness of Rust overweight Java whilst memory safety overweight C/C++
-and since Rust was chosen for sync client we decided to choose it for backend as well.
+Java, C/C++ and GO were also considered, but the lightweightness of Rust overweight Java whilst memory safety overweight C/C++.
+Since Rust was chosen for sync client we decided to choose it for backend as well.
 
 \subsection{Backend design}\label{subsec:backend-design}
 Backend code base has been built following Domain Driven Design (DDD).
 DDD is a concept that centers the development and code structure around the business domain.
-It helps to keep the code more organized, maintainable and extendable \cite{domain-driven-design}.
+It helps to keep the code more organized, maintainable and extendable~\cite{domain-driven-design}.
 % TODO: More explanation for DDD, some reference
 
-A layered architecture can be found on Figure\ref{fig:backend-layered-diagram}
+A layered architecture can be found on Figure~\ref{fig:backend-layered-diagram}.
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/backend_layered_diagram}
     \caption{Backend architecture}
     \label{fig:backend-layered-diagram}
 \end{figure}
 
-Folder structure is displayed in Table
+Folder structure is displayed in Table~\ref{tab:gtm-api-folder-structure}.
 \ref{tab:gtm-api-folder-structure}.
 \begin{table}[h]
     \centering
@@ -236,7 +237,7 @@ Folder structure is displayed in Table
         \hline
         Folder & Purpose\\
         \hline
-        doc &  .\\ %TODO TAVO
+        .github & CI/CD related files\\
         \hline
         migrations & Migrations for diesel. \\
         \hline
@@ -258,7 +259,11 @@ Folder structure is displayed in Table
 \subsection{Database design}\label{subsec:database-design}
 One requirement when choosing database was that we needed it to have bindings for our Object-relational mapper (ORM),
 so we could easily use it in our application.
-This requirement narrowed search down to SQLite, MySQL and PostgreSQL.
+This requirement narrowed search down to SQLite, MySQL and PostgreSQL as they were the only languages with full support in Diesel.
+There are other ORM-s written for rust, but Diesel is one of the most popular ones, so we decided to go with it as
+there was no need to use some other database.
+% TODO: S6nastus paremaks
+
 SQLite was ruled out as it is not strongly typed, and it does not have the same amount of features PostgreSQL and MySQL have.
 For choosing between MySQL and PostgreSQL it came down to personal preference as both of them are strongly typed and
 support all the required features, including recursive queries.
@@ -348,6 +353,8 @@ Folder structure is displayed in Table
         \hline
         Folder & Purpose\\
         \hline
+        .github & CI/CD related files\\
+        \hline
         src/api & Service calls .\\
         \hline
         src/assets & Images and icons. \\
@@ -404,3 +411,4 @@ State management does not have a certain winner.
 Choosing a state management library comes down to personal preference.
 We decided to use Easy Peasy which is built on the most popular state management library Redux.
 Easy Peasy was chosen over Redux because Redux has steep learning curve but Easy Peasy is easy to use.
+%TODO: Vb contents alla?
