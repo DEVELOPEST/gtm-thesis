@@ -151,13 +151,60 @@ Similarly to
 It also doesn't have a CLI interface due to similar reasons as web app.
 
 
+\subsection{General time tracking applications}\label{subsec:general-time-tracking-alternatives}
+There are also several more general time tracking applications, some of which are
+\href{https://toggl.com/}{Toggl}, \href{https://www.forestapp.cc/}{Forest}, \href{https://www.rescuetime.com/}{RescueTime} and
+\href{https://clockify.me/}{Clockify}.
+Although they are designed for more general use, it is important to also review their main features to see,
+if any of them can be extended to be suitable for our use case.
+\cite{general-time-tracking-alternatives}
+
+These applications are available for multiple platforms and devices, including phones.
+Most of them have plugins for different applications, including IDE-s in some cases, but they always require some manual
+input for starting tracking.
+Usually the manual input is required to choose the task and rest of the tracking is automatic.
+As these apps are not build for programmers, they lack git related statistics such as lines added and removed.
+The most accurate connection, between time and code written is usually the task/branch name.
+
+In short, these applications solve different problem of measuring work time, rather than the problem of measuring
+code writing statistics.
+
 \subsection{Existing plugin analysis results}\label{subsec:existing-plugin-analysis-results}
+As a result of analysis, a table was draw to visualize differences between existing solutions.
+Toggl was chosen to represent general time tracking applications, as it has the most programming related features
+out of the ones described above.
+Features comparison is visible in Table~\ref{tab:comparison-results}.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ | p{4cm} | p{2.25cm} | p{2.25cm} | p{2.25cm} | p{2.25cm} | }
+        \hline
+         & Wakatime & Git-Time-Metric & Darkyenus-TimeTracker & Toggl\\
+        \hline
+        Supports most common computer operating systems & Yes & Yes & Yes & Yes\\
+        \hline
+        Is fully automatic & Yes & Yes & Yes & No\\
+        \hline
+        Has git integration & Only in paid version & Yes & No & Only with issues\\
+        \hline
+        Supports tracking non programming activities & Yes & No & No & Yes\\
+        \hline
+        Is open source & Partially & Yes & Yes & No\\
+        \hline
+        Can be used locally & No & Yes & Yes & No\\
+        \hline
+    \end{tabular}
+    \caption{Existing solutions features comparison.}
+    \label{tab:comparison-results}
+\end{table}
+
 During the analysis there were two main ideas which way to go:
 \begin{enumerate}
     \item Build a Git statistics support for~\nameref{subsec:wakatime}.
     \item Add some features to~\nameref{subsec:git-time-metric} and rebuild (some of) its plugins.
 \end{enumerate}
 
+Toggl was not viable for us as it is built to solve different kind of problem.
 \nameref{subsec:darkyenus-time-tracker} was ruled out as it lacked features useful for us.
 Non the less, it was decided that we can use it as a base for building JetBrains plugin.
 
