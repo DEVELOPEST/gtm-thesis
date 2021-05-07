@@ -285,7 +285,7 @@ As reverting database changes can result in a loss of data, it has to be done ma
 
 \subsubsection{ERD Schema}\label{subsubsec:erd-schema}
 The database holds data about tracked time, registered users and how the users can access time data.
-The structure if the database schema is described in Figure~\ref{subsubsec:erd-schema}
+The structure if the database schema is described in Figure~\ref{fig:erd-schema}
 
 Time data follows the structure of git commits tree and file tree.
 The \textit{repositories} table contains general information about git repository such as name and the sync client
@@ -329,10 +329,11 @@ Frontend has been build using ReactJS library.
 According to the State of Frontend 2020 report ReactJS is the most used JavaScript framework and also the framework which developers want to learn or keep using the most.
 It is faster than Angular, and it's somewhat functional style was more pealing for us than the style of Vue.
 It was chosen as Marten, who's mostly responsible for frontend development has some experience with it.
+Most popular frontend frameworks by popularity are shown on Figure~\ref{fig:frontend-framework-popularity}.
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{figures/frontend_framework_popularity.png}
-    \caption{Frontend framework popularity \cite{state-of-frontend-report}}
+    \includegraphics[width=\textwidth]{figures/frontend_framework_popularity}
+    \caption{Frontend framework popularity~\cite{state-of-frontend-report}}
     \label{fig:frontend-framework-popularity}
 \end{figure}
 

@@ -422,7 +422,8 @@ OAuth linking flow is described on Figure
 \ref{fig:account-linking}.
 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/oauth_linking_user_flow}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/oauth_linking_user_flow}
     \caption{OAuth linking with user}
     \label{fig:account-linking}
 \end{figure}
@@ -499,3 +500,98 @@ Multiple groups can be selected to compare them.
 Graph draws out lines charts depending on amount of groups selected.
 X-axis shows the period of time and Y-axis shows time spent.
 Each line has different color as it represents different group and makes the graph more understandable.
+
+\subsection{Licencing}\label{subsec:licencing}
+It was decided in the beginning, that all the apps installed on client machine are made open source so that
+our users could inspect the code themselves and see that there are no malicious activities being done.
+
+In the beginning we planned to keep backend and frontend code as closed source.
+Later this plan was changed as we saw that Wakatime open source alternatives have received lots of features and updates
+during development of our app and are real strong competitors.
+If we'd keep our app as close source there is high chance our users will yous turn to these solutions or build their own one.
+
+To find suitable licence(s) for our apps, we chose top 3 most popular open source licences as of beginning of 2021 and decided
+to compare them to find which suits for us the best.
+These three licences were Apache-2.0 Licence, Massachusetts Institute of Technology (MIT) Licence and GNU Lesser General Public License (GPLv3) according to White source.
+As the top three contains both a copy-left and permissive licences, we decided not to include any more licences in the comparison.
+\cite{open-source-licences}
+The results of comparison are show in table~\ref{tab:open-source-licence-comparison}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ | p{4cm} | p{2cm} | p{2cm} | p{2cm} |}
+        \hline
+         & Apache-2.0 & MIT & GPLv3\\
+        \hline
+        Market share & 28\% & 26\% & 10\% \\
+        \hline
+        Allows proprietary use & Yes & Yes & Yes\\
+        \hline
+        Allows source modifications & Yes, must state & Yes & Yes, must state\\
+        \hline
+        Allows sub-licensing & Yes & Yes & No\\
+        \hline
+        Disclose source & No & No & Yes\\
+        \hline
+    \end{tabular}
+    \caption{Comparison of most popular open source licences.}
+    \label{tab:open-source-licence-comparison}
+\end{table}
+
+MIT licence is the most permissive of these three as it only states that it's copyright has to be included, and
+the author provides no warranties.
+MIT is also the shortest, and the simplest in it's wording.
+This makes MIT licence ideal for libraries that are supposed to be included in other applications.
+\cite{mit-licences}
+
+Apache 2.0 licence is similar to MIT as it's also a permissive licence.
+It differs from MIT licence by having more conditions clearly stated.
+Apache 2.0 licence also states that contributors provide an express grant of patent rights, meaning that it gives
+user more protection about patent trolls.
+Apache 2.0 licence also states that changes made to source code have to be stated, but they can be licenced under different terms.
+\cite{apache-2-licences}
+
+GNU General Public License v3.0 on the other hand is one of the strongest copy left licences.
+It states, that if piece of code licenced under GPLv3 is included in building some bigger application,
+then the source code of the whole application must be licenced under GPLv3 making the licence sticky.
+Although the licence states the code has to be publicly available, it does not prohibit commercial use.
+GPLv3 can be used to protect software against making it private.
+\cite{gplv3-licence}
+
+As the GPLv3's statement of making the whole source code public is really strong, we decided to also analyze
+GNU Lesser General Public Licence v3.0 (LGPLv3) which is mostly the same as GPLv3, but is more permissive by
+stating that the source code does not have to be licenced under LGPLv3 if the original code is not modified and only used as a library.
+\cite{lgplv3-licence}
+
+\subsubsection{Licencing IDE plugins}\label{subsubsec:licencing-ide-plugins}
+It was decided to licence our IDE plugins under MIT licence.
+Our IDE plugins are relatively small and lack business logic in them.
+They are only required to integrate GTM into IDE-s and we would greatly benefit, if someone would make better alternatives
+as this would attract more users into using GTM.
+Also, most of, if not all the original Git-Time-Metric plugins are licenced under MIT licence and all Wakatime plugins are
+licenced under similarly permissive licences.
+
+\subsubsection{Licencing gtm-core}\label{subsubsec:licencing-gtm-core}
+It was decided that similarly to IDE plugins, gtm-core is licenced under MIT licence.
+The biggest reason for it was that the original Git-Time-Metric app is licenced under MIT licence, and we have not made any huge changes.
+If we licenced our app under more restrictive licence, users could easily turn to original Git-Time-Metric app and develop it instead.
+As we have the same licence as the original Git-Time-Metric app, there is possibility that if there will be more work put into the
+original app than ours, we can merge our changes into the original app without having to change licencing.
+
+\subsubsection{Licencing gtm-sync}\label{subsubsec:licencing-gtm-sync}
+For gtm-sync it was decided to licence it under LGPLv3.
+As gtm-sync is pretty much a requirement to get data from Git notes to our back end, we want to make sure it,
+and it's potential successors stay publicly available.
+We would like someone to base his closed source (and potentially non-free) application on gtm-sync.
+However, we do want to allow others to use gtm-sync as a library without requiring them to open source their project.
+If we allow users to use it as a library more freely, we also increase the chance to have other users contribute towards gtm-sync
+rather than their closed source fork or alternative.
+
+\subsubsection{Licencing gtm-api and gtm-front}\label{subsubsec:licencing-gtm-api-and-gtm-front}
+We decided to licence gtm-api and gtm-front under same licence as they are more closely tied together than other parts of application.
+For the licence we chose GNU Lesser General Public Licence v3.0. % TODO: Vb GPLv3
+We strongly want these applications to stay open source also in the future so copy-left was logical choice.
+Although both of them are applications, not libraries we chose tho use LGPLv3 instead of GPLv3, as technically some parts
+could be also used as libraries and that's fine with us.
+
+If someone wishes to use it without open sourcing his code there's always option to ask us as dual licencing is also possibility.
+Then we can decide whether to allow it or not, but generally we want the code to stay open source.
