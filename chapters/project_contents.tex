@@ -160,10 +160,78 @@ This extra check also means you cannot add tracking to self-hosted git servers t
 However, we could not find any better way to identify that the given user has access to some git repository and
 therefore it was decided to not support any custom setups.
 
+\section{Sync client}\label{sec:sync-client-content}
+Sync client is used to fetch data from git notes and then sync it up to our backend.
+To interact with sync client, you either need to edit local config file or send REST API requests to its endpoints.
+
+Manually editing configuration is meant for human as it gives more control over application and REST API is
+for machine to machine communication.
+All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ | p{6cm} | p{6cm} |}
+        \hline
+        Endpoint & Description\\
+        \hline
+        GET /repositories/<provider>/<user>/<repo> & Used to get data about single repository \\
+        \hline
+        POST /repositories & Used to start tracking repository\\
+        \hline
+        GET /repositories/sync-all & Used to sync all tracked repositories to backend\\
+        \hline
+        GET/POST /repositories/<provider>/<user>/<repo>/sync & Sync single repository.
+        Post is allowed as webhooks sometimes only support post requests\\
+        \hline
+        POST /hooks/github/push & Endpoint for github hook to sync repository\\
+        \hline
+        POST /hooks/gitlab/push & Endpoint for gitlab hook to sync repository\\
+        \hline
+    \end{tabular}
+    \caption{Gtm-sync API endpoints.}
+    \label{tab:gtm-sync-endpoints}
+\end{table}
+
+For configuration \textit{config.toml} file is used.
+It contains information about backend, where to sync data, git user authorization (ssh keys) and about tracked repositories.
+Although gtm-sync supports cloning with both Secure Shell Protocol (SSH) and HTTPS, we have limited it to HTTPS in our backend for simplicity.
+In order for ssh keys to work, we have created a user called \textit{gtm-user} to TalTech gitlab server and added SSH key to him.
+This means \textit{gtm-user} has to have at minimal reporter access to project in order to track it.
+For GitHub and GitLab we only support tracking public repositories for now and for the SSH cloning to work, the SSH key was added to
+Tavo Annus'es personal account.
+The configuration variables are described in Table~\ref{tab:gtm-sync-config}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ | p{6cm} | p{6cm} |}
+        \hline
+        Variable & Description\\
+        \hline
+        target\_base\_url & Backend url, used for syncing data \\
+        \hline
+        sync\_base\_url &  Public url to self (Optional), used to force sync\\
+        \hline
+        access\_token & Backend API key\\
+        \hline
+        ssh\_public\_key & Path to git user public ssh key\\
+        \hline
+        ssh\_private\_key & Path to git user private ssh key\\
+        \hline
+        repositories\_base\_path & Path to store cloned repositories at\\
+        \hline
+        repositories & List of tracked repositories (each has path in filesystem and clone url)\\
+        \hline
+    \end{tabular}
+    \caption{Gtm-sync config variables.}
+    \label{tab:gtm-sync-config}
+\end{table}
+
 \section{Backend}\label{sec:backend-content}
+Backend is the central part of our system as it connects frontend, sync client and database.
+It communicates with gtm-sync and gtm-front via REST API requests.
 
 Sync client which has api key registered has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-for-sync}.
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{ | p{4cm} | p{4cm} | p{4cm} |}
         \hline
@@ -181,7 +249,7 @@ Sync client which has api key registered has access to the endpoints in Table~\r
 \end{table}
 
 An authorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-secured}.
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{ | p{4cm} | p{4cm} | p{4cm} |}
         \hline
@@ -194,14 +262,16 @@ An authorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoin
         GET /\{group\_name\}/subdirs-timeline & start: int, end: int, interval: string, timezone: string, depth: int & Returns sub-directory timeline for group. \\
         \hline
         GET /\{group\_name\}/timeline & start: int, end: int, interval: string, timezone: string & Returns timeline for group. \\
-        \hline  % TODO: Group stats endpoint
+        \hline
+        GET /groups/\{group\_name\}/stats & start: int, end: int, depth: int & Used to get group stats for leaderboard view.\\
+        \hline
     \end{tabular}
     \caption{Gtm-api secured public endpoints}
     \label{tab:gtm-api-endpoints-secured}
 \end{table}
 
 Unauthorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-public}.
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{ | p{4cm} | p{4cm} | p{4cm} |}
         \hline
@@ -337,7 +407,7 @@ Login and register user flows are described on Figure
 \ref{fig:login-signup-diagram}.
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{figures/login_signup_diagram}
+    \includegraphics[width=\textwidth]{figures/login_signup_user_flow}
     \caption{Log in and sign up flows}
     \label{fig:login-signup-diagram}
 \end{figure}
@@ -352,7 +422,7 @@ OAuth linking flow is described on Figure
 \ref{fig:account-linking}.
 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/account_linking}
+    \includegraphics[width=\textwidth]{figures/oauth_linking_user_flow}
     \caption{OAuth linking with user}
     \label{fig:account-linking}
 \end{figure}
