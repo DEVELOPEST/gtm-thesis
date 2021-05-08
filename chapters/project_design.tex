@@ -1,4 +1,4 @@
-We decided to have time tracking data stored in Git Notes for every repo so that it can be tightly tied to code.
+We decided to base our application on~\nameref{subsec:git-time-metric} and have time tracking data stored in Git Notes for every repo so that it can be tightly tied to code.
 This gives us opportunity to have more complete overview when and on what issue / branch the time was spent.
 It also gives access to a features such as git diff that can be used for measuring writing speed.
 Furthermore, it lifts a job from our shoulders by handling complex cases such as rebase and merge for us.
@@ -8,12 +8,10 @@ They can also be externally edited, and they might cause issues with git usage i
 Nonetheless, we decided to go this way as the space used by git notes is fractional compared to file sizes, and our app is a tool for the developer,
 so we don't see any urgent need to protect it from him.
 
-Later it was brought out in gitlab time tracking issue discussion, that storing time data in git notes is a very clean approach.
+Later it was brought out in Gitlab time tracking issue discussion, that they consider storing time data in git notes
+to be a very clean approach compared to storing it in commit messages.
 However, they have not yet decided to implement it themselves as it requires major changes in their current business logic.
 \cite{gitlab-time-issue}
-
-We also found open source Command Line Interface (CLI) app made for local time-tracking with Git, so we decided to base our app on the already existing code and add more functionality.
-There is always an option to switch to external database for storing this kind of data but there is no reason to so at the moment.
 
 Partly enforced by the usage of git, the general design is shown on Figure
 \ref{fig:project-archidecture}.
@@ -27,11 +25,12 @@ Partly enforced by the usage of git, the general design is shown on Figure
 The general time-tracking application can be divided into three different kind of smaller applications:
 \begin{enumerate}
     \item \textbf{Applications that are responsible for data collecting.} These applications are CLI app and IDE plugins and are installed on developers machine.
-    \item \textbf{Applications that are responsible for syncing data.} This role is filled by a Sync client, and these applications are installed onto companies servers where they can access git internal network.
-    \item \textbf{Applications that are responsible for analyzing and displaying data.} These are Frontend and Backend app that can be installed on any public server.
+    \item \textbf{Applications that are responsible for syncing data.} This role is filled by a Sync client.
+    These applications can be installed onto companies/universities servers where they can access git internal network if needed.
+    \item \textbf{Applications that are responsible for analyzing and displaying data.} These are Frontend and Backend app that are installed on any server.
 \end{enumerate}
 
-The reasoning behind this architecture is scalability and security.
+The reasoning behind this architecture is security and scalability.
 For every Backend there can be multiple Sync clients all installed on different machines and with different Git access rights.
 For every Sync client there can be multiple Client apps all logging time independent of one another.
 And in the end, there can be multiple IDE plugins interacting with CLI app.
@@ -40,10 +39,10 @@ For security, it is very important to ensure, that no sensitive information is l
 To deal with this issue many companies have their Git available only in an internal network.
 Not to rise any more security concerns we decided to follow the same principle and not export any git code outside internal network.
 That is the reason, why Sync client is needed as it has access to internal network, but only uploads time-tracking related information to our Backend.
-Therefore, actual code never leaves an internal network.
+Therefore, actual code never leaves internal network.
 
 All the applications that are installed on either client machine or client server are open source so that the client can easily verify,
-they only do what they are meant to do.
+they only do what they are meant to do and perform no malicious activities.
 
 To properly manage numerous apps in different programming languages we decided to have each app source code in separate git repository.
 This reduces the amount of merge conflicts and also makes building CI/CD easier.
@@ -109,17 +108,18 @@ Gtm-core folder structure is displayed in Table
 \end{table}
 
 Although the app was already working we still needed to do many bug fixes and add some features it didn't have.
-The biggest change in design was that we removed copied in dependencies to git submodules.
-Although this seems like a small step it turned out to be very complex to build go linked with C library dynamically.
-As we didn't manage to get on dependency to properly work in Windows environments we decided to leave it separately fetched and built in ci/cd workflow file.
+The biggest change in design was that we moved copied in dependencies to git submodules.
+Although this seems like a small step, it turned out to be very complex to build Go app linked with C library dynamically.
+As we didn't manage to get all git submodules dependencies to properly work in Windows environments
+we decided to leave it separately fetched and built in ci/cd workflow file.
 Nonetheless, all "snapshot" dependencies were removed.
 We also added stress tests to verify effect of using gtm-core with large amounts of commits.
 
 \section{IDE plugins}\label{sec:ide-plugins}
-IDE plugins installed on developer IDE, and they execute CLI app commands on specific editor events.
+IDE plugins are installed on developer IDE, and they execute CLI app commands on specific editor events.
 Plugins are needed to listen for editor events such as typing without having to give CLI app extensive permissions to run in background.
 They also provide a simple way to display some information in IDE.
-For example time since last commit is show to user inside IDE.
+For example time since last commit is shown to user inside IDE.
 
 Currently, we only have one plugin that is compatible with all Jetbrains IDE's.
 The gtm-jetbrains plugin is written in Kotlin and uploaded to Jetbrains plugin repository so that you can easily install it in your Jetbrains IDE.
@@ -158,18 +158,18 @@ Namespace \textit{ee.developest.gtm} is shortened to \textit{<ns>} for readabili
 
 \section{Sync client}\label{sec:sync-client}
 Sync client is run on a network, where it can access git repositories.
-On git push, hook sends request to gtm-sync via HTTP request.
+On git push, git webhook sends request to gtm-sync via HTTP request.
 Then gtm-sync fetches git repository with its time data, extracts required data and syncs it up to Backend.
 
 The gtm-sync application was written in Rust as it had more up to date library for libgit2 than both Java and Go, required for interacting with git.
 Although we did not have prior experience with Rust we preferred it to C/C++ as it is memory safe and it has higher level libraries that can be
 used for building a web server and API client.
-Python and NodeJS were ruled out because they produce very big memory footprint compared to Rust, and they also run a lot slower.
+Python and NodeJS that also provide convenient higher level functions were ruled out because they produce very
+big memory footprint compared to Rust, and they also run a lot slower.
 Neither of them also gives a type safety that was a must for us.
 
 For the code design, we followed domain based architecture.
-Folder structure for gtm-sync is displayed in Table
-\ref{tab:gtm-sync-folder-structure}.
+Folder structure for gtm-sync is displayed in Table~\ref{tab:gtm-sync-folder-structure}.
 
 \begin{table}[h]
     \centering
@@ -200,7 +200,6 @@ Folder structure for gtm-sync is displayed in Table
 Backend is a collection of code which runs on the server.
 It receives requests from clients and sends appropriate data back to the clients based on the business logic.
 Backend also has a database which stores all the necessary data for the application.
-As a database system PostgresSQL was chosen as it is capable of reading and writing large amounts of data efficiently, and we already have considerable amount of experience with it.
 
 In our case backend receives data from sync client via REST API requests and stores the data in the database.
 End users can interact with backend though frontend via REST API requests.
@@ -228,7 +227,6 @@ A layered architecture can be found on Figure~\ref{fig:backend-layered-diagram}.
 \end{figure}
 
 Folder structure is displayed in Table~\ref{tab:gtm-api-folder-structure}.
-\ref{tab:gtm-api-folder-structure}.
 \begin{table}[h]
     \centering
     \begin{tabular}{ | p{3cm} | p{10cm} |}
@@ -297,7 +295,7 @@ the time spent editing files is spent just before commit timestamp.
 For this we have a table called \textit{timeline} which olds timestamps and durations of every consecutive edits as
 well as reference to file in which the time was spent.
 
-The user and roles table are responsible for persisting user login credentials, roles and connected OAuth accounts.
+The \textit{users} and \textit{roles} table are responsible for persisting user login credentials, roles and connected OAuth accounts.
 As we allow user to optionally register only via OAuth the password field is nullable.
 Users that have no password can only log in via OAuth, but they can also add password at any time.
 
@@ -321,12 +319,12 @@ User emails retrieved from OAuth providers are stored in \textit{emails} table t
 \section{Frontend}\label{sec:frontend}
 Frontend is a software program or website which the user interacts with.
 In our case frontend is a website where user can see time tracking data according to the privileges.
-Although technically also CLI app can be considered frontend when we refer to frontend we only mean website.
+Although technically also CLI app can be considered frontend when we refer to frontend we only mean the website.
 
 Frontend has been build using ReactJS library.
 According to the State of Frontend 2020 report ReactJS is the most used JavaScript framework and also the framework which developers want to learn or keep using the most.
 It is faster than Angular, and it's somewhat functional style was more pealing for us than the style of Vue.
-It was chosen as Marten, who's mostly responsible for frontend development has some experience with it.
+It was chosen by Marten, who's mostly responsible for frontend development has some experience with it.
 Most popular frontend frameworks by popularity are shown on Figure~\ref{fig:frontend-framework-popularity}.
 
 \begin{figure}[h]
@@ -397,12 +395,12 @@ It is much more customizable than CoreUI charts as it allows combining different
 
 At this point the design problem arose again.
 Designing graphs were done in the following manner:
-\begin{itemize}
+\begin{enumerate}
     \item Understand the functionality and create an initial component.
     \item Let it settle for some time and then discuss with team.
     \item Finalize component and release it for test users.
     \item Make final changes according to the users' feedback.
-\end{itemize}
+\end{enumerate}
 Design patterns such as graph sizes, colors, spacings, fonts etc. were chosen in such a way that it would look similar to CoreUI graphs.
 
 \subsection{State management}\label{subsec:state-management}
