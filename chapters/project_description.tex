@@ -1,4 +1,4 @@
-Prior to the actual development, the general project framework was sey up:
+Prior to the actual development, the general project framework was set up:
 \begin{itemize}
     \item The roles and responsibilities were split.
     \item The rules and agreements on developing methodology were made.
@@ -13,7 +13,7 @@ frontend on the later half of the project.
 For the project management, GitHub was chosen as it is more common for users to browse project on GitHub rather than Gitlab.
 Universities personal Gitlab server was ruled out as it does not allow non-university students to easily access open source parts of our application.
 
-As a communication channel, Discord was used for both text and sound/video communication.
+For communication channel, Discord was used for both text and sound/video communication.
 The main reason was that we were both used to using Discord, it is free, and it allows reasonably well formatted code pastes / pinning.
 
 Meetings with TalTech mentor were organized weekly on Teams to have continuous feedback on project.
@@ -42,12 +42,12 @@ For universities the needs for time tracking are:
 
 Possibility to have an overview of a group of students is needed to get feedback on subjects.
 The only sensible way to have an overview of a volume of study in subject is to measure it on multiple students.
-This leads us to a next requirement, that it shall not be easy for students to distort their time data.
+This also leads us to a requirement, that it shall not be easy for students to distort their time data.
 Students commonly like to magnify their effort put into subjects and if it is easy to do, we have no idea if the data is distorted or not.
 As there is a big number of students in some subjects and students have multiple subjects to attend it has to be easy to install the app.
 There simply is no time to waste on helping all the students with more complex manual installation.
 As universities have no right to enforce usage of some operating system, the app also has to work on all commonly used platforms.
-Lastly it has to be clear for students, what is the application doing.
+Lastly it has to be clear for students, what the application is doing.
 Otherwise, they may be afraid of invasion of privacy and not install the application.
 
 \subsection{Time tracking for companies}\label{subsec:time-tracking-for-companies}
@@ -97,7 +97,7 @@ this kind of application could be built.
 \subsection{Wakatime}\label{subsec:wakatime}
 \href{https://wakatime.com/about}{Wakatime} is one of most popular applications used for tracking your work.
 It supports variety of Integrated Development Environments (IDEs) including JetBrains IDEs required by TalTech.
-It has both it's IDE plugins and Command Line Interface (CLI) app licenced under BSD-3 licence.
+It has both it's IDE plugins and Command Line Interface (CLI) app licenced under Berkeley Software Distribution 3 Clause Licence (BSD-3).
 It also has a public API that allows fetching time data from their servers.
 The downside of using Wakatime is that it costs to see data older than 2 weeks and as it only temporarily
 stores data on client machine, there is no easy way to access data without modifying already existent CLI app.
@@ -109,7 +109,7 @@ As a result there is not much data stored locally meaning that the backend has t
 once users start rewriting history, especially given that Git is a distributed version control system.
 In the end of 2020 Wakatime also launched its git integration that allows to see time spent per commit, but for previously
 described reasons it gets confused after history rewrites and maps it based on timestamp.
-This means that stashed time is added to wrong commit.
+This means that for example stashed time is added to wrong commit.
 Wakatime git integration also does not support statistics such a lines added and deleted.
 
 Although Wakatime's front and backend are private there are some open source alternatives.
@@ -131,23 +131,24 @@ This allows it to access more Git data such as lines added and lines removed for
 Git-Time-Metric does not have a web interface (there are some half done projects meant to run only locally).
 On the other hand, it has a very powerful and pretty CLI also capable of displaying data in a human-readable format.
 
-One of the biggest downsides of Git-Time-Metric is that its active development has stopped in August 2019 and also it's plugins haven't received many updates.
+One of the biggest downsides of Git-Time-Metric is that its active development has stopped in August 2019 and also
+it's plugins haven't received any updates since then.
 Since JetBrains IDEs have changed a lot since that time it doesn't work on newest IDE versions making it tricky to use.
 
 The biggest design difference between~\nameref{subsec:wakatime} and Git-Time-Metric is that Git-Time-Metric stores all it's data locally.
-This makes the Git repository own it's time tracking data and not to worry about external companies policies.
+This makes the Git repository own it's time tracking data and user not to worry about external companies policies.
 The CLI app is free and as long as there is a free Git server, you don't have to pay for anyone to persist you time data.
 
 
 \subsection{DarkyenusTimeTracker}\label{subsec:darkyenus-time-tracker}
 \href{https://github.com/Darkyenus/DarkyenusTimeTracker}{DarkyenusTimeTracker} is also an open source time tracker licenced under The Unlicensed.
 It is only a plugin built for JetBrains IDEs, but it does support automatic recording.
-It only stores time since last commit, but it does support automatic time logging to commit messages meaning that this data can be possibly collected via Jira or some other software.
+It only stores time since last commit, but it does support automatic time logging to commit messages meaning that this data can be possibly collected by Jira or some other software.
 Sadly Gitlab, nor Github currently support parsing time data from git commit messages (Gitlab only support time logging directly under issue).
 The other downside is that it only logs the total amount of time spent, no per file statistics.
 
 Similarly to
-\ref{subsec:git-time-metric}, it does not have a web interface, and it would be very hard to make one as the time date is not clearly separated from Git commit messages.
+\nameref{subsec:git-time-metric}, it does not have a web interface, and it would be very hard to make one as the time date is not clearly separated from Git commit messages.
 It also doesn't have a CLI interface due to similar reasons as web app.
 
 
@@ -210,17 +211,17 @@ Non the less, it was decided that we can use it as a base for building JetBrains
 
 \nameref{subsec:wakatime} seems to be the best choice for targeting only companies.
 It is already built for companies to use and it has been tested a lot.
-It's also more delicate that~\nameref{subsec:git-time-metric} when handling source code as it supports obfuscating file names and paths.
+It's also more delicate than~\nameref{subsec:git-time-metric} when handling source code as it supports obfuscating file names and paths.
 
 On the other hand, building a Git statistics support for~\nameref{subsec:wakatime} also requires us to build our own backend
-for all the data or pay to access~\nameref{subsec:wakatime} API.
+for all the data or pay to access~\nameref{subsec:wakatime} API. % TODO: See oli nii 2020 sugisel, kas peaks mainima et nuud on alternatiivid paremad?
 Either way an external database is needed to store all its Git related statistics.
 Whilst it has great benefits, it is very hard to implement as it would require adding extra features to all most all it's plugins.
 As Git history rewrites may cause conflicts it also needs either a complex system to solve these conflicts or just ignore history overwrites.
 The second option would mean that whilst the time data saved would very closely reflect developer work in the short term it might get
 confusing in the long run.
 As a result of numerous rebases and squashes in different branches it becomes difficult to understand where the time data belongs.
-The question arises: Why would we want to have time data attached to manny commits if don't really care about the commits and just squash them?
+The question arises: Why would we want to have time data attached to many commits if we don't really care about the commits and just squash them?
 For us the answer was that we should also squash the time data to only "point" to single squashed commit, but it is too complex to achieve.
 
 When adding Git statistics to~\nameref{subsec:wakatime} it is rather hard to persist its security features such as obfuscating file names.
@@ -231,6 +232,6 @@ Whilst the rewriting of IDE plugins is a lot of work it's still less than buildi
 It is also important to mention thant~\nameref{subsec:git-time-metric} architecture makes it difficult to record indirectly programming related tasks time
 such as searching for help online.
 The reason for it is that it is very inconsistent to tie time spent outside editing Git repository files to certain git repository.
-In this project context we don't seem this as a big problem as we are mainly targeting time spent inside IDE.
+In this project context we don't see this as a big problem as we are mainly targeting time spent inside IDE.
 Trying to record internet browsing data or time spent on other programs may be seen as invasion of privacy,
 and it might greatly reduce the amount of users interested in our app.
