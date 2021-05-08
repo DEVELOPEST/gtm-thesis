@@ -16,13 +16,20 @@ Main benefits of choosing Rust are
 
 Main cons of choosing Rust are
 \begin{itemize}
-    \item Code writing efficiency is lower.
-    \item Less functionality to the application.
-    \item Significant time consumption increase in the process of development.
+    \item Code writing efficiency is lower in learning phase resulting in less functionality being made for application.
+    \item Significantly longer compile times than Java (and also longer than C/C++)
+    \item Less optimal code than what it could be due to being inexperienced in language.
 \end{itemize}
 
-The decision to use Rust turned out to be brilliant.
+In the end the decision to use Rust turned out to be brilliant.
+We had some struggles in the beginning, especially when working with dates and time, but they weren't too hard to overcome.
 We were able to demonstrate the adoption of new technology while getting very good performance for our backend.
+Surprisingly the performance difference between Java and Rust can be noticed by human without specifically measuring in some cases
+as Rust has significantly faster cold start and faster response times.
+For bigger queries this becomes less apparent depending on case, as the most noticeable benefit comes from Rust
+having to do less Heap allocation when responding to request.
+Although we were afraid, that Rust code might be harder to write than Java code, that wasn't the case.
+% TODO: Kas peaks siin ütleba et soovitame ka teistel õppida või see teemaväline?
 
 \section{Changed technologies}\label{sec:changed-technologies}
 Only change we made in the technologies was going from JavaScript to TypeScript in frontend.
@@ -33,7 +40,7 @@ We started to analyze the perks and cons of TypeScript (superset of JavaScript) 
 
 Main benefits of TypeScript are
 \begin{itemize}
-    \item It is strongly typed (helps with code readability).
+    \item It is strongly typed (helps with code readability and IDE support).
     \item Very similar to JavaScript.
     \item Both of us have previous experience with it.
     \item All the JavaScript libraries, and other JavaScript code works without any changes.

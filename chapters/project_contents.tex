@@ -82,7 +82,7 @@ To initialize time tracking from Jetbrains IDE the user needs to open/reload pro
 Upon doing that he is prompted to choose whether to start tracking or not.
 To initialize tracking, start tracking has to be chosen.
 This initializes tracking for currently open repository with default settings (equal to no argument for CLI).
-If the user chooses not to initialize tracking, his choice is persisted in local project file within \textit{.idea} directory.
+If the user chooses not to initialize tracking, his choice is persisted in local jetbrains project config file within \textit{.idea} directory.
 To later add tracking to repository, he needs to do it from command line or by deleting project settings file.
 
 
@@ -170,7 +170,7 @@ All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{ | p{6cm} | p{6cm} |}
+    \begin{tabular}{ | p{8cm} | p{6cm} |}
         \hline
         Endpoint & Description\\
         \hline
@@ -195,7 +195,7 @@ All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
 For configuration \textit{config.toml} file is used.
 It contains information about backend, where to sync data, git user authorization (ssh keys) and about tracked repositories.
 Although gtm-sync supports cloning with both Secure Shell Protocol (SSH) and HTTPS, we have limited it to HTTPS in our backend for simplicity.
-In order for ssh keys to work, we have created a user called \textit{gtm-user} to TalTech gitlab server and added SSH key to him.
+In order for SSH keys to work, we have created a user called \textit{gtm-user} to TalTech gitlab server and added SSH key to him.
 This means \textit{gtm-user} has to have at minimal reporter access to project in order to track it.
 For GitHub and GitLab we only support tracking public repositories for now and for the SSH cloning to work, the SSH key was added to
 Tavo Annus'es personal account.
@@ -233,7 +233,7 @@ It communicates with gtm-sync and gtm-front via REST API requests.
 Sync client which has api key registered has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-for-sync}.
 \begin{table}[H]
     \centering
-    \begin{tabular}{ | p{4cm} | p{4cm} | p{4cm} |}
+    \begin{tabular}{ | p{5cm} | p{4cm} | p{5cm} |}
         \hline
         Endpoint & Parameters & Description\\
         \hline
@@ -251,7 +251,7 @@ Sync client which has api key registered has access to the endpoints in Table~\r
 An authorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-secured}.
 \begin{table}[H]
     \centering
-    \begin{tabular}{ | p{4cm} | p{4cm} | p{4cm} |}
+    \begin{tabular}{ | p{5cm} | p{4cm} | p{5cm} |}
         \hline
         Endpoint & Parameters & Description\\
         \hline
@@ -273,7 +273,7 @@ An authorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoin
 Unauthorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-public}.
 \begin{table}[H]
     \centering
-    \begin{tabular}{ | p{4cm} | p{4cm} | p{4cm} |}
+    \begin{tabular}{ | p{5cm} | p{4cm} | p{5cm} |}
         \hline
         Endpoint & Parameters & Description\\
         \hline
@@ -342,7 +342,7 @@ comparing repositories group id against previously fetched ids.
 To fetch group with all of its subgroups a recursive Structured Query Language (SQL) query was needed as the groups'
 hierarchy formulates a tree like structure.
 Our database provider PostgreSQL supports recursive queries so there were no technical problems with implementing it on SQL database.
-A simplified version of our group system database tables can be seen of Figure~\ref{fig:group-system}
+A simplified version of our group system database tables can be seen of Figure~\ref{fig:group-system}.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/group_system}
@@ -395,16 +395,15 @@ In those tabs users can see their/others data as graphs and tables.
 
 \subsection{Authentication and authorization}\label{subsec:authentication-and-authorization}
 Authentication and authorization is implemented using bearer token system.
-User gets JSON Web Token from api and stores it to the localstorage and adds to every request header.
+User gets JSON Web Token (JWT) from api and stores it to the localstorage and adds to every request header.
 User has to log in from log in page.
-On success client receives JSON Web Token from backend and client stores it in localstorage.
+On success client receives JWT from backend and client stores it in localstorage.
 Then user is automatically redirected to main page.
 Users can log in with OAuth or username/password.
 In case of OAuth user is redirected to according OAuth platform for authentication.
-When successful, user is redirected to frontend with JSON Web Token (JWT).
-JSON web token is saved on localstorage and user is redirected to main page where he/she can access their data.
-Login and register user flows are described on Figure
-\ref{fig:login-signup-diagram}.
+When successful, user is redirected to frontend with JWT.
+JWT is saved on localstorage and user is redirected to main page where he/she can access their data.
+Login and register user flows are described on Figure~\ref{fig:login-signup-diagram}.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/login_signup_user_flow}
@@ -508,9 +507,9 @@ our users could inspect the code themselves and see that there are no malicious 
 In the beginning we planned to keep backend and frontend code as closed source.
 Later this plan was changed as we saw that Wakatime open source alternatives have received lots of features and updates
 during development of our app and are real strong competitors.
-If we'd keep our app as close source there is high chance our users will yous turn to these solutions or build their own one.
+If we'd keep our app as close source there is high chance our users will turn to these solutions or build their own one.
 
-To find suitable licence(s) for our apps, we chose top 3 most popular open source licences as of beginning of 2021 and decided
+To find suitable licence(s) for our apps, we took top 3 most popular open source licences as of beginning of 2021 and decided
 to compare them to find which suits for us the best.
 These three licences were Apache-2.0 Licence, Massachusetts Institute of Technology (MIT) Licence and GNU Lesser General Public License (GPLv3) according to White source.
 As the top three contains both a copy-left and permissive licences, we decided not to include any more licences in the comparison.
@@ -540,7 +539,8 @@ The results of comparison are show in table~\ref{tab:open-source-licence-compari
 MIT licence is the most permissive of these three as it only states that it's copyright has to be included, and
 the author provides no warranties.
 MIT is also the shortest, and the simplest in it's wording.
-This makes MIT licence ideal for libraries that are supposed to be included in other applications.
+This makes MIT licence ideal for libraries that are supposed to be included in other applications but may cause
+so ambiguity in more complex cases.
 \cite{mit-licences}
 
 Apache 2.0 licence is similar to MIT as it's also a permissive licence.
@@ -557,7 +557,7 @@ Although the licence states the code has to be publicly available, it does not p
 GPLv3 can be used to protect software against making it private.
 \cite{gplv3-licence}
 
-As the GPLv3's statement of making the whole source code public is really strong, we decided to also analyze
+As the GPLv3's statement of making the whole source code public is really strong, we decided to also consider
 GNU Lesser General Public Licence v3.0 (LGPLv3) which is mostly the same as GPLv3, but is more permissive by
 stating that the source code does not have to be licenced under LGPLv3 if the original code is not modified and only used as a library.
 \cite{lgplv3-licence}
