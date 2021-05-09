@@ -579,6 +579,7 @@ original app than ours, we can merge our changes into the original app without h
 
 \subsubsection{Licencing gtm-sync}\label{subsubsec:licencing-gtm-sync}
 For gtm-sync it was decided to licence it under LGPLv3.
+As all the dependencies are licenced under MIT licence (many also dual licenced under Apache 2 Licence), they are LGPLv3 compatible.
 As gtm-sync is pretty much a requirement to get data from Git notes to our back end, we want to make sure it,
 and it's potential successors stay publicly available.
 We would like someone to base his closed source (and potentially non-free) application on gtm-sync.
@@ -588,6 +589,8 @@ rather than their closed source fork or alternative.
 
 \subsubsection{Licencing gtm-api and gtm-front}\label{subsubsec:licencing-gtm-api-and-gtm-front}
 We decided to licence gtm-api and gtm-front under same licence as they are more closely tied together than other parts of application.
+Similarly to gtm-sync all the dependencies are licenced under MIT licence (many also dual licenced under Apache 2 Licence), they are LGPLv3 compatible.
+% TODO: Check front end licences
 For the licence we chose GNU Lesser General Public Licence v3.0. % TODO: Vb GPLv3
 We strongly want these applications to stay open source also in the future so copy-left was logical choice.
 Although both of them are applications, not libraries we chose tho use LGPLv3 instead of GPLv3, as technically some parts
