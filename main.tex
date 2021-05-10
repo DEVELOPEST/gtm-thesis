@@ -18,7 +18,8 @@
 %
 % These commands need to be defined in order to produce a correct and personalized document
 %
-\newcommand{\doctitle}{Development of time tracking system for git}
+\newcommand{\doctitle}{Development of Time Tracking and Visualization System for Programming}
+% Programmeerimisele kuluva aja jälgimise ja visualiseerimise süsteemi arendamine
 \newcommand{\docsubtitle}{Bachelor Thesis}
 
 \newcommand{\meone}{Tavo Annus}
@@ -101,11 +102,14 @@ pdfkeywords={\keywords}
     \chapter{Project contents}\label{ch:project-contents}
     \input{chapters/project_contents.tex}
 
+    \chapter{Results and validation}\label{ch:results-and-validation}
+    \input{chapters/results_and_validation.tex}
+
     \chapter{Comments}\label{ch:comments}
     \input{chapters/comments.tex}
 
-    \chapter{Summary}\label{ch:summary}
-    \input{chapters/summary.tex}
+    \chapter{Conclusion and future development}\label{ch:summary}
+    \input{chapters/conclusion_future_development.tex}
 
     \pagebreak
     \phantomsection
@@ -119,9 +123,9 @@ pdfkeywords={\keywords}
     \chapter*{Appendices}
     \renewcommand{\thechapter}{\arabic{chapter}}
 
-    \addcontentsline{toc}{chapter}{Appendix 1 - Something}\label{chapter:appendix-one}
-    {\let\clearpage\relax\chapter*{Appendix 1 - Something}}
-    \input{appendices/appendix-one.tex}
+    \addcontentsline{toc}{chapter}{Appendix 1 - Project links}\label{chapter:appendix-project-links}
+    {\clearpage\relax\chapter*{Appendix 1 - Project links}}
+    \input{appendices/appendix-project-links.tex}
 
     \clearpage
     \phantomsection
