@@ -397,6 +397,7 @@ In those tabs users can see their/others data as graphs and tables.
 Authentication and authorization is implemented using bearer token system.
 User gets JSON Web Token (JWT) from api and stores it to the localstorage and adds to every request header.
 User has to log in from log in page.
+Login page view can be found on Figure~\ref{fig:login}.
 On success client receives JWT from backend and client stores it in localstorage.
 Then user is automatically redirected to main page.
 Users can log in with OAuth or username/password.
@@ -413,7 +414,7 @@ Login and register user flows are described on Figure~\ref{fig:login-signup-diag
 
 \subsection{Profile}\label{subsec:profile}
 \subsubsection{OAuth linking}\label{subsubsec:oauth-linking}
-It is also possible to link multiple OAuth platforms to one account.
+It is also possible to link multiple OAuth platforms to one account (Figure~\ref{fig:link_accounts}).
 In that case user has to log in and head to the profile page where he/she can find link accounts tab.
 If OAuth platform is already linked then backend unlinks it from this account, otherwise user is redirected to OAuth platform for authentication.
 On success user will be redirected to frontend and user can access new repositories that this OAuth platform account has.
@@ -428,21 +429,20 @@ OAuth linking flow is described on Figure
 \end{figure}
 
 \subsubsection{Change password}\label{subsubsec:change-password}
-Users can also change password.
+Users can also change password (Figure~\ref{fig:change_password}).
 In profile view under change password tab user has to fill all the fields correctly and password will be changed.
 If user does not have a password (OAuth registration), only new password fields have to be filled.
 Once you have already added a password, it's not possible to remove it to avoid possibility to have inaccessible accounts.
 
 \subsubsection{Repositories}\label{subsubsec:repositories}
-Under repositories tab user can see all their repositories.
+Under repositories tab user can see all their repositories (Figure~\ref{fig:repositories}).
 User can start tracking new repository by clicking start tracking and then adding webhook to according OAuth platform.
 If start tracking is clicked and everything is successful, a blue info box with instructions for webhook will pop up.
 In case user wants to start tracking again then the repository can be found at the end of the list with button initialize again.
 Tracking can also be stopped by clicking on the red button with trash can.
-% TODO lisasse screenshot
 
 \subsubsection{Delete account}\label{subsubsec:delete-account}
-Account deletion is under delete account tab.
+Account deletion is under delete account tab (Figure~\ref{fig:delete_account}).
 To keep away accidental account deletion user has to write their name to the input box and then can submit.
 If account is deleted, user is redirected to the login page.
 % TODO: Mis siis kui viimase OAuthi unlinkid? ka delete? tegelt vist oleks warning vms parem aga idk
@@ -453,6 +453,7 @@ From sidebar user can navigate to necessary page and on top of the page user has
 
 \subsubsection{Dashboard}\label{subsubsec:dashboard}
 Dashboard is the main landing page if user is logged in.
+Dashboard view can be found on Figure~\ref{fig:dashboard}.
 Dashboard contains three graphs and inputs.
 From inputs user can change group, time period and interval.
 User can choose between all the groups he/she has access to.
@@ -478,6 +479,7 @@ This graph brings out on which tasks people spend most of their time on and is v
 
 \subsubsection{Leaderboard}\label{subsubsec:leaderboard}
 Leaderboard contains four inputs and two tables where users and files/folders can be easily compared.
+Leaderboard view can be found on Figure~\ref{fig:leaderboard}.
 Inputs contain group selection, date selection and depth selection.
 Depth determines how deep will the search go for files and folders.
 
@@ -494,6 +496,7 @@ At the end of the page there is export data button which downloads csv file with
 
 \subsubsection{Comparison}\label{subsubsec:comparison}
 Comparison page has four inputs and one graph.
+Comparison view can be found on Figure~\ref{fig:comparison}.
 Inputs again are group selection, date selection and interval selection.
 Multiple groups can be selected to compare them.
 Graph draws out lines charts depending on amount of groups selected.
