@@ -65,7 +65,7 @@ For companies more security concerns arise.
 It is very important to protect source code, therefore they highly prefer the code to never leave their own hardware/servers.
 As companies have numerous developers working on same project simultaneously for a long periods of time the application has to
 remain working efficiently when used in repositories containing a large number of commits.
-Furthermore, as there are many people working on same repository the time data has to persisted through all git operations.
+Furthermore, as there are many people working on same repository the time data has to persisted through all Git operations.
 Otherwise, it will start limiting developers, and they will not use it.
 To have clear overview of both work done by user and work done on certain issue it has to be possible to join time data over
 multiple repositories and filter it by users and issues.
@@ -101,16 +101,16 @@ It has both it's IDE plugins and Command Line Interface (CLI) app licenced under
 It also has a public API that allows fetching time data from their servers.
 The downside of using Wakatime is that it costs to see data older than 2 weeks and as it only temporarily
 stores data on client machine, there is no easy way to access data without modifying already existent CLI app.
-Wakatime also does not make use of git statistics such as lines added and lines removed.
+Wakatime also does not make use of Git statistics such as lines added and lines removed.
 It only reads branch name, commit message and author data.
 The reason behind this is likely it's architecture - it continuously sends heartbeats with required data to its backend.
 If no internet connection exists, it stores these heartbeats locally in rather cryptic format.
 As a result there is not much data stored locally meaning that the backend has to bundle time data to commits which becomes a very complicated task
 once users start rewriting history, especially given that Git is a distributed version control system.
-In the end of 2020 Wakatime also launched its git integration that allows to see time spent per commit, but for previously
+In the end of 2020 Wakatime also launched its Git integration that allows to see time spent per commit, but for previously
 described reasons it gets confused after history rewrites and maps it based on timestamp.
 This means that for example stashed time is added to wrong commit.
-Wakatime git integration also does not support statistics such a lines added and deleted.
+Wakatime's Git integration also does not support statistics such a lines added and deleted.
 
 Although Wakatime's front and backend are private there are some open source alternatives.
 Two most advanced alternatives are \href{https://github.com/mujx/hakatime}{Hakatime} licenced under Unlicense and
@@ -126,7 +126,7 @@ our system on their already existing functionality, but that wasn't the case whe
 \subsection{Git-Time-Metric}\label{subsec:git-time-metric}
 \href{https://github.com/git-time-metric/gtm}{Git-Time-Metric} is a popular open source time tracking plugin licenced under MIT licence.
 It has plugins for most commonly used IDEs including JetBrains IDEs, VSCode, Vim and more.
-It is closely tied to git as it stores its time tracking data in git notes.
+It is closely tied to Git as it stores its time tracking data in Git notes.
 This allows it to access more Git data such as lines added and lines removed for each commit.
 Git-Time-Metric does not have a web interface (there are some half done projects meant to run only locally).
 On the other hand, it has a very powerful and pretty CLI also capable of displaying data in a human-readable format.
@@ -143,7 +143,7 @@ The CLI app is free and as long as there is a free Git server, you don't have to
 \href{https://github.com/Darkyenus/DarkyenusTimeTracker}{DarkyenusTimeTracker} is also an open source time tracker licenced under The Unlicensed.
 It is only a plugin built for JetBrains IDEs, but it does support automatic recording.
 It only stores time since last commit, but it does support automatic time logging to commit messages meaning that this data can be possibly collected by Jira or some other software.
-Sadly Gitlab, nor Github currently support parsing time data from git commit messages (Gitlab only support time logging directly under issue).
+Sadly Gitlab, nor Github currently support parsing time data from Git commit messages (Gitlab only support time logging directly under issue).
 The other downside is that it only logs the total amount of time spent, no per file statistics.
 
 Similarly to
@@ -163,7 +163,7 @@ These applications are available for multiple platforms and devices, including p
 Most of them have plugins for different applications, including IDE-s in some cases, but they always require some manual
 input for starting tracking.
 Usually the manual input is required to choose the task and rest of the tracking is automatic.
-As these apps are not build for programmers, they lack git related statistics such as lines added and removed.
+As these apps are not build for programmers, they lack Git related statistics such as lines added and removed.
 The most accurate connection, between time and code written is usually the task/branch name.
 
 In short, these applications solve different problem of measuring work time, rather than the problem of measuring
@@ -185,7 +185,7 @@ Features comparison is visible in Table~\ref{tab:comparison-results}.
         \hline
         Is fully automatic & Yes & Yes & Yes & No\\
         \hline
-        Has git integration & Only in paid version & Yes & No & Only with issues\\
+        Has Git integration & Only in paid version & Yes & No & Only with issues\\
         \hline
         Supports tracking non programming activities & Yes & No & No & Yes\\
         \hline
@@ -227,10 +227,10 @@ When adding Git statistics to~\nameref{subsec:wakatime} it is rather hard to per
 Aa a result, whilst~\nameref{subsec:wakatime} is currently the most ready for commercial use, it is hard to implement extra features.
 
 Adding features such as automatic notes fetching and pushing to~\nameref{subsec:git-time-metric} on the other hand is way simpler.
-Whilst the rewriting of IDE plugins is a lot of work it's still less than building a system for~\nameref{subsec:wakatime} capable of handling git rebases.
+Whilst the rewriting of IDE plugins is a lot of work it's still less than building a system for~\nameref{subsec:wakatime} capable of handling Git rebases.
 It is also important to mention thant~\nameref{subsec:git-time-metric} architecture makes it difficult to record indirectly programming related tasks time
 such as searching for help online.
-The reason for it is that it is very inconsistent to tie time spent outside editing Git repository files to certain git repository.
+The reason for it is that it is very inconsistent to tie time spent outside editing Git repository files to certain Git repository.
 In this project context we don't see this as a big problem as we are mainly targeting time spent inside IDE.
 Trying to record internet browsing data or time spent on other programs may be seen as an invasion of privacy,
 and it might greatly reduce the amount of users interested in our app.
