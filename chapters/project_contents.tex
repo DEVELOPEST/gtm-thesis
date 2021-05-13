@@ -13,9 +13,9 @@ For windows a new installer was built to make installing easier.
 Also, it was chosen to switch from statically compiling SSH2 Libraries into our application to dynamic linking.
 For Debian Linux, a build script for debian packages was set up to also provide debian packages with every release.
 
-The application was updated to automatically add a fetch refspecs to fetch data from remotes on git fetch.
-Also, a pre-push git hook was added to automatically push data to origin.
-With these two hooks, the time data is automatically fetched pushed whenever git push is made requiring user no extra effort.
+The application was updated to automatically add a fetch refspecs to fetch data from remotes on Git fetch.
+Also, a pre-push Git hook was added to automatically push data to origin.
+With these two hooks, the time data is automatically fetched pushed whenever Git push is made requiring user no extra effort.
 
 To still allow users to only track time locally, a \textit{--local} option was added to \textit{init} command.
 Also \textit{--auto-log=[jira|gitlab]} option was added to support automatic time logging to commit messages.
@@ -23,7 +23,7 @@ Currently, this time can only be collected in Jira, but there is also and \href{
 open for Gitlab to implement this.\cite{gitlab-time-issue}
 
 To view data based branch the checked out branch name when the commit was made is also now stored to data.
-This couldn't be avoided because the branch is simply a pointer to commit and due to git being distributed control system,
+This couldn't be avoided because the branch is simply a pointer to commit and due to Git being distributed control system,
 it isn't guaranteed.
 
 For students, it is important to view time spent on specific tasks.
@@ -34,7 +34,7 @@ data based on directories.
 Although the Git supports automatic merging/rewriting of the notes, it was inconsistent in some cases, especially when the user
 wants to also rewrite manually added notes.
 To keep time data after Git rebases, a new command \textit{rewrite} was introduced.
-This command is ran by git post-rewrite hook, and it rewrites notes so that they still point to correct commit.
+This command is ran by Git post-rewrite hook, and it rewrites notes so that they still point to correct commit.
 
 \subsection{Initializing tracking}\label{subsec:init-tracking}
 Main flow for initializing tracking for repository is described in Figure~\ref{fig:init-tracking}.
@@ -46,7 +46,7 @@ Main flow for initializing tracking for repository is described in Figure~\ref{f
 
 First requirement is that you need to have gtm-core installed and added to \textit{PATH} in order to initialize tracking.
 If the user has gtm-core installed he can initialize tracking from command line.
-To do that, it is required to change your current directory to be somewhere within git root directory.
+To do that, it is required to change your current directory to be somewhere within Git root directory.
 Time tracking is then initialize with \textit{gtm init} command.
 The command support following arguments:
 
@@ -61,7 +61,7 @@ The command support following arguments:
         --auto-log & Either \textit{gitlab} or \textit{jira} to automatically log time
         into commit messages with given format.\\
         \hline
-        --local & If set, no git fetch nor push hooks are added.
+        --local & If set, no Git fetch nor push hooks are added.
         Time data is only stored locally.\\
         \hline
         --tags & Optionally add tags to project for better local organization.\\
@@ -146,7 +146,7 @@ User flow for making repository visible on gtm web application is shown on Figur
 \end{figure}
 
 Firstly, to have our sync client access the data, you cannot have time data only stored locally.
-Then to add a repository, you need to have linked appropriate git server provider account via OAuth so that we can
+Then to add a repository, you need to have linked appropriate Git server provider account via OAuth so that we can
 verify that you have the access to repository.
 After that you need to search for the repository from web interface and click add tracking button.
 With that the tracking is technically added, but to also automatically sync time data on every push to remote,
@@ -156,12 +156,12 @@ To make sure that the repository can be accessed by the user the request to appr
 when user has pressed \textit{"Start tracking"} button.
 This check is required as the user could easily guess other peoples private repository clone urls and then post
 it to our backend with his own JWT.
-This extra check also means you cannot add tracking to self-hosted git servers that do not provide OAuth2.
-However, we could not find any better way to identify that the given user has access to some git repository and
+This extra check also means you cannot add tracking to self-hosted Git servers that do not provide OAuth2.
+However, we could not find any better way to identify that the given user has access to some Git repository and
 therefore it was decided to not support any custom setups.
 
 \section{Sync client}\label{sec:sync-client-content}
-Sync client is used to fetch data from git notes and then sync it up to our backend.
+Sync client is used to fetch data from Git notes and then sync it up to our backend.
 To interact with sync client, you either need to edit local config file or send REST API requests to its endpoints.
 
 Manually editing configuration is meant for human as it gives more control over application and REST API is
@@ -193,9 +193,9 @@ All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
 \end{table}
 
 For configuration \textit{config.toml} file is used.
-It contains information about backend, where to sync data, git user authorization (ssh keys) and about tracked repositories.
+It contains information about backend, where to sync data, Git user authorization (ssh keys) and about tracked repositories.
 Although gtm-sync supports cloning with both Secure Shell Protocol (SSH) and HTTPS, we have limited it to HTTPS in our backend for simplicity.
-In order for SSH keys to work, we have created a user called \textit{gtm-user} to TalTech gitlab server and added SSH key to him.
+In order for SSH keys to work, we have created a user called \textit{gtm-user} to TalTech Gitlab server and added SSH key to him.
 This means \textit{gtm-user} has to have at minimal reporter access to project in order to track it.
 For GitHub and GitLab we only support tracking public repositories for now and for the SSH cloning to work, the SSH key was added to
 Tavo Annus'es personal account.
@@ -213,9 +213,9 @@ The configuration variables are described in Table~\ref{tab:gtm-sync-config}.
         \hline
         access\_token & Backend API key\\
         \hline
-        ssh\_public\_key & Path to git user public ssh key\\
+        ssh\_public\_key & Path to Git user public ssh key\\
         \hline
-        ssh\_private\_key & Path to git user private ssh key\\
+        ssh\_private\_key & Path to Git user private ssh key\\
         \hline
         repositories\_base\_path & Path to store cloned repositories at\\
         \hline
@@ -291,8 +291,8 @@ All the endpoints can be found \href{https://cs.ttu.ee/services/gtm/api/swagger/
 \subsection{Security}\label{subsec:scurity}
 Our application holds data, that shall not be visible to all client and therefore some kind of authentication and authorization methods are required.
 For the data stored in Git notes we decided no extra security is required, as the time data isn't more sensitive than the actual code.
-The security of source code stored in git repository is handled by a client himself and Git providers.
-If they wish to have some more protection for git notes, they can configure it themselves.
+The security of source code stored in Git repository is handled by a client himself and Git providers.
+If they wish to have some more protection for Git notes, they can configure it themselves.
 We only provide the option to have notes only stored locally (not pushed to origin).
 
 For the web application we need to implement our own security measures.
@@ -301,26 +301,26 @@ Accounts that only have password authentication are not authorized to access any
 explicitly gives them access to any.
 
 To automatically get access to repositories you are contributor of you need to authenticate yourself via OAuth2 standard.
-This way we can verify, that the user signing in to our application is the same user that has access to some git repository.
+This way we can verify, that the user signing in to our application is the same user that has access to some Git repository.
 
 \subsubsection{OAuth2}\label{subsubsec:oauth2}
 For OAuth2 authorization rocket{\_}oauth2 library is used, that follows RFC-6749 standard~\cite{rocket-oauth2, oauth2}.
 We support authentication via \href{https://github.com/}{Github.com}, \href{https://about.gitlab.com/}{Gitlab.com},
 \href{https://bitbucket.org/}{Bitbucket.org}, \href{https://azure.microsoft.com/}{Azure} (Microsoft account) and
 TalTech \href{https://gitlab.cs.ttu.ee/}{gitlab server}.
-First three were chosen as they are the most common git server providers as of 2021.
+First three were chosen as they are the most common Git server providers as of 2021.
 Authentication via Microsoft was added as TalTech (and also numerous other universities / companies) use it and therefore
 all students have already registered account there.
 Also, it provides access to user emails, that can be later used to filter out user commits.
-TalTech gitlab server was added, as the application is currently developed for TalTech and therefore it was a requirement
-that everything shall also work on TalTech gitlab server.
+TalTech Gitlab server was added, as the application is currently developed for TalTech and therefore it was a requirement
+that everything shall also work on TalTech Gitlab server.
 
 From all OAuth2 providers at least user read access is required to get access to user emails.
 For OAuth2 providers, that are also a Git server providers also permissions to read user repositories data is required.
 User repositories data is used to give user automatically access to his own repositories and also display repositories
 not currently tracked by gtm.
 It also allows more easily adding automatic data collection to user repositories, as user can browse through
-repositories from different git server providers.
+repositories from different Git server providers.
 
 \subsection{Groups system}\label{subsec:group-system}
 One of the requirements for our app was that it should be possible to group repositories together.
@@ -365,14 +365,14 @@ Role \textit{USER} is added to every created user, and it has no extra permissio
 
 People with \textit{USER} role can:
 \begin{enumerate}
-    \item View data from git repositories, they have access to.
+    \item View data from Git repositories, they have access to.
     \item Add new repositories.
     \item Delete repositories they have access to.
 \end{enumerate}
 
 People with \textit{LECTURER} role can:
 \begin{enumerate}
-    \item View data from git repositories, they have access to.
+    \item View data from Git repositories, they have access to.
     \item Add new repositories.
     \item Delete repositories they have access to.
     \item Give access to others.
