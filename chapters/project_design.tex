@@ -1,5 +1,6 @@
-We decided to base our application on~\nameref{subsec:git-time-metric} and have time tracking data stored in Git Notes for every repo so that it can be tightly tied to code.
-This gives us opportunity to have more complete overview when and on what issue / branch the time was spent.
+We decided to base our application on~\nameref{subsec:git-time-metric} and have time tracking data stored in Git Notes
+for every repo so that it can be tightly tied to code.
+This gives us an opportunity to have a more complete overview when and on what issue / branch the time was spent.
 It also gives access to a features such as Git diff that can be used for measuring writing speed.
 Furthermore, it lifts a job from our shoulders by handling complex cases such as rebase and merge for us.
 
@@ -65,14 +66,14 @@ Gtm-core folder structure is displayed in Table
     \centering
     \begin{tabular}{ | p{3cm} | p{10cm} |}
         \hline
-        Folder & Purpose\\
+        \textbf{Folder} & \textbf{Purpose}\\
         \hline
         .github & Github related files (Workflows for CI/CD, issues and pull requests templates)\\
         \hline
         deploy & Deploying related files.
         Currently, only Windows installer files and Licence packed with installer.\\
         \hline
-        command & Every command has files <command>.go and <command>\_test.go which respectively are controller for command, and it's tests.
+        command & Every command has files \textit{<command>.go} and \textit{<command>\_test.go} which respectively are controller for command, and it's tests.
         The controller is responsible for parsing arguments, calling appropriate services and printing out results.\\
         \hline
         docs & Documentation files.\\
@@ -100,7 +101,7 @@ Gtm-core folder structure is displayed in Table
         \hline
         vendor & Directory containing dependencies listed in Git submodules.\\
         \hline
-        <root> & Program entry point, Git related files, README and gofmt style lint configuration .\\
+        <root> & Program entry point, Git related files, README and Gofmt style lint configuration .\\
         \hline
     \end{tabular}
     \caption{Gtm-core folder structure.}
@@ -111,7 +112,7 @@ Although the app was already working we still needed to do many bug fixes and ad
 The biggest change in design was that we moved copied in dependencies to Git submodules.
 Although this seems like a small step, it turned out to be very complex to build Go app linked with C library dynamically.
 As we didn't manage to get all Git submodules dependencies to properly work in Windows environments
-we decided to leave it separately fetched and built in ci/cd workflow file.
+we decided to leave it separately fetched and built in CI/CD workflow file.
 Nonetheless, all "snapshot" dependencies were removed.
 We also added stress tests to verify effect of using gtm-core with large amounts of commits.
 
@@ -134,7 +135,7 @@ Namespace \textit{ee.developest.gtm} is shortened to \textit{<ns>} for readabili
     \centering
     \begin{tabular}{ | p{3cm} | p{10cm} |}
         \hline
-        Folder & Purpose\\
+        \textbf{Folder} & \textbf{Purpose}\\
         \hline
         .gradle & Gradle related files\\
         \hline
@@ -175,7 +176,7 @@ Folder structure for gtm-sync is displayed in Table~\ref{tab:gtm-sync-folder-str
     \centering
     \begin{tabular}{ | p{3cm} | p{10cm} |}
         \hline
-        Folder & Purpose\\
+        \textbf{Folder} & \textbf{Purpose}\\
         \hline
         .github & Github workflows.\\
         \hline
@@ -207,10 +208,10 @@ End users can interact with backend though frontend via REST API requests.
 
 Backend application has been built with Rust programming language using Rocket framework.
 Rust is a relatively new low-level statically-typed programming language that's focused on performance and safety.
-It gives all most the same speed as C, but guarantees both memory and thread safety.
+It gives almost the same speed as C, but guarantees both memory and thread safety.
 It also follows many more functional patterns than Java/C/C++/Go which makes writing code easier and safer once mastered.
 Since we needed a fast backend with minimal overhead for processing large datasets Rust was the best choice.
-Java, C/C++ and GO were also considered, but the lightweightness of Rust overweight Java whilst memory safety overweight C/C++.
+Java, C/C++ and GO were also considered, but the lightweightness of Rust overweights Java whilst memory safety overweights C/C++.
 Since Rust was chosen for sync client we decided to choose it for backend as well.
 
 \subsection{Backend design}\label{subsec:backend-design}
@@ -231,11 +232,11 @@ Folder structure is displayed in Table~\ref{tab:gtm-api-folder-structure}.
     \centering
     \begin{tabular}{ | p{3cm} | p{10cm} |}
         \hline
-        Folder & Purpose\\
+        \textbf{Folder} & \textbf{Purpose}\\
         \hline
         .github & CI/CD related files\\
         \hline
-        migrations & Migrations for diesel. \\
+        migrations & Migrations for Diesel. \\
         \hline
         src/common & Widely used files.\\
         \hline
@@ -256,7 +257,7 @@ Folder structure is displayed in Table~\ref{tab:gtm-api-folder-structure}.
 One requirement when choosing database was that we needed it to have bindings for our Object-relational mapper (ORM),
 so we could easily use it in our application.
 This requirement narrowed search down to SQLite, MySQL and PostgreSQL as they were the only languages with full support in Diesel.
-There are other ORM-s written for rust, but Diesel is one of the most popular ones, so we decided to go with it as
+There are other ORM-s written for Rust, but Diesel is one of the most popular ones, so we decided to go with it as
 there was no need to use some other database.
 % TODO: S6nastus paremaks
 
@@ -273,15 +274,15 @@ For data persistence we have mounted database files volume to host machine.
 
 \subsubsection{Database versioning}\label{subsubsec:database-versioning}
 As we have users data in our database it is important to also persist it through database schema updates.
-For this we use migrations and let diesel handle the updates.
-Every time database change is required, we add new migration with both up and down scripts that can be used by diesel
+For this we use migrations and let Diesel handle the updates.
+Every time database change is required, we add new migration with both up and down scripts that can be used by Diesel
 to run the migration or revert it.
 Diesel is configured to automatically run updates added to release.
-As reverting database changes can result in a loss of data, it has to be done manually via diesel CLI app.
+As reverting database changes can result in a loss of data, it has to be done manually via Diesel CLI app.
 
 \subsubsection{ERD Schema}\label{subsubsec:erd-schema}
 The database holds data about tracked time, registered users and how the users can access time data.
-The structure if the database schema is described in Figure~\ref{fig:erd-schema}
+The structure of the database schema is described in Figures~\ref{fig:erd-schema-user} and~\ref{fig:erd-schema-general}.
 
 Time data follows the structure of Git commits tree and file tree.
 The \textit{repositories} table contains general information about Git repository such as name and the sync client
@@ -311,9 +312,15 @@ If one already exists, it is updated instead of adding new.
 User emails retrieved from OAuth providers are stored in \textit{emails} table to avoid unnecessary web requests.
 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{figures/erd_schema}
-    \caption{ERD schema}
-    \label{fig:erd-schema}
+    \includegraphics[width=\textwidth]{figures/erd_schema_user}
+    \caption{ERD schema for user related tables}
+    \label{fig:erd-schema-user}
+\end{figure}
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{figures/erd_schema_general}
+    \caption{ERD schema for non user related tables}
+    \label{fig:erd-schema-general}
 \end{figure}
 
 \section{Frontend}\label{sec:frontend}
@@ -323,8 +330,8 @@ Although technically also CLI app can be considered frontend when we refer to fr
 
 Frontend has been build using ReactJS library.
 According to the State of Frontend 2020 report ReactJS is the most used JavaScript framework and also the framework which developers want to learn or keep using the most.
-It is faster than Angular, and it's somewhat functional style was more pealing for us than the style of Vue.
-It was chosen by Marten, who's mostly responsible for frontend development has some experience with it.
+It is faster than Angular, and its somewhat functional style was more pealing for us than the style of Vue.
+It was chosen by Marten, who's mostly responsible for frontend development and had some prior experience with it.
 Most popular frontend frameworks by popularity are shown on Figure~\ref{fig:frontend-framework-popularity}.
 
 \begin{figure}[h]
@@ -337,9 +344,9 @@ Most popular frontend frameworks by popularity are shown on Figure~\ref{fig:fron
 Frontend code is written following the main principles promoted by ReactJS community and documentation.
 For an example component's names use PascalCase, helper files use camelCase, folders use camelCase.
 Code is divided into multiple files/components to prevent code repetition, inline CSS is avoided, liner is used to make code easier to use, service calls are in the separate file, etc.
-To prove code quality and readability TypeScript was chosen as it is strongly typed language which JavaScript is not.
+To improve code quality and readability TypeScript was chosen as it is strongly typed language which JavaScript is not.
 This decision was not made in the beginning of the project but as the code kept growing and readability suffered the decision was made.
-One of the biggest reasons to switch from JavaScript to Typescript was that due to being strongly typed language,
+One of the biggest reasons to switch from JavaScript to TypeScript was that due to being strongly typed language,
 TypeScript has better IDE support.
 Folder structure is displayed in Table
 \ref{tab:gtm-front-folder-structure}.
@@ -348,7 +355,7 @@ Folder structure is displayed in Table
     \centering
     \begin{tabular}{ | p{3cm} | p{10cm} |}
         \hline
-        Folder & Purpose\\
+        \textbf{Folder} & \textbf{Purpose}\\
         \hline
         .github & CI/CD related files\\
         \hline
@@ -387,8 +394,8 @@ Since the team did not have any professional designers, CoreUI was a great choic
 CoreUI is an Open Source Bootstrap Admin Template which is built on Bootstrap and written with readability in mind.
 The design and easy usability were the decisive factors choosing CoreUI.
 
-However, easy usability has its own downsides as the graphs were not as customizable.
-For graphs Recharts was chosen.
+However, CoreUI's charts were not customizable to an extent we required.
+For better customization Recharts was chosen for building graphics.
 Recharts is a composable charting library built on React components and D3.
 It is much more customizable than CoreUI charts as it allows combining different bar charts, line charts, etc.
 \cite{recharts-readme}

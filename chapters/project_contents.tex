@@ -22,9 +22,8 @@ Also \textit{--auto-log=[jira|gitlab]} option was added to support automatic tim
 Currently, this time can only be collected in Jira, but there is also and \href{https://gitlab.com/gitlab-org/gitlab/-/issues/16543}{issue}
 open for Gitlab to implement this.\cite{gitlab-time-issue}
 
-To view data based branch the checked out branch name when the commit was made is also now stored to data.
-This couldn't be avoided because the branch is simply a pointer to commit and due to Git being distributed control system,
-it isn't guaranteed.
+To allow filtering data by branch name we decided to also store current branch name in Git Notes when committing a file.
+This couldn't be avoided because the branch is simply a pointer to commit and there is no guarantee that this pointer isn't changed or deleted.
 
 For students, it is important to view time spent on specific tasks.
 In most subjects the tasks are placed in separate subdirectories for better files management.
@@ -47,14 +46,14 @@ Main flow for initializing tracking for repository is described in Figure~\ref{f
 First requirement is that you need to have gtm-core installed and added to \textit{PATH} in order to initialize tracking.
 If the user has gtm-core installed he can initialize tracking from command line.
 To do that, it is required to change your current directory to be somewhere within Git root directory.
-Time tracking is then initialize with \textit{gtm init} command.
-The command support following arguments:
+Time tracking is then initialized with \textit{gtm init} command.
+The command supports following arguments:
 
 \begin{table}[h]
     \centering
     \begin{tabular}{ | p{3cm} | p{10cm} |}
         \hline
-        Argument & Description\\
+        \textbf{Argument} & \textbf{Description}\\
         \hline
         --terminal & Enable time tracking for terminal. (Requires terminal plugin)\\
         \hline
@@ -77,7 +76,7 @@ The command support following arguments:
 It is safe to run \textit{gtm init} multiple times with any of the arguments.
 
 The user can also initialize time tracking from within IDE if he has gtm plugin installed.
-Currently, only Jetbrains IDE plugin support starting tracking.
+Currently, only Jetbrains IDE plugin supports starting tracking.
 To initialize time tracking from Jetbrains IDE the user needs to open/reload project he wishes to add time tracking to.
 Upon doing that he is prompted to choose whether to start tracking or not.
 To initialize tracking, start tracking has to be chosen.
@@ -172,7 +171,7 @@ All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
     \centering
     \begin{tabular}{ | p{8cm} | p{6cm} |}
         \hline
-        Endpoint & Description\\
+        \textbf{Endpoint} & \textbf{Description}\\
         \hline
         GET /repositories/<provider>/<user>/<repo> & Used to get data about single repository \\
         \hline
@@ -205,7 +204,7 @@ The configuration variables are described in Table~\ref{tab:gtm-sync-config}.
     \centering
     \begin{tabular}{ | p{6cm} | p{6cm} |}
         \hline
-        Variable & Description\\
+        \textbf{Variable} & \textbf{Description}\\
         \hline
         target\_base\_url & Backend url, used for syncing data \\
         \hline
@@ -235,7 +234,7 @@ Sync client which has api key registered has access to the endpoints in Table~\r
     \centering
     \begin{tabular}{ | p{5cm} | p{4cm} | p{5cm} |}
         \hline
-        Endpoint & Parameters & Description\\
+        \textbf{Endpoint} & \textbf{Parameters} & \textbf{Description}\\
         \hline
         POST /repositories & - & Sync client can send new repo timeline data \\
         \hline
@@ -253,7 +252,7 @@ An authorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoin
     \centering
     \begin{tabular}{ | p{5cm} | p{4cm} | p{5cm} |}
         \hline
-        Endpoint & Parameters & Description\\
+        \textbf{Endpoint} & \textbf{Parameters} & \textbf{Description}\\
         \hline
         GET /groups & - & Returns all the groups logged-in user has access to. \\
         \hline
@@ -275,7 +274,7 @@ Unauthorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoint
     \centering
     \begin{tabular}{ | p{5cm} | p{4cm} | p{5cm} |}
         \hline
-        Endpoint & Parameters & Description\\
+        \textbf{Endpoint} & \textbf{Parameters} & \textbf{Description}\\
         \hline
         POST /auth/login & - & For login \\
         \hline
@@ -522,7 +521,7 @@ The results of comparison are show in table~\ref{tab:open-source-licence-compari
     \centering
     \begin{tabular}{ | p{4cm} | p{2cm} | p{2cm} | p{2cm} |}
         \hline
-         & Apache-2.0 & MIT & GPLv3\\
+         & \textbf{Apache-2.0} & \textbf{MIT} & \textbf{GPLv3}\\
         \hline
         Market share & 28\% & 26\% & 10\% \\
         \hline
