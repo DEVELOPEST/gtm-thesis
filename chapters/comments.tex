@@ -1,4 +1,4 @@
-In this section an overview is provided about the most impactful and changed technologies.
+In this section an overview is provided about the most impactful and changed technologies as well as the most important design choices.
 
 \section{Rust}\label{sec:rust}
 Initially we were thinking of choosing Java as our Backend language.
@@ -51,5 +51,13 @@ Only debatable reason to use JavaScript is performance gain.
 In our case this does not play a huge role as the performance gain starts to shine in the hands of advanced JavaScript developers.
 Although we do suffer performance problems in some cases, the decision of TypeScript is not the root cause of the problem.
 
-
+\section{Using Git-Time-Metric as a base}\label{sec:using-git-time-metric-base}
+Initially the~\nameref{subsec:git-time-metric} app seemed more pleasing to us as it already showed many fancy Git statistics whilst
+the main alternative~\nameref{subsec:wakatime} did not.
+We viewed some Wakatimes open source alternatives but discarded them as they had only really basic features implemented meaning that
+we'd need to build backend on our own regardless of the choice which app to use as a base.
+We went with~\nameref{subsec:git-time-metric} and we haven't had any major setbacks, so we've proven this was a decent choice.
+However, there has been a lot of work put into also Wakatime's alternatives.
+If we'd need to start again from scratch we'd likely to go with one of the Wakatime's alternatives instead as right now
+they already are decent open source backends.
 
