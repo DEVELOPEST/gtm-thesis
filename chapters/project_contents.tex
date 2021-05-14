@@ -75,7 +75,7 @@ The command supports following arguments:
 \end{table}
 It is safe to run \textit{gtm init} multiple times with any of the arguments.
 
-The user can also initialize time tracking from within IDE if he has gtm plugin installed.
+The user can also initialize time tracking from within IDE if he has GTM plugin installed.
 Currently, only Jetbrains IDE plugin supports starting tracking.
 To initialize time tracking from Jetbrains IDE the user needs to open/reload project he wishes to add time tracking to.
 Upon doing that he is prompted to choose whether to start tracking or not.
@@ -123,9 +123,9 @@ it perfectly describes, why it was necessary to have gtm-core as a separate prog
 \subsection{Adding tracking to repositories}\label{subsec:adding-tracking}
 We have added three levels to view time data:
 \begin{enumerate}
-    \item Add tracking (locally), view data via gtm CLI app.
+    \item Add tracking (locally), view data via GTM CLI app.
     \item Add tracking (locally), log data to commit messages.
-    \item Add tracking, sync data to gtm Web App.
+    \item Add tracking, sync data to GTM Web App.
 \end{enumerate}
 
 All smaller level can be included while using higher level option.
@@ -136,7 +136,7 @@ existing system and only modifies commit message.
 To use auto logging option you simply need to add \textit{--auto-log=[gitlab|jira]} option when initiating tracking for a repository.
 
 To view data from web interface, some more steps are required.
-User flow for making repository visible on gtm web application is shown on Figure~\ref{fig:add-tracking-user-flow}.
+User flow for making repository visible on GTM web application is shown on Figure~\ref{fig:add-tracking-user-flow}.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/add_repo_user_flow}
@@ -317,7 +317,7 @@ that everything shall also work on TalTech Gitlab server.
 From all OAuth2 providers at least user read access is required to get access to user emails.
 For OAuth2 providers, that are also a Git server providers also permissions to read user repositories data is required.
 User repositories data is used to give user automatically access to his own repositories and also display repositories
-not currently tracked by gtm.
+not currently tracked by GTM.
 It also allows more easily adding automatic data collection to user repositories, as user can browse through
 repositories from different Git server providers.
 
