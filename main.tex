@@ -34,11 +34,11 @@
 \newcommand{\supervisortitle}{M Sc}
 \newcommand{\cosupervisor}{Secondary Supervisor Name}
 \newcommand{\cosupervisortitle}{MsC}
-\newcommand{\keywords}{Important, comma, separated, keywords, applicable, to, your, thesis}
+\newcommand{\keywords}{gtm, time tracking, git, rust, go}
 \newcommand{\version}{0.1 version}
-\newcommand{\monthYear}{Month Year}
+\newcommand{\monthYear}{May 17th}
 \newcommand{\Year}{2021}
-\newcommand{\signatureDate}{Month Day, Year}
+\newcommand{\signatureDate}{May 17th, 2021}
 
 \author{\meone \metwo}
 
@@ -124,7 +124,7 @@ pdfkeywords={\keywords}
     \renewcommand{\thechapter}{\arabic{chapter}}
 
     \addcontentsline{toc}{chapter}{Appendix 1 - Project links}\label{chapter:appendix-project-links}
-    {\clearpage\relax\chapter*{Appendix 1 - Project links}}
+    {\let\clearpage\relax\chapter*{Appendix 1 - Project links}}
     \input{appendices/appendix-project-links.tex}
 
     \clearpage
