@@ -55,19 +55,19 @@ The command supports following arguments:
         \hline
         \textbf{Argument} & \textbf{Description}\\
         \hline
-        --terminal & Enable time tracking for terminal. (Requires terminal plugin)\\
+        \textit{--terminal} & Enable time tracking for terminal. (Requires terminal plugin)\\
         \hline
-        --auto-log & Either \textit{gitlab} or \textit{jira} to automatically log time
+        \textit{--auto-log} & Either \textit{gitlab} or \textit{jira} to automatically log time
         into commit messages with given format.\\
         \hline
-        --local & If set, no Git fetch nor push hooks are added.
+        \textit{--local} & If set, no Git fetch nor push hooks are added.
         Time data is only stored locally.\\
         \hline
-        --tags & Optionally add tags to project for better local organization.\\
+        \textit{--tags} & Optionally add tags to project for better local organization.\\
         \hline
-        --clear-tags & If project already has some tags running it with given flag removes previously added flags.\\
+        \textit{--clear-tags} & If project already has some tags running it with given flag removes previously added flags.\\
         \hline
-        --cwd & Useful for specifying working directory for scripts.\\
+        \textit{--cwd} & Useful for specifying working directory for scripts.\\
         \hline
     \end{tabular}
     \caption{Gtm-front folder structure.}
@@ -133,7 +133,7 @@ Viewing data via CLI app is always possible, as it is the same app that is respo
 This can be done both only locally or with pushing and pulling notes from remotes.
 You can also add logging time spent to commit messages in both of the scenarios as it simply works on top of the already
 existing system and only modifies commit message.
-To use auto logging option you simply need to add \textit{--auto-log=[gitlab|jira]} option when initiating tracking for a repository.
+To use auto logging option you simply need to add \textit{--auto-log=[gitlab|jira]} option when initiating tracking. % for a repository.
 
 To view data from web interface, some more steps are required.
 User flow for making repository visible on GTM web application is shown on Figure~\ref{fig:add-tracking-user-flow}.
