@@ -1,7 +1,7 @@
 We decided to base our application on~\nameref{subsec:git-time-metric} and have time tracking data stored in Git Notes
 for every repo so that it can be tightly tied to code.
 This gives us an opportunity to have a more complete overview when and on what issue / branch the time was spent.
-It also gives access to a features such as Git diff that can be used for measuring writing speed.
+It also gives access to features such as Git diff that can be used for measuring writing speed.
 Furthermore, it lifts a job from our shoulders by handling complex cases such as rebase and merge for us.
 
 The downside is that Git notes take up some space on client machine and Git server.
@@ -28,7 +28,7 @@ The general time-tracking application can be divided into three different kind o
     \item \textbf{Applications that are responsible for data collecting.} These applications are CLI app and IDE plugins and are installed on developers machine.
     \item \textbf{Applications that are responsible for syncing data.} This role is filled by a Sync client.
     These applications can be installed onto companies/universities servers where they can access Git internal network if needed.
-    \item \textbf{Applications that are responsible for analyzing and displaying data.} These are Frontend and Backend app that are installed on any server.
+    \item \textbf{Applications that are responsible for analysing and displaying data.} These are Frontend and Backend app that are installed on any server.
 \end{enumerate}
 
 The reasoning behind this architecture is security and scalability.
@@ -55,7 +55,7 @@ This is the main app on client machine.
 The app is responsible for storing events sent by an editor to files and then later also combining the stored information into Git Note.
 You can also see all main stats, such as time spent on a commit via CLI app.
 
-The app is based on open source time tracking app \href{https://github.com/git-time-metric/gtm}{Git-Time-Metric} written in Go and licenced under MIT licence.
+The app is based on open source time tracking app \href{https://github.com/git-time-metric/gtm}{Git-Time-Metric} written in Go and licensed under MIT licence.
 We decided to base our app on Git-Time-Metric solution because their app was working the way we wanted to, it had plenty of users meaning plenty of testing done,
 and the Git-Time-Metric app had good code style.
 
@@ -88,7 +88,7 @@ Gtm-core folder structure is displayed in Table
         note & Git notes serialization, deserialization and tests.\\
         \hline
         project & Gtm initialization and uninitialization related services with tests.
-        These services are responsible for calling appropriate functions from scm package to Git hooks and modifying Git config.\\
+        These services are responsible for calling appropriate functions from \textit{scm} package to Git hooks and modifying Git config.\\
         \hline
         report & Report generation services used by report command.\\
         \hline
@@ -97,7 +97,7 @@ Gtm-core folder structure is displayed in Table
         \hline
         test & Python files for running stress tests for gtm-core.\\
         \hline
-        util & Various string, datetime and math helper functions.\\
+        util & Various string, date, time and math helper functions.\\
         \hline
         vendor & Directory containing dependencies listed in Git submodules.\\
         \hline
@@ -141,7 +141,7 @@ Namespace \textit{ee.developest.gtm} is shortened to \textit{<ns>} for readabili
         \hline
         src/<ns>/listener & Editor event listeners.\\
         \hline
-        src/<ns>/popup & Popups related controllers.
+        src/<ns>/popup & Pop-ups related controllers.
         Used for getting user input\\
         \hline
         src/<ns>/service & Service files such as ConfigService.kt\\
@@ -270,7 +270,7 @@ Both of them are also open source.
 
 We decided to go with the PostgreSQL as we had prior experience with it.
 
-As we are running the application in "beta" we decided to run database in docker container on our development machine to
+As we are running the application in "beta", we decided to run database in docker container on our development machine to
 reduce the cost of upkeep.
 For data persistence we have mounted database files volume to host machine.
 
@@ -292,14 +292,14 @@ responsible for tracking it.
 Then the \textit{commits} table has the information about commits such as author, timestamp and commit message.
 Each \textit{commits} table entry has also reference to repository it is committed to.
 Every commit has zero or more files that were edited in it.
-These files are contained in \textit{files} table and they contain information about files added and deleted.
+These files are contained in \textit{files} table, and they contain information about files added and deleted.
 To have more accurate data about when the time was spent separate table is needed as there is no guarantee that
 the time spent editing files is spent just before commit timestamp.
 For this we have a table called \textit{timeline} which olds timestamps and durations of every consecutive edits as
 well as reference to file in which the time was spent.
 
 The \textit{users} and \textit{roles} table are responsible for persisting user login credentials, roles and connected OAuth accounts.
-As we allow user to optionally register only via OAuth the password field is nullable.
+As we allow user to optionally register only via OAuth, the password field is nullable.
 Users that have no password can only log in via OAuth, but they can also add password at any time.
 
 Every user can have multiple rows with role \textit{USER} being added to every user by default.
@@ -321,14 +321,14 @@ User emails retrieved from OAuth providers are stored in \textit{emails} table t
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/erd_schema_general}
-    \caption{ERD schema for non user related tables}
+    \caption{ERD schema for non-user related tables}
     \label{fig:erd-schema-general}
 \end{figure}
 
 \section{Frontend}\label{sec:frontend}
 Frontend is a software program or website which the user interacts with.
 In our case frontend is a website where user can see time tracking data according to the privileges.
-Although technically also CLI app can be considered frontend when we refer to frontend we only mean the website.
+Although technically also CLI app can be considered frontend, when we refer to frontend we only mean the website.
 
 Frontend has been build using ReactJS library.
 According to the State of Frontend 2020 report ReactJS is the most used JavaScript framework and also the framework which developers want to learn or keep using the most.
@@ -344,7 +344,7 @@ Most popular frontend frameworks by popularity are shown on Figure~\ref{fig:fron
 
 \subsection{Code design}\label{subsec:code-design}
 Frontend code is written following the main principles promoted by ReactJS community and documentation.
-For an example component's names use PascalCase, helper files use camelCase, folders use camelCase.
+For an example component's names use \textit{PascalCase}, helper files use \textit{camelCase}, folders use \textit{camelCase}.
 Code is divided into multiple files/components to prevent code repetition, inline CSS is avoided, liner is used to make code easier to use, service calls are in the separate file, etc.
 To improve code quality and readability TypeScript was chosen as it is strongly typed language which JavaScript is not.
 This decision was not made in the beginning of the project but as the code kept growing and readability suffered the decision was made.
@@ -367,7 +367,7 @@ Folder structure is displayed in Table
         \hline
         src/containers & Main container structure (Header, Footer, Content, etc.)\\
         \hline
-        src/models & Easy peasy state management models.\\
+        src/models & Easy-Peasy state management models.\\
         \hline
         src/reusable & components that can be reused.\\
         \hline
@@ -410,11 +410,11 @@ Designing graphs were done in the following manner:
     \item Finalize component and release it for test users.
     \item Make final changes according to the users' feedback.
 \end{enumerate}
-Design patterns such as graph sizes, colors, spacings, fonts etc. were chosen in such a way that it would look similar to CoreUI graphs.
+Design patterns such as graph sizes, colours, spacings, fonts etc. were chosen in such a way that it would look similar to CoreUI graphs.
 
 \subsection{State management}\label{subsec:state-management}
 State management does not have a certain winner.
 Choosing a state management library comes down to personal preference.
-We decided to use Easy Peasy which is built on the most popular state management library Redux.
-Easy Peasy was chosen over Redux because Redux has steep learning curve but Easy Peasy is easy to use.
+We decided to use Easy-Peasy which is built on the most popular state management library Redux.
+Easy Peasy was chosen over Redux because Redux has steep learning curve but Easy-Peasy is easy to use.
 %TODO: Vb contents alla?

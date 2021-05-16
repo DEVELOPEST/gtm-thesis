@@ -8,17 +8,17 @@ Firstly \textit{--cwd=\{some/path\}} option was added to allow easier integratio
 Option to pass current directory as option is required, as IDEs not launched from terminal sometimes have their working
 directory elsewhere and setting custom working directory every time we call CLI app is more complicated than passing an argument.
 
-To clean up user home directories, global config files were moved from \textit{~/.git-time-metrics/} to \textit{~/.config/gtm/}.
+To clean up user home directories, global configuration files were moved from \textit{~/.git-time-metrics/} to \textit{~/.config/gtm/}.
 For windows a new installer was built to make installing easier.
 Also, it was chosen to switch from statically compiling SSH2 Libraries into our application to dynamic linking.
-For Debian Linux, a build script for debian packages was set up to also provide debian packages with every release.
+For Debian Linux, a build script for Debian packages was set up to also provide Debian packages with every release.
 
 The application was updated to automatically add a fetch refspecs to fetch data from remotes on Git fetch.
 Also, a pre-push Git hook was added to automatically push data to origin.
 With these two hooks, the time data is automatically fetched pushed whenever Git push is made requiring user no extra effort.
 
 To still allow users to only track time locally, a \textit{--local} option was added to \textit{init} command.
-Also \textit{--auto-log=[jira|gitlab]} option was added to support automatic time logging to commit messages.
+Also, \textit{--auto-log=[jira|gitlab]} option was added to support automatic time logging to commit messages.
 Currently, this time can only be collected in Jira, but there is also and \href{https://gitlab.com/gitlab-org/gitlab/-/issues/16543}{issue}
 open for Gitlab to implement this.\cite{gitlab-time-issue}
 
@@ -44,7 +44,7 @@ Main flow for initializing tracking for repository is described in Figure~\ref{f
 \end{figure}
 
 First requirement is that you need to have gtm-core installed and added to \textit{PATH} in order to initialize tracking.
-If the user has gtm-core installed he can initialize tracking from command line.
+If the user has gtm-core installed, he can initialize tracking from command line.
 To do that, it is required to change your current directory to be somewhere within Git root directory.
 Time tracking is then initialized with \textit{gtm init} command.
 The command supports following arguments:
@@ -81,7 +81,7 @@ To initialize time tracking from Jetbrains IDE the user needs to open/reload pro
 Upon doing that he is prompted to choose whether to start tracking or not.
 To initialize tracking, start tracking has to be chosen.
 This initializes tracking for currently open repository with default settings (equal to no argument for CLI).
-If the user chooses not to initialize tracking, his choice is persisted in local jetbrains project config file within \textit{.idea} directory.
+If the user chooses not to initialize tracking, his choice is persisted in local Jetbrains project config file within \textit{.idea} directory.
 To later add tracking to repository, he needs to do it from command line or by deleting project settings file.
 
 
@@ -95,7 +95,7 @@ There are also many more plugins that have been previously written for original 
 
 \subsection{Jetbrains}\label{subsec:jetbrains-plugin}
 Jetbrains also had plugin for original Git-Time-Metric, but the IDE has gone through lots of changes since the last update to plugin.
-As of 2021 this causes Jetbrains IDEs to crash.
+As of 2021, this causes Jetbrains IDEs to crash.
 We decided to fully rewrite the plugin as it heavily used now deprecated Jetbrains components.
 
 The plugin catches following events and forwards the data to gtm-core:
@@ -107,10 +107,10 @@ The plugin catches following events and forwards the data to gtm-core:
     \item Visible area changed (Window resized / split).
 \end{enumerate}
 
-In response, plugin gets time since last commit (uncommitted time), which it show on the bottom status bar.
+In response, plugin gets time since last commit (uncommitted time), which it shows on the bottom status bar.
 
-In addition to silently listening for events and updating time the plugin communicates with user via popup dialog and notification.
-The popup dialog is used to prompt user whether he wants to start tracking time for project as described in~\nameref{subsec:init-tracking}
+In addition to silently listening for events and updating time the plugin communicates with user via pop-up dialog and notification.
+The pop-up dialog is used to prompt user whether he wants to start tracking time for project as described in~\nameref{subsec:init-tracking}
 Notifications are used to report errors and more important actions results (such as whether adding tracking was successful).
 
 \subsection{Vim}\label{subsec:vim-plugin}
@@ -153,7 +153,7 @@ you also need to add webhook.
 
 To make sure that the repository can be accessed by the user the request to appropriate provider is made again
 when user has pressed \textit{"Start tracking"} button.
-This check is required as the user could easily guess other peoples private repository clone urls and then post
+This check is required as the user could easily guess other peoples private repository clone URLs and then post
 it to our backend with his own JWT.
 This extra check also means you cannot add tracking to self-hosted Git servers that do not provide OAuth2.
 However, we could not find any better way to identify that the given user has access to some Git repository and
@@ -161,7 +161,7 @@ therefore it was decided to not support any custom setups.
 
 \section{Sync client}\label{sec:sync-client-content}
 Sync client is used to fetch data from Git notes and then sync it up to our backend.
-To interact with sync client, you either need to edit local config file or send REST API requests to its endpoints.
+To interact with sync client, you either need to edit local configuration file or send REST API requests to its endpoints.
 
 Manually editing configuration is meant for human as it gives more control over application and REST API is
 for machine to machine communication.
@@ -182,9 +182,9 @@ All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
         GET/POST /repositories/<provider>/<user>/<repo>/sync & Sync single repository.
         Post is allowed as webhooks sometimes only support post requests\\
         \hline
-        POST /hooks/github/push & Endpoint for github hook to sync repository\\
+        POST /hooks/github/push & Endpoint for Github hook to sync repository\\
         \hline
-        POST /hooks/gitlab/push & Endpoint for gitlab hook to sync repository\\
+        POST /hooks/gitlab/push & Endpoint for Gitlab hook to sync repository\\
         \hline
     \end{tabular}
     \caption{Gtm-sync API endpoints.}
@@ -206,9 +206,9 @@ The configuration variables are described in Table~\ref{tab:gtm-sync-config}.
         \hline
         \textbf{Variable} & \textbf{Description}\\
         \hline
-        target\_base\_url & Backend url, used for syncing data \\
+        target\_base\_url & Backend URL, used for syncing data \\
         \hline
-        sync\_base\_url &  Public url to self (Optional), used to force sync\\
+        sync\_base\_url &  Public URL to self (Optional), used to force sync\\
         \hline
         access\_token & Backend API key\\
         \hline
@@ -218,7 +218,7 @@ The configuration variables are described in Table~\ref{tab:gtm-sync-config}.
         \hline
         repositories\_base\_path & Path to store cloned repositories at\\
         \hline
-        repositories & List of tracked repositories (each has path in filesystem and clone url)\\
+        repositories & List of tracked repositories (each has path in filesystem and clone URL)\\
         \hline
     \end{tabular}
     \caption{Gtm-sync config variables.}
@@ -229,7 +229,7 @@ The configuration variables are described in Table~\ref{tab:gtm-sync-config}.
 Backend is the central part of our system as it connects frontend, sync client and database.
 It communicates with gtm-sync and gtm-front via REST API requests.
 
-Sync client which has api key registered has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-for-sync}.
+Sync client which has API key registered has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-for-sync}.
 \begin{table}[H]
     \centering
     \begin{tabular}{ | p{5cm} | p{4cm} | p{5cm} |}
@@ -336,7 +336,7 @@ Requirements for grouping system
 
 As the groups may consist of both groups and repositories we decided to automatically create group for every repository.
 This means now groups can only consist of zero or more other groups.
-If we need te get the repository we can fetch all the group ids that are accessible and then query from repositories database by
+If we need to get the repository we can fetch all the group ids that are accessible and then query from repositories database by
 comparing repositories group id against previously fetched ids.
 To fetch group with all of its subgroups a recursive Structured Query Language (SQL) query was needed as the groups'
 hierarchy formulates a tree like structure.
@@ -394,15 +394,15 @@ In those tabs users can see their/others data as graphs and tables.
 
 \subsection{Authentication and authorization}\label{subsec:authentication-and-authorization}
 Authentication and authorization is implemented using bearer token system.
-User gets JSON Web Token (JWT) from api and stores it to the localstorage and adds to every request header.
+User gets JSON Web Token (JWT) from API and stores it to the local storage and adds to every request header.
 User has to log in from log in page.
 Login page view can be found on Figure~\ref{fig:login}.
-On success client receives JWT from backend and client stores it in localstorage.
+On success client receives JWT from backend and client stores it in local storage.
 Then user is automatically redirected to main page.
 Users can log in with OAuth or username/password.
 In case of OAuth user is redirected to according OAuth platform for authentication.
 When successful, user is redirected to frontend with JWT.
-JWT is saved on localstorage and user is redirected to main page where he/she can access their data.
+JWT is saved on local storage and user is redirected to main page where he/she can access their data.
 Login and register user flows are described on Figure~\ref{fig:login-signup-diagram}.
 
 \begin{figure}[H]
@@ -469,12 +469,12 @@ According to the interval it shows daily activity, weekly activity or monthly ac
 X-axis shows interval and Y-axis shows average time spent during this time.
 If interval is day then X-axis describes each hour, in case of week, X-axis describes each week day, etc.
 Y-axis also shows lines added and removed from code.
-This graph brings out the timeframe when users are actively programming.
+This graph brings out the time frame when users are actively programming.
 
 Third graph is bar chart which describes time spent in folders or files.
 X-axis shows the period of time and Y-axis shows the time spent during the period.
 Bars are stacked on each other and each bar describes one folder or file.
-This graph brings out on which tasks people spend most of their time on and is very useful for lecturers who want to see which homeoworks take more time.
+This graph brings out on which tasks people spend most of their time on and is very useful for lecturers who want to see which homeworks take more time.
 
 \subsubsection{Leaderboard}\label{subsubsec:leaderboard}
 Leaderboard contains four inputs and two tables where users and files/folders can be easily compared.
@@ -491,7 +491,7 @@ Data is divided into 8 columns - total time, commits, lines added, lines removed
 Sequence can also be changed by clicking on the column header.
 This table can be useful for comparing different tasks in university as they are usually placed in separate folders.
 
-At the end of the page there is export data button which downloads csv file with data.
+At the end of the page there is export data button which downloads Comma Separated Values (CSV) file with data.
 
 \subsubsection{Comparison}\label{subsubsec:comparison}
 Comparison page has four inputs and one graph.
@@ -500,7 +500,7 @@ Inputs again are group selection, date selection and interval selection.
 Multiple groups can be selected to compare them.
 Graph draws out lines charts depending on amount of groups selected.
 X-axis shows the period of time and Y-axis shows time spent.
-Each line has different color as it represents different group and makes the graph more understandable.
+Each line has different colour as it represents different group and makes the graph more understandable.
 
 \subsection{Licencing}\label{subsec:licencing}
 It was decided in the beginning, that all the apps installed on client machine are made open source so that
@@ -549,41 +549,41 @@ Apache 2.0 licence is similar to MIT as it's also a permissive licence.
 It differs from MIT licence by having more conditions clearly stated.
 Apache 2.0 licence also states that contributors provide an express grant of patent rights, meaning that it gives
 user more protection about patent trolls.
-Apache 2.0 licence also states that changes made to source code have to be stated, but they can be licenced under different terms.
+Apache 2.0 licence also states that changes made to source code have to be stated, but they can be licensed under different terms.
 \cite{apache-2-licences}
 
 GNU General Public License v3.0 on the other hand is one of the strongest copy left licences.
-It states, that if piece of code licenced under GPLv3 is included in building some bigger application,
-then the source code of the whole application must be licenced under GPLv3 making the licence sticky.
+It states, that if piece of code licensed under GPLv3 is included in building some bigger application,
+then the source code of the whole application must be licensed under GPLv3 making the licence sticky.
 Although the licence states the code has to be publicly available, it does not prohibit commercial use.
 GPLv3 can be used to protect software against making it private.
 \cite{gplv3-licence}
 
 As the GPLv3's statement of making the whole source code public is really strong, we decided to also consider
 GNU Lesser General Public Licence v3.0 (LGPLv3) which is mostly the same as GPLv3, but is more permissive by
-stating that the source code does not have to be licenced under LGPLv3 if the original code is not modified and only used as a library.
+stating that the source code does not have to be licensed under LGPLv3 if the original code is not modified and only used as a library.
 \cite{lgplv3-licence}
 
 \subsubsection{Licencing IDE plugins}\label{subsubsec:licencing-ide-plugins}
 It was decided to licence our IDE plugins under MIT licence.
 Our IDE plugins are relatively small and lack business logic in them.
-They are only required to integrate GTM into IDE-s and we would greatly benefit, if someone would make better alternatives
+They are only required to integrate GTM into IDE-s, and we would greatly benefit, if someone would make better alternatives
 as this would attract more users into using GTM.
-Also, most of, if not all the original Git-Time-Metric plugins are licenced under MIT licence and all Wakatime plugins are
-licenced under similarly permissive licences.
+Also, most of, if not all the original Git-Time-Metric plugins are licensed under MIT licence and all Wakatime plugins are
+licensed under similarly permissive licences.
 
 \subsubsection{Licencing gtm-core}\label{subsubsec:licencing-gtm-core}
-It was decided that similarly to IDE plugins, gtm-core is licenced under MIT licence.
-The biggest reason for it was that the original Git-Time-Metric app is licenced under MIT licence, and we have not made any huge changes.
-If we licenced our app under more restrictive licence, users could easily turn to original Git-Time-Metric app and develop it instead.
-As we have the same licence as the original Git-Time-Metric app, there is possibility that if there will be more work put into the
-original app than ours, we can merge our changes into the original app without having to change licencing.
+It was decided that similarly to IDE plugins, gtm-core is licensed under MIT licence.
+The biggest reason for it was that the original Git-Time-Metric app is licensed under MIT licence, and we have not made any huge changes.
+If we licensed our app under more restrictive licence, users could easily turn to original Git-Time-Metric app and develop it instead.
+As we have the same license as the original Git-Time-Metric app, there is possibility that if there will be more work put into the
+original app than ours, we can merge our changes into the original app without having to change licensing.
 
 \subsubsection{Licencing gtm-sync}\label{subsubsec:licencing-gtm-sync}
 For gtm-sync it was decided to licence it under LGPLv3.
-As all the dependencies are licenced under MIT licence (many also dual licenced under Apache 2 Licence), they are LGPLv3 compatible.
+As all the dependencies are licensed under MIT licence (many also dual licensed under Apache 2 Licence), they are LGPLv3 compatible.
 As gtm-sync is pretty much a requirement to get data from Git notes to our back end, we want to make sure it,
-and it's potential successors stay publicly available.
+and its potential successors stay publicly available.
 We would like someone to base his closed source (and potentially non-free) application on gtm-sync.
 However, we do want to allow others to use gtm-sync as a library without requiring them to open source their project.
 If we allow users to use it as a library more freely, we also increase the chance to have other users contribute towards gtm-sync
@@ -591,12 +591,12 @@ rather than their closed source fork or alternative.
 
 \subsubsection{Licencing gtm-api and gtm-front}\label{subsubsec:licencing-gtm-api-and-gtm-front}
 We decided to licence gtm-api and gtm-front under same licence as they are more closely tied together than other parts of application.
-Similarly to gtm-sync all the dependencies are licenced under MIT licence (many also dual licenced under Apache 2 Licence), they are LGPLv3 compatible.
-% TODO: Check front end licences
-For the licence we chose GNU Lesser General Public Licence v3.0. % TODO: Vb GPLv3
+Similarly to gtm-sync all the dependencies are licensed under MIT licence (many also dual licensed under Apache 2 Licence), they are LGPLv3 compatible.
+
+For the licence we chose GNU Lesser General Public Licence v3.0.
 We strongly want these applications to stay open source also in the future so copy-left was logical choice.
-Although both of them are applications, not libraries we chose tho use LGPLv3 instead of GPLv3, as technically some parts
+Although both of them are applications, not libraries we chose to use LGPLv3 instead of GPLv3, as technically some parts
 could be also used as libraries and that's fine with us.
 
-If someone wishes to use it without open sourcing his code there's always option to ask us as dual licencing is also possibility.
+If someone wishes to use it without open sourcing his code there's always option to ask us as dual licensing is also possibility.
 Then we can decide whether to allow it or not, but generally we want the code to stay open source.
