@@ -5,35 +5,35 @@ Our CLI app is based on~\nameref{subsec:git-time-metric}, an already working ope
 Although it already had all the basic features, some improvements and fixes were required.
 
 Firstly \textit{--cwd=\{some/path\}} option was added to allow easier integration of plugins.
-Option to pass current directory as option is required, as IDEs not launched from terminal sometimes have their working
+Option to pass a current directory as an option is required, as IDEs not launched from terminal sometimes have their working
 directory elsewhere and setting custom working directory every time we call CLI app is more complicated than passing an argument.
 
 To clean up user home directories, global configuration files were moved from \textit{~/.git-time-metrics/} to \textit{~/.config/gtm/}.
-For windows a new installer was built to make installing easier.
+For Windows, a new installer was built to make installing easier.
 Also, it was chosen to switch from statically compiling SSH2 Libraries into our application to dynamic linking.
 For Debian Linux, a build script for Debian packages was set up to also provide Debian packages with every release.
 
 The application was updated to automatically add a fetch refspecs to fetch data from remotes on Git fetch.
 Also, a pre-push Git hook was added to automatically push data to origin.
-With these two hooks, the time data is automatically fetched pushed whenever Git push is made requiring user no extra effort.
+With these two hooks, the time data is automatically fetched pushed whenever Git push is made requiring the user no extra effort.
 
 To still allow users to only track time locally, a \textit{--local} option was added to \textit{init} command.
 Also, \textit{--auto-log=[jira|gitlab]} option was added to support automatic time logging to commit messages.
 Currently, this time can only be collected in Jira, but there is also and \href{https://gitlab.com/gitlab-org/gitlab/-/issues/16543}{issue}
 open for Gitlab to implement this.\cite{gitlab-time-issue}
 
-To allow filtering data by branch name we decided to also store current branch name in Git Notes when committing a file.
+To allow filtering data by branch name we decided to also store the current branch name in Git Notes when committing a file.
 This couldn't be avoided because the branch is simply a pointer to commit and there is no guarantee that this pointer isn't changed or deleted.
 
 For students, it is important to view time spent on specific tasks.
-In most subjects the tasks are placed in separate subdirectories for better files management.
+In most subjects, the tasks are placed in separate subdirectories for better file management.
 To allow users to view time spent on specific tasks, a \textit{--subdir="sub/dir/name"} option was added to filter out
 data based on directories.
 
-Although the Git supports automatic merging/rewriting of the notes, it was inconsistent in some cases, especially when the user
+Although Git supports automatic merging/rewriting of the notes, it was inconsistent in some cases, especially when the user
 wants to also rewrite manually added notes.
 To keep time data after Git rebases, a new command \textit{rewrite} was introduced.
-This command is ran by Git post-rewrite hook, and it rewrites notes so that they still point to correct commit.
+This command is run by Git post-rewrite hook, and it rewrites notes so that they still point to the correct commit.
 
 \subsection{Initializing tracking}\label{subsec:init-tracking}
 Main flow for initializing tracking for repository is described in Figure~\ref{fig:init-tracking}.
@@ -43,7 +43,7 @@ Main flow for initializing tracking for repository is described in Figure~\ref{f
     \label{fig:init-tracking}
 \end{figure}
 
-First requirement is that you need to have gtm-core installed and added to \textit{PATH} in order to initialize tracking.
+The first requirement is that you need to have gtm-core installed and added to \textit{PATH} in order to initialize tracking.
 If the user has gtm-core installed, he can initialize tracking from command line.
 To do that, it is required to change your current directory to be somewhere within Git root directory.
 Time tracking is then initialized with \textit{gtm init} command.
@@ -77,47 +77,47 @@ It is safe to run \textit{gtm init} multiple times with any of the arguments.
 
 The user can also initialize time tracking from within IDE if he has GTM plugin installed.
 Currently, only Jetbrains IDE plugin supports starting tracking.
-To initialize time tracking from Jetbrains IDE the user needs to open/reload project he wishes to add time tracking to.
+To initialize time tracking from Jetbrains IDE the user needs to open/reload the project he wishes to add time tracking to.
 Upon doing that he is prompted to choose whether to start tracking or not.
 To initialize tracking, start tracking has to be chosen.
-This initializes tracking for currently open repository with default settings (equal to no argument for CLI).
-If the user chooses not to initialize tracking, his choice is persisted in local Jetbrains project config file within \textit{.idea} directory.
-To later add tracking to repository, he needs to do it from command line or by deleting project settings file.
+This initializes tracking for the currently open repository with default settings (equal to no argument for CLI).
+If the user chooses not to initialize tracking, his choice is persisted in a local Jetbrains project config file within \textit{.idea} directory.
+To later add tracking to a repository, he needs to do it from the command line or by deleting the Jetbrains' project settings file.
 
 
 \section{IDE Plugins}\label{sec:plugins}
 
-IDE plugins are used to capture editor specific events and then execute appropriate commands on gtm-core.
+IDE plugins are used to capture editor-specific events and then execute appropriate commands on gtm-core.
 Basically gtm-core and IDE plugin combo works like a language server and code formatting plugin combo.
-This eliminates need to write duplicate code when writing plugins for multiple IDEs.
+This eliminates the need to write duplicate code when writing plugins for multiple IDEs.
 Currently, we have full support for Jetbrains and some support for Vim.
 There are also many more plugins that have been previously written for original Git-Time-Metric, and most of them also work with our app.
 
 \subsection{Jetbrains}\label{subsec:jetbrains-plugin}
-Jetbrains also had a plugin for original Git-Time-Metric, but the IDE has gone through lots of changes since the last update to the plugin.
+Jetbrains also had a plugin for the original Git-Time-Metric, but the IDE has gone through lots of changes since the last update to the plugin.
 As of 2021, this causes Jetbrains IDEs to crash.
 We decided to fully rewrite the plugin as it heavily used now deprecated Jetbrains components.
 
 The plugin catches following events and forwards the data to gtm-core:
 \begin{enumerate}
-    \item Opening the file in editor.
+    \item Opening the file in the editor.
     \item A mouse pressed inside the editor (on file).
     \item A process run (Mostly build, test, debug or run, but can be any other process you run via IDE)
     \item File saved.
     \item Visible area changed (Window resized / split).
 \end{enumerate}
 
-In response, plugin gets the time since the last commit (uncommitted time), which it shows on the bottom status bar.
+In response, the plugin gets the time since the last commit (uncommitted time), which it shows on the bottom status bar.
 
-In addition to silently listening for events and updating time the plugin communicates with the user via pop-up dialog and notification.
+In addition to silently listening for events and updating time, the plugin communicates with the user via pop-up dialog and notification.
 The pop-up dialog is used to prompt the user whether he wants to start tracking time for the project as described in~\nameref{subsec:init-tracking}
 Notifications are used to report errors and more important action results (such as whether adding tracking was successful).
 
 \subsection{Vim}\label{subsec:vim-plugin}
 An already existing \href{https://github.com/git-time-metric/gtm-vim-plugin}{plugin} for vim was forked as it had all the required features.
 Version numbers and update links were changed to comply with our version.
-As the Vim script file to give the support for tracking time and also displaying it on status line is under 80 lines long
-it perfectly describes, why it was necessary to have gtm-core as a separate program instead of writing the business logic inside plugin.
+As the Vim script file to give the support for tracking time and also displaying it on the status line is under 80 lines long
+it perfectly describes, why it was necessary to have gtm-core as a separate program instead of writing the business logic inside the plugin.
 
 
 \subsection{Adding tracking to repositories}\label{subsec:adding-tracking}
@@ -128,15 +128,15 @@ We have added three levels to view time data:
     \item Add tracking, sync data to GTM Web App.
 \end{enumerate}
 
-All smaller level features can be included while using higher level option.
+All smaller level features can be included while using a higher level option.
 Viewing data via CLI app is always possible, as it is the same app that is responsible for recording data.
 This can be done both only locally or with pushing and pulling notes from remotes.
 You can also add logging time spent to commit messages in both of the scenarios as it simply works on top of the already
-existing system and only modifies commit message.
+existing system and only modifies the commit message.
 To use auto logging option you simply need to add \textit{--auto-log=[gitlab|jira]} option when initiating tracking. % for a repository.
 
-To view data from web interface, some more steps are required.
-User flow for making repository visible on GTM web application is shown on Figure~\ref{fig:add-tracking-user-flow}.
+To view data from the web interface, some more steps are required.
+User flow for making repository visible on GTM web application is shown in Figure~\ref{fig:add-tracking-user-flow}.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/add_repo_user_flow}
@@ -146,12 +146,12 @@ User flow for making repository visible on GTM web application is shown on Figur
 
 Firstly, to have our sync client access the data, you cannot have time data only stored locally.
 Then to add a repository, you need to have linked appropriate Git server provider account via OAuth so that we can
-verify that you have the access to repository.
-After that you need to search for the repository from web interface and click \textit{"Start tracking"} button.
-With that the tracking is technically added, but to also automatically sync time data on every push to remote,
-you also need to add webhook.
+verify that you have the access to the repository.
+After that, you need to search for the repository from the web interface and click \textit{"Start tracking"} button.
+With that, the tracking is technically added, but to also automatically sync time data on every push to remote,
+you also need to add a webhook.
 
-To make sure that the repository can be accessed by the user the request to appropriate provider is made again
+To make sure that the repository can be accessed by the user the request to an appropriate provider is made again
 when user has pressed \textit{"Start tracking"} button.
 This check is required as the user could easily guess other peoples private repository clone URLs and then post
 it to our backend with his own JWT.
@@ -160,11 +160,11 @@ However, we could not find any better way to identify that the given user has ac
 therefore it was decided to not support any custom setups.
 
 \section{Sync client}\label{sec:sync-client-content}
-Sync client is used to fetch data from Git notes and then sync it up to our backend.
+Sync client is used for fetching data from Git notes and then syncing it up to the backend.
 The gtm-sync application is configured in a local configuration file, and it exposes some REST API endpoints
 that allow adding new repositories and endpoints for triggering syncing process
 
-Manually editing configuration is meant for developer as it gives more control over application and REST API is
+Manually editing configuration is meant for a developer as it gives more control over application and REST API is
 for machine to machine communication.
 All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
 
@@ -194,10 +194,10 @@ All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
 \end{table}
 
 For configuration \textit{config.toml} file is used.
-It contains information about backend, where to sync data, Git user authorization (ssh keys) and about tracked repositories.
+It contains information about the backend, where to sync data, Git user authorization (SSH keys), and about tracked repositories.
 Although gtm-sync supports cloning with both Secure Shell Protocol (SSH) and HTTPS, we have limited it to HTTPS in our backend for simplicity.
-In order for SSH keys to work, we have created a user called \textit{gtm-user} to TalTech Gitlab server and added SSH key to him.
-This means \textit{gtm-user} has to have at minimal reporter access to project in order to track it.
+In order for SSH keys to work, we have created a user called \textit{gtm-user} to TalTech Gitlab server and added an SSH key to him.
+This means \textit{gtm-user} has to have at minimal reporter access to the project in order to track it.
 For GitHub and GitLab we only support tracking public repositories for now and for the SSH cloning to work, the SSH key was added to
 Tavo Annus'es personal account.
 The configuration variables are described in Table~\ref{tab:gtm-sync-config}.
@@ -228,7 +228,7 @@ The configuration variables are described in Table~\ref{tab:gtm-sync-config}.
 \end{table}
 
 \section{Backend}\label{sec:backend-content}
-Backend is the central part of our system as it connects frontend, sync client and database.
+Backend is the central part of our system as it connects frontend, sync client, and database.
 It communicates with gtm-sync and gtm-front via REST API requests.
 
 Sync client which has API key registered has access to the endpoints in Table~\ref{tab:gtm-api-endpoints-for-sync}.
@@ -291,17 +291,17 @@ All the endpoints can be found \href{https://cs.ttu.ee/services/gtm/api/swagger/
 
 \subsection{Security}\label{subsec:scurity}
 Our application holds data, that shall not be visible to all clients and therefore some kind of authentication and authorization methods are required.
-For the data stored in Git notes we decided no extra security is required, as the time data isn't more sensitive than the actual code.
-The security of source code stored in Git repository is handled by a client himself and Git providers.
+For the data stored in Git notes, we decided no extra security is required, as the time data isn't more sensitive than the actual code.
+The security of source code stored in a Git repository is handled by a client himself and Git providers.
 If they wish to have some more protection for Git notes, they can configure it themselves.
 We only provide the option to have notes only stored locally (not pushed to origin).
 
-For the web application we need to implement our own security measures.
-For the most basic usage we have a simple username and password authentication.
-Accounts that only have password authentication are not authorized to access any groups nor repositories unless Admin user
+For the web application, we need to implement our own security measures.
+For the most basic usage, we have a simple username and password authentication.
+Accounts that only have password authentication are not authorized to access any groups nor repositories unless the Admin user
 explicitly gives them access to any.
 
-To automatically get access to repositories you are contributor of you need to authenticate yourself via OAuth2 standard.
+To automatically get access to repositories you are a contributor of you need to authenticate yourself via OAuth2 standard.
 This way we can verify, that the user signing in to our application is the same user that has access to some Git repository.
 
 \subsubsection{OAuth2}\label{subsubsec:oauth2}
@@ -309,18 +309,18 @@ For OAuth2 authorization rocket{\_}oauth2 library is used, that follows RFC-6749
 We support authentication via \href{https://github.com/}{Github.com}, \href{https://about.gitlab.com/}{Gitlab.com},
 \href{https://bitbucket.org/}{Bitbucket.org}, \href{https://azure.microsoft.com/}{Azure} (Microsoft account) and
 TalTech \href{https://gitlab.cs.ttu.ee/}{gitlab server}.
-First three were chosen as they are the most common Git server providers as of 2021.
-Authentication via Microsoft was added as TalTech (and also numerous other universities / companies) use it and therefore
-all students have already registered account there.
+The first three were chosen as they are the most common Git server providers as of 2021.
+Authentication via Microsoft was added as TalTech (and also numerous other universities/companies) use it and therefore
+all students have already registered accounts there.
 Also, it provides access to user emails, that can be later used to filter out user commits.
 TalTech Gitlab server was added, as the application is currently developed for TalTech and therefore it was a requirement
 that everything shall also work on TalTech Gitlab server.
 
 From all OAuth2 providers at least user read access is required to get access to user emails, which we use to link users with commits.
-For OAuth2 providers, that are also a Git server providers also permissions to read user repositories data is required.
+For OAuth2 providers, which are also a Git server providers also permissions to read user repositories data are required.
 User repositories data is used to give user automatically access to his own repositories and also display repositories
 not currently tracked by GTM.
-It also allows adding automatic data collection to user repositories more easily, as user can browse through
+It also allows adding automatic data collection to user repositories more easily, as a user can browse through
 repositories from different Git server providers.
 
 \subsection{Groups system}\label{subsec:group-system}
@@ -328,9 +328,9 @@ One of the requirements for our app was that it should be possible to group repo
 The grouping is needed to view statistics for multiple repositories at once and also compare groups of repositories.
 The grouping system should be also capable of controlling user access rights to different repositories.
 
-Requirements for grouping system were:
+Requirements for the grouping system were:
 \begin{itemize}
-    \item It shall be possible to group both repositories and groups already consisting of repositories into a bigger groups.
+    \item It shall be possible to group both repositories and groups already consisting of repositories into a bigger group.
     \item Single repository may belong to multiple groups.
     \item Group access can be limited to only viewing summary (group total).
     \item Granting user an access group's subgroups and then removing it shall have no side effects. (Accesses to subgroups shall not be persisted)
@@ -340,10 +340,10 @@ As the groups may consist of both groups and repositories we decided to automati
 This means new groups can only consist of zero or more other groups.
 If we need to get the repository we can fetch all the group ids that are accessible and then query from repositories database by
 comparing repositories group id against previously fetched ids.
-To fetch group with all of its subgroups a recursive Structured Query Language (SQL) query was needed as the groups'
-hierarchy formulates a tree like structure.
+To fetch a group with all of its subgroups a recursive Structured Query Language (SQL) query was needed as the groups'
+hierarchy formulates a tree-like structure.
 Our database provider PostgreSQL supports recursive queries so there were no technical problems with implementing it on SQL database.
-A simplified version of our group system database tables can be seen of Figure~\ref{fig:group-system}.
+A simplified version of our group system database tables can be seen in Figure~\ref{fig:group-system}.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/group_system}
@@ -351,7 +351,7 @@ A simplified version of our group system database tables can be seen of Figure~\
     \label{fig:group-system}
 \end{figure}
 
-This tree like groups' hierarchy allows us to easily give and take user access to any group.
+This tree-like groups hierarchy allows us to easily give and take user access to any group.
 If we want to change access from only parent group to also all subgroups access, we can simply toggle access{\_}level{\_}recursive
 variable.
 If we remove one particular group access, all other accesses remain in place,
@@ -359,8 +359,8 @@ meaning that groups previously accessible via some other group access remain acc
 
 \subsection{Roles}\label{subsec:roles}
 Our application has three different roles to control user permissions.
-Single user can belong to multiple roles and also new roles can be dynamically added to database as they are
-kept in separate table.
+A single user can belong to multiple roles and also new roles can be dynamically added to the database as they are
+kept in a separate table.
 Currently, there are three roles in total: \textit{USER}, \textit{LECTURER} and \textit{ADMIN}.
 Role \textit{USER} is added to every created user, and it has no extra permissions.
 
@@ -390,21 +390,21 @@ People with \textit{ADMIN} role can:
 Frontend is one-page web application.
 Users can log in and see their data according to their privileges.
 This application has two main parts - profile and data visualization.
-Under profile users can change password, link OAuth accounts and delete account and add repositories.
-Data visualization is divided into 3 parts - dashboard, leaderboard and timeline comparison.
+Under profile, users can change password, link OAuth accounts and delete an account and add repositories.
+Data visualization is divided into 3 parts - \textit{"Dashboard"}, \textit{"Leaderboard"} and \textit{"Timeline comparison"}.
 In those tabs users can see their/others data as graphs and tables.
 
 \subsection{Authentication and authorization}\label{subsec:authentication-and-authorization}
-Authentication and authorization is implemented using bearer token system.
-User gets JSON Web Token (JWT) from API and stores it to the local storage and adds to every request header.
-User has to log in from log in page.
-Login page view can be found on Figure~\ref{fig:login}.
-On success client receives JWT from backend and client stores it in local storage.
-Then user is automatically redirected to main page.
+Authentication and authorization is implemented using a bearer token system.
+The user gets JSON Web Token (JWT) from API and stores it to the local storage and adds it to every request header.
+The user has to log in from \textit{"Log in"} page.
+Login page view can be found in Figure~\ref{fig:login}.
+On success, client receives JWT from the backend and stores it in local storage.
+Then the user is automatically redirected to the main page.
 Users can log in with OAuth or username/password.
-In case of OAuth user is redirected to according OAuth platform for authentication.
-When successful, user is redirected to frontend with JWT.
-JWT is saved on local storage and user is redirected to main page where he/she can access their data.
+In case of OAuth is chosen, the user is redirected to according OAuth platform for authentication.
+If The authentication is successful, the user is redirected to the frontend with JWT.
+JWT is saved on local storage and the user is redirected to the main page where he/she can access their data.
 Login and register user flows are described on Figure~\ref{fig:login-signup-diagram}.
 
 \begin{figure}[H]
@@ -416,10 +416,10 @@ Login and register user flows are described on Figure~\ref{fig:login-signup-diag
 \subsection{Profile}\label{subsec:profile}
 \subsubsection{OAuth linking}\label{subsubsec:oauth-linking}
 It is also possible to link multiple OAuth platforms to one account (Figure~\ref{fig:link_accounts}).
-In that case user has to log in and head to the profile page where he can find link accounts tab.
-If OAuth platform is already linked then backend unlinks it from this account, otherwise user is redirected to OAuth platform for authentication.
-On success user will be redirected to frontend and user can access new repositories that this OAuth platform account has.
-OAuth linking flow is described on Figure
+In that case, the user has to log in and head to the profile page where he can find the link  under \textit{"Accounts"} tab.
+If an account from OAuth platform is already linked then the backend unlinks it from this account, otherwise user is redirected to OAuth platform for authentication.
+On success the user will be redirected to the frontend and the user can access new repositories that this OAuth platform account has.
+OAuth linking flow is described in Figure
 \ref{fig:account-linking}.
 
 \begin{figure}[H]
@@ -431,16 +431,16 @@ OAuth linking flow is described on Figure
 
 \subsubsection{Change password}\label{subsubsec:change-password}
 Users can also change password (Figure~\ref{fig:change_password}).
-In profile view under change password tab user has to fill all the fields correctly and password will be changed.
-If user does not have a password (OAuth registration), only new password fields have to be filled.
-Once you have already added a password, it's not possible to remove it to avoid possibility to have inaccessible accounts.
+In the \textit{"Profile"} view under the \textit{"Change password"} tab user has to fill all the fields correctly and the password will be changed.
+If the user does not have a password (OAuth registration), only new password fields have to be filled.
+Once you have already added a password, it's not possible to remove it to avoid the possibility to have inaccessible accounts.
 
 \subsubsection{Repositories}\label{subsubsec:repositories}
 Under repositories tab user can see all his repositories (Figure~\ref{fig:repositories}).
-User can start tracking a new repository by clicking start tracking and then adding a webhook to the according OAuth platform.
-If start tracking is clicked and everything is successful, a blue info box with instructions for webhook setup will pop up.
-In case user wants to start tracking again then the repository can be found at the end of the list with a button initialize again.
-Tracking can also be stopped by clicking on the red button with trash can.
+The user can start tracking a new repository by clicking \textit{"Start tracking"} and then adding a webhook to the according OAuth platform.
+If \textit{"Start tracking"} is clicked and everything is successful, a blue info box with instructions for webhook setup will pop up.
+In case the user wants to start tracking again then the repository can be found at the end of the list with a button initialize again.
+Tracking can also be stopped by clicking on the red button with a trash can.
 
 \subsubsection{Delete account}\label{subsubsec:delete-account}
 Account deletion is under \textit{"Delete account"} tab (Figure~\ref{fig:delete_account}).
@@ -450,31 +450,31 @@ If the account is deleted, the user is redirected to the \textit{"Login page"}.
 
 \subsection{Data visualization}\label{subsec:data-visualization}
 Data visualization is divided into three pages - dashboard, leaderboard and comparison.
-From the sidebar the user can navigate to the necessary page and on top of the page user has selection of properties according to the graphs.
+From the sidebar, the user can navigate to the necessary page, and on top of the page user has a selection of properties according to the graphs.
 
 \subsubsection{Dashboard}\label{subsubsec:dashboard}
 Dashboard is the main landing page if user is logged in.
-Dashboard view can be found on Figure~\ref{fig:dashboard}.
-Dashboard contains three graphs and inputs.
-From inputs user can change group, time period and interval.
+\textit{"Dashboard"} view can be found in Figure~\ref{fig:dashboard}.
+\textit{"Dashboard"} contains three graphs and inputs.
+From inputs, the user can change group, time period and interval.
 User can choose between all the groups he/she has access to.
-Time period has start and end which cannot be apart more than a year for performance reasons.
+The time period has start and end which cannot be apart more than a year for performance reasons.
 Intervals are days, weeks and months.
 
-The first graph is a combination of line and bar charts which describes time spent writing code in a period of time and also shows how many users were active at the interval.
-X-axis shows the period of time and Y-axis on shows the time spent during the period.
-Y-axis also shows active users count during the period.
-Line shows time spent and bar shows users count.
+The first graph is a combination of a line and a bar charts, which describes time spent writing code in a period of time and also shows how many users were active at the interval.
+The X-axis shows the period of time and Y-axis shows the time spent during the period.
+The Y-axis also shows active users count during the period.
+The line shows time spent and bar shows users count.
 
-The second graph is line chart which describes activity hours during the chosen period.
-According to the interval it shows daily activity, weekly activity or monthly activity.
-X-axis shows interval and Y-axis shows average time spent during this time.
-If interval is day then X-axis describes each hour, in case of week, X-axis describes each week day, etc.
-Y-axis also shows lines added and removed from code.
+The second graph is a line chart which describes activity hours during the chosen period.
+According to the interval, it shows daily activity, weekly activity or monthly activity.
+The X-axis shows interval over selected time period, and the Y-axis shows an average time spent during each interval.
+If the interval is day then the X-axis describes each hour, in case it is a week, the X-axis describes each week day, etc.
+The Y-axis also shows lines added and removed from code.
 This graph brings out the time frame when users are actively programming.
 
-The third graph is a bar chart which describes time spent in folders or files.
-X-axis shows the time period and Y-axis shows the time spent during day/week/month depending on the chosen interval.
+The third graph is a bar chart that describes time spent in folders or files.
+The X-axis shows the time period, and the Y-axis shows the time spent during day/week/month depending on the chosen interval.
 Bars are stacked on each other and each bar describes one folder or file.
 This graph brings out on which tasks people spend most of their time on and is very useful for lecturers who want to see which homeworks take more time.
 The depth of how far into files tree the app goes to group files is set to 2, as this makes
@@ -483,47 +483,47 @@ It will be made configurable in the future.
 
 \subsubsection{Leaderboard}\label{subsubsec:leaderboard}
 Leaderboard contains four inputs and two tables where users and files/folders can be easily compared.
-Leaderboard view can be found on Figure~\ref{fig:leaderboard}.
+\textit{"Leaderboard"} view can be found in Figure~\ref{fig:leaderboard}.
 Inputs contain group selection, date selection and depth selection.
 Depth determines how deep will the search go for files and folders.
 
-First table shows info about users in chosen group.
+The first table shows info about users in the chosen group.
 Data is divided into 7 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour and lines per commit.
 By clicking on the column header the contents of the table will be sorted accordingly.
 
-Second table shows info about file system.
+The second table shows info about the project(s) file system.
 Data is divided into 8 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour, lines per commit and users.
-Sequence can also be changed by clicking on the column header.
+The sequence can also be changed by clicking on the column header.
 This table can be useful for comparing different tasks in university as they are usually placed in separate folders.
 
-At the end of the page there is export data button which allows downloading Comma Separated Values (CSV) file with data.
+At the end of the page, there is an export data button that allows downloading Comma Separated Values (CSV) file with data.
 The data is filtered by the same inputs that filter the data in tables but is grouped
-by also commits giving higher resolution that the tables described above.
+by also commits giving higher resolution than the tables described above.
 
 
 \subsubsection{Comparison}\label{subsubsec:comparison}
 Comparison page has four inputs and one graph.
-Comparison view can be found on Figure~\ref{fig:comparison}.
+\textit{"Comparison"} view can be found in Figure~\ref{fig:comparison}.
 Inputs again are group selection, date selection and interval selection.
 Multiple groups can be selected to compare them.
-Graph draws out lines charts depending on amount of groups selected.
-X-axis shows the period of time and Y-axis shows time spent.
-Each line has different colour as it represents different group and makes the graph more understandable.
+Graph draws out line charts depending on the amount of groups selected.
+The X-axis shows the period of time and Y-axis shows time spent.
+Each line has different colour as it represents a different group and makes the graph more understandable.
 The graph can be toggled to show either total time or average time per user.
 
-\subsection{Licencing}\label{subsec:licencing}
-It was decided in the beginning, that all the apps installed on client machine are made open source so that
+\subsection{Licensing}\label{subsec:licencing}
+It was decided in the beginning, that all the apps installed on a client machine are made open source so that
 our users could inspect the code themselves and see that there are no malicious activities being done.
 
-In the beginning we planned to keep backend and frontend code as closed source.
+In the beginning, we planned to keep backend and frontend code as closed source.
 Later this plan was changed as we saw that Wakatime open source alternatives have received lots of features and updates
-during development of our app and are real strong competitors.
-If we'd keep our app as close source there is high chance our users will turn to these solutions or build their own one.
+during the development of our app and are really strong competitors.
+If we'd keep our app as a close source there is a high chance our users will turn to these solutions or build their own one.
 
-To find suitable licence(s) for our apps, we took top 3 most popular open source licences as of beginning of 2021 and decided
-to compare them to find which suits for us the best.
-These three licences were Apache-2.0 Licence, Massachusetts Institute of Technology (MIT) Licence and GNU Lesser General Public License (GPLv3) according to White source.
-As the top three contains both a copy-left and permissive licences, we decided not to include any more licences in the comparison.
+To find suitable licence(s) for our apps, we took the top 3 most popular open source licences as of beginning of 2021 and decided
+to compare them to find which suits us the best.
+These three licences were Apache-2.0 Licence, Massachusetts Institute of Technology (MIT) Licence and GNU Lesser General Public License (GPLv3) according to the White source.
+As the top three contains both copy-left and permissive licences, we decided not to include any more licences in the comparison.
 \cite{open-source-licences}
 The results of comparison are show in table~\ref{tab:open-source-licence-comparison}
 \begin{table}[H]
@@ -557,12 +557,12 @@ so ambiguity in more complex cases.
 Apache 2.0 licence is similar to MIT as it's also a permissive licence.
 It differs from MIT licence by having more conditions clearly stated.
 Apache 2.0 licence also states that contributors provide an express grant of patent rights, meaning that it gives
-user more protection about patent trolls.
+the user more protection about patent trolls.
 Apache 2.0 licence also states that changes made to source code have to be stated, but they can be licensed under different terms.
 \cite{apache-2-licences}
 
 GNU General Public License v3.0 on the other hand is one of the strongest copy left licences.
-It states, that if piece of code licensed under GPLv3 is included in building some bigger application,
+It states, that if a piece of code licensed under GPLv3 is included in building some bigger application,
 then the source code of the whole application must be licensed under GPLv3 making the licence sticky.
 Although the licence states the code has to be publicly available, it does not prohibit commercial use.
 GPLv3 can be used to protect software against making it private.
@@ -576,7 +576,7 @@ stating that the source code does not have to be licensed under LGPLv3 if the or
 \subsubsection{Licencing IDE plugins}\label{subsubsec:licencing-ide-plugins}
 It was decided to licence our IDE plugins under MIT licence.
 Our IDE plugins are relatively small and lack business logic in them.
-They are only required to integrate GTM into IDE-s, and we would greatly benefit, if someone would make better alternatives
+They are only required to integrate GTM into IDE-s, and we would greatly benefit if someone would make better alternatives
 as this would attract more users into using GTM.
 Also, most of, if not all the original Git-Time-Metric plugins are licensed under MIT licence and all Wakatime plugins are
 licensed under similarly permissive licences.
@@ -584,13 +584,13 @@ licensed under similarly permissive licences.
 \subsubsection{Licencing gtm-core}\label{subsubsec:licencing-gtm-core}
 It was decided that similarly to IDE plugins, gtm-core is licensed under MIT licence.
 The biggest reason for it was that the original Git-Time-Metric app is licensed under MIT licence, and we have not made any huge changes.
-If we licensed our app under more restrictive licence, users could easily turn to original Git-Time-Metric app and develop it instead.
-As we have the same license as the original Git-Time-Metric app, there is possibility that if there will be more work put into the
+If we licensed our app under a more restrictive licence, users could easily turn to the original Git-Time-Metric app and develop it instead.
+As we have the same license as the original Git-Time-Metric app, there is a possibility that if there will be more work put into the
 original app than ours, we can merge our changes into the original app without having to change licensing.
 
 \subsubsection{Licencing gtm-sync}\label{subsubsec:licencing-gtm-sync}
 For gtm-sync it was decided to licence it under LGPLv3.
-As all the dependencies are licensed under MIT licence (many also dual licensed under Apache 2 Licence), they are LGPLv3 compatible.
+As all the dependencies are licensed under MIT licence (many also dual-licensed under Apache 2 Licence), they are LGPLv3 compatible.
 As gtm-sync is pretty much a requirement to get data from Git notes to our back end, we want to make sure it,
 and its potential successors stay publicly available.
 We would like someone to base his closed source (and potentially non-free) application on gtm-sync.
@@ -599,13 +599,13 @@ If we allow users to use it as a library more freely, we also increase the chanc
 rather than their closed source fork or alternative.
 
 \subsubsection{Licencing gtm-api and gtm-front}\label{subsubsec:licencing-gtm-api-and-gtm-front}
-We decided to licence gtm-api and gtm-front under same licence as they are more closely tied together than other parts of application.
-Similarly to gtm-sync all the dependencies are licensed under MIT licence (many also dual licensed under Apache 2 Licence), they are LGPLv3 compatible.
+We decided to licence gtm-api and gtm-front under the same licence as they are more closely tied together than other parts of the application.
+Similarly to gtm-sync all the dependencies are licensed under MIT licence (many also dual-licensed under Apache 2 Licence), they are LGPLv3 compatible.
 
 For the licence we chose GNU Lesser General Public Licence v3.0.
-We strongly want these applications to stay open source also in the future so copy-left was logical choice.
+We strongly want these applications to stay open source also in the future, so a copy-left was logical choice.
 Although both of them are applications, not libraries we chose to use LGPLv3 instead of GPLv3, as technically some parts
 could be also used as libraries and that's fine with us.
 
-If someone wishes to use it without open sourcing his code there's always option to ask us as dual licensing is also possibility.
-Then we can decide whether to allow it or not, but generally we want the code to stay open source.
+If someone wishes to use it without open sourcing his code there's always an option to ask us as dual licensing is also a possibility.
+Then we can decide whether to allow it or not, but generally, we want the code to stay open source.
