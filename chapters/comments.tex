@@ -1,42 +1,42 @@
-In this section an overview is provided about the most impactful and changed technologies as well as the most important design choices.
+In this section, an overview is provided about the most impactful and changed technologies as well as the most important design choices.
 
 \section{Rust}\label{sec:rust}
-Initially we were thinking of choosing Java as our Backend language.
-As we started to analyze the needs, we ruled out C\#, Python and C++ and choosing suitable language came down to Java and Rust.
-Both of us already had a lot of experience with Java and Java is very widely used but in the other hand the performance and lightweightness of Rust seemed to be over weighting Java.
+Initially, we were thinking of choosing Java as our Backend language.
+As we started to analyze the needs, we ruled out C\#, Python, C++ and choosing suitable language came down to Java and Rust.
+Both of us already had a lot of experience with Java and Java is very widely used but on the other hand, the performance and lightweightness of Rust seemed to be over weighting Java.
 The easiest path would have been to choose already familiar Java, but we decided to go with Rust.
 
-Main benefits of choosing Rust are
+The main benefits of choosing Rust are
 \begin{itemize}
     \item Performance gain.
-    \item Its lightweight.
-    \item The benefit of learning new programming language.
+    \item It's lightweight.
+    \item The benefit of learning a new programming language.
     \item Demonstrating fast adoption of new technologies which is super important in today's world.
 \end{itemize}
 
-Main cons of choosing Rust are
+The main cons of choosing Rust are
 \begin{itemize}
-    \item Code writing efficiency is lower in learning phase resulting in less functionality being made for application.
+    \item Code writing efficiency is lower in the learning phase resulting in less functionality being made for the application.
     \item Significantly longer compile times than Java (and also longer than C/C++)
     \item Less optimal code than what it could be due to being inexperienced in language.
 \end{itemize}
 
-In the end the decision to use Rust turned out to be brilliant.
+In the end, the decision to use Rust turned out to be brilliant.
 We had some struggles in the beginning, especially when working with dates and time, but they weren't too hard to overcome.
 We were able to demonstrate the adoption of new technology while getting very good performance for our backend.
-Surprisingly the performance difference between Java and Rust can be noticed by human without specifically measuring in some cases
+Surprisingly the performance difference between Java and Rust can be noticed by a human without specifically measuring in some cases
 as Rust has significantly faster cold start and faster response times.
-For bigger queries this becomes less apparent depending on case, as the most noticeable benefit comes from Rust
-having to do less Heap allocation when responding to request.
+For bigger queries, this becomes less apparent depending on a case, as the most noticeable benefit comes from Rust
+having to do less Heap allocation when responding to the request.
 Although we were afraid, that Rust code might be harder to write than Java code, that wasn't the case.
 % TODO: Kas peaks siin ütleba et soovitame ka teistel õppida või see teemaväline?
 
 \section{Changed technologies}\label{sec:changed-technologies}
-Only change we made in the technologies was going from JavaScript to TypeScript in frontend.
-JavaScript is the most widely used language for frontend projects, so we did not analyze the need of other technologies.
-As the project kept growing and frontend started to get harder to read and organize, we came to the realization that better solution is needed.
-Code readability is very important part of this project as school plans to use this application in the future and other students must understand the code quickly.
-We started to analyze the perks and cons of TypeScript (superset of JavaScript) and turned out that it is a good solution for our problem.
+The only change we made in the technologies was going from JavaScript to TypeScript in the frontend.
+JavaScript is the most widely used language for frontend projects, so we did not analyze the need for other technologies.
+As the project kept growing and the frontend started to get harder to read and organize, we came to the realization that a better solution is needed.
+Code readability is a very important part of this project as the school plans to use this application in the future and other students must understand the code quickly.
+We started to analyze the perks and cons of TypeScript (a superset of JavaScript) and turned out that it is a good solution for our problem.
 
 Main benefits of TypeScript are
 \begin{itemize}
@@ -47,17 +47,17 @@ Main benefits of TypeScript are
     \item Supports modules, generics and interfaces to define data.
 \end{itemize}
 
-Only debatable reason to use JavaScript is performance gain.
-In our case this does not play a huge role as the performance gain starts to shine in the hands of advanced JavaScript developers.
+The only debatable reason to use JavaScript is its performance gain over TypeScript.
+In our case, this does not play a huge role as the performance gain starts to shine in the hands of advanced JavaScript developers.
 Although we do suffer performance problems in some cases, the decision of TypeScript is not the root cause of the problem.
 
 \section{Using Git-Time-Metric as a base}\label{sec:using-git-time-metric-base}
 Initially the~\nameref{subsec:git-time-metric} app seemed more pleasing to us as it already showed many fancy Git statistics whilst
 the main alternative~\nameref{subsec:wakatime} did not.
 We viewed some Wakatimes' open source alternatives but discarded them as they had only really basic features implemented meaning that
-we'd need to build backend on our own regardless of the choice which app to use as a base.
+we'd need to build the backend on our own regardless of the choice of which app to use as a base.
 We went with~\nameref{subsec:git-time-metric} and we haven't had any major setbacks, so we've proven this was a decent choice.
 However, there has been a lot of work put into also Wakatime's alternatives.
-If we'd need to start again from scratch we'd likely to go with one of the Wakatime's alternatives instead as right now
+If we'd need to start again from scratch we'd likely go with one of the Wakatime's alternatives instead as right now
 they already are decent open source backends.
 
