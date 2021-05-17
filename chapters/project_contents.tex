@@ -94,27 +94,27 @@ Currently, we have full support for Jetbrains and some support for Vim.
 There are also many more plugins that have been previously written for original Git-Time-Metric, and most of them also work with our app.
 
 \subsection{Jetbrains}\label{subsec:jetbrains-plugin}
-Jetbrains also had plugin for original Git-Time-Metric, but the IDE has gone through lots of changes since the last update to plugin.
+Jetbrains also had a plugin for original Git-Time-Metric, but the IDE has gone through lots of changes since the last update to the plugin.
 As of 2021, this causes Jetbrains IDEs to crash.
 We decided to fully rewrite the plugin as it heavily used now deprecated Jetbrains components.
 
 The plugin catches following events and forwards the data to gtm-core:
 \begin{enumerate}
-    \item Opening file in editor.
-    \item Mouse pressed inside editor (on file).
-    \item Process run (Mostly build, test, debug or run, but can be any other process you run via IDE)
+    \item Opening the file in editor.
+    \item A mouse pressed inside the editor (on file).
+    \item A process run (Mostly build, test, debug or run, but can be any other process you run via IDE)
     \item File saved.
     \item Visible area changed (Window resized / split).
 \end{enumerate}
 
-In response, plugin gets time since last commit (uncommitted time), which it shows on the bottom status bar.
+In response, plugin gets the time since the last commit (uncommitted time), which it shows on the bottom status bar.
 
-In addition to silently listening for events and updating time the plugin communicates with user via pop-up dialog and notification.
-The pop-up dialog is used to prompt user whether he wants to start tracking time for project as described in~\nameref{subsec:init-tracking}
-Notifications are used to report errors and more important actions results (such as whether adding tracking was successful).
+In addition to silently listening for events and updating time the plugin communicates with the user via pop-up dialog and notification.
+The pop-up dialog is used to prompt the user whether he wants to start tracking time for the project as described in~\nameref{subsec:init-tracking}
+Notifications are used to report errors and more important action results (such as whether adding tracking was successful).
 
 \subsection{Vim}\label{subsec:vim-plugin}
-Already existing \href{https://github.com/git-time-metric/gtm-vim-plugin}{plugin} for vim was forked as it had all the required features.
+An already existing \href{https://github.com/git-time-metric/gtm-vim-plugin}{plugin} for vim was forked as it had all the required features.
 Version numbers and update links were changed to comply with our version.
 As the Vim script file to give the support for tracking time and also displaying it on status line is under 80 lines long
 it perfectly describes, why it was necessary to have gtm-core as a separate program instead of writing the business logic inside plugin.
@@ -128,7 +128,7 @@ We have added three levels to view time data:
     \item Add tracking, sync data to GTM Web App.
 \end{enumerate}
 
-All smaller level can be included while using higher level option.
+All smaller level features can be included while using higher level option.
 Viewing data via CLI app is always possible, as it is the same app that is responsible for recording data.
 This can be done both only locally or with pushing and pulling notes from remotes.
 You can also add logging time spent to commit messages in both of the scenarios as it simply works on top of the already
@@ -147,7 +147,7 @@ User flow for making repository visible on GTM web application is shown on Figur
 Firstly, to have our sync client access the data, you cannot have time data only stored locally.
 Then to add a repository, you need to have linked appropriate Git server provider account via OAuth so that we can
 verify that you have the access to repository.
-After that you need to search for the repository from web interface and click add tracking button.
+After that you need to search for the repository from web interface and click \textit{"Start tracking"} button.
 With that the tracking is technically added, but to also automatically sync time data on every push to remote,
 you also need to add webhook.
 
@@ -161,9 +161,10 @@ therefore it was decided to not support any custom setups.
 
 \section{Sync client}\label{sec:sync-client-content}
 Sync client is used to fetch data from Git notes and then sync it up to our backend.
-To interact with sync client, you either need to edit local configuration file or send REST API requests to its endpoints.
+The gtm-sync application is configured in a local configuration file, and it exposes some REST API endpoints
+that allow adding new repositories and endpoints for triggering syncing process
 
-Manually editing configuration is meant for human as it gives more control over application and REST API is
+Manually editing configuration is meant for developer as it gives more control over application and REST API is
 for machine to machine communication.
 All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
 
@@ -179,7 +180,8 @@ All the API endpoints are described in Table~\ref{tab:gtm-sync-endpoints}.
         \hline
         GET /repositories/sync-all & Used to sync all tracked repositories to backend\\
         \hline
-        GET/POST /repositories/<provider>/<user>/<repo>/sync & Sync single repository.
+        GET/POST /repositories/<provider>/<user>
+        /<repo>/sync & Sync single repository.
         Post is allowed as webhooks sometimes only support post requests\\
         \hline
         POST /hooks/github/push & Endpoint for Github hook to sync repository\\
@@ -288,14 +290,14 @@ Unauthorized user has access to the endpoints in Table~\ref{tab:gtm-api-endpoint
 All the endpoints can be found \href{https://cs.ttu.ee/services/gtm/api/swagger/index.html}{here}.
 
 \subsection{Security}\label{subsec:scurity}
-Our application holds data, that shall not be visible to all client and therefore some kind of authentication and authorization methods are required.
+Our application holds data, that shall not be visible to all clients and therefore some kind of authentication and authorization methods are required.
 For the data stored in Git notes we decided no extra security is required, as the time data isn't more sensitive than the actual code.
 The security of source code stored in Git repository is handled by a client himself and Git providers.
 If they wish to have some more protection for Git notes, they can configure it themselves.
 We only provide the option to have notes only stored locally (not pushed to origin).
 
 For the web application we need to implement our own security measures.
-For most basic usage we have simple username and password authentication.
+For the most basic usage we have a simple username and password authentication.
 Accounts that only have password authentication are not authorized to access any groups nor repositories unless Admin user
 explicitly gives them access to any.
 
@@ -314,11 +316,11 @@ Also, it provides access to user emails, that can be later used to filter out us
 TalTech Gitlab server was added, as the application is currently developed for TalTech and therefore it was a requirement
 that everything shall also work on TalTech Gitlab server.
 
-From all OAuth2 providers at least user read access is required to get access to user emails.
+From all OAuth2 providers at least user read access is required to get access to user emails, which we use to link users with commits.
 For OAuth2 providers, that are also a Git server providers also permissions to read user repositories data is required.
 User repositories data is used to give user automatically access to his own repositories and also display repositories
 not currently tracked by GTM.
-It also allows more easily adding automatic data collection to user repositories, as user can browse through
+It also allows adding automatic data collection to user repositories more easily, as user can browse through
 repositories from different Git server providers.
 
 \subsection{Groups system}\label{subsec:group-system}
@@ -326,16 +328,16 @@ One of the requirements for our app was that it should be possible to group repo
 The grouping is needed to view statistics for multiple repositories at once and also compare groups of repositories.
 The grouping system should be also capable of controlling user access rights to different repositories.
 
-Requirements for grouping system
+Requirements for grouping system were:
 \begin{itemize}
-    \item It shall be possible to group both repositories and groups already consisting of repositories.
-    \item Single repository may be possible of multiple groups.
+    \item It shall be possible to group both repositories and groups already consisting of repositories into a bigger groups.
+    \item Single repository may belong to multiple groups.
     \item Group access can be limited to only viewing summary (group total).
-    \item Granting user an access group subgroups and then removing it shall have no side effects. (Accesses to subgroups shall not be persisted)
+    \item Granting user an access group's subgroups and then removing it shall have no side effects. (Accesses to subgroups shall not be persisted)
 \end{itemize}
 
-As the groups may consist of both groups and repositories we decided to automatically create group for every repository.
-This means now groups can only consist of zero or more other groups.
+As the groups may consist of both groups and repositories we decided to automatically create a group for every repository.
+This means new groups can only consist of zero or more other groups.
 If we need to get the repository we can fetch all the group ids that are accessible and then query from repositories database by
 comparing repositories group id against previously fetched ids.
 To fetch group with all of its subgroups a recursive Structured Query Language (SQL) query was needed as the groups'
@@ -352,12 +354,12 @@ A simplified version of our group system database tables can be seen of Figure~\
 This tree like groups' hierarchy allows us to easily give and take user access to any group.
 If we want to change access from only parent group to also all subgroups access, we can simply toggle access{\_}level{\_}recursive
 variable.
-If we remove one particular group access, all other accesses remain in place, meaning that you some group was accessible
-also via some other group access, you still have the access.
+If we remove one particular group access, all other accesses remain in place,
+meaning that groups previously accessible via some other group access remain accessible via the other group access.
 
 \subsection{Roles}\label{subsec:roles}
 Our application has three different roles to control user permissions.
-Single user can belong to multiple roles and roles and also new roles can be dynamically added to database as they are
+Single user can belong to multiple roles and also new roles can be dynamically added to database as they are
 kept in separate table.
 Currently, there are three roles in total: \textit{USER}, \textit{LECTURER} and \textit{ADMIN}.
 Role \textit{USER} is added to every created user, and it has no extra permissions.
@@ -414,7 +416,7 @@ Login and register user flows are described on Figure~\ref{fig:login-signup-diag
 \subsection{Profile}\label{subsec:profile}
 \subsubsection{OAuth linking}\label{subsubsec:oauth-linking}
 It is also possible to link multiple OAuth platforms to one account (Figure~\ref{fig:link_accounts}).
-In that case user has to log in and head to the profile page where he/she can find link accounts tab.
+In that case user has to log in and head to the profile page where he can find link accounts tab.
 If OAuth platform is already linked then backend unlinks it from this account, otherwise user is redirected to OAuth platform for authentication.
 On success user will be redirected to frontend and user can access new repositories that this OAuth platform account has.
 OAuth linking flow is described on Figure
@@ -434,21 +436,21 @@ If user does not have a password (OAuth registration), only new password fields 
 Once you have already added a password, it's not possible to remove it to avoid possibility to have inaccessible accounts.
 
 \subsubsection{Repositories}\label{subsubsec:repositories}
-Under repositories tab user can see all their repositories (Figure~\ref{fig:repositories}).
-User can start tracking new repository by clicking start tracking and then adding webhook to according OAuth platform.
-If start tracking is clicked and everything is successful, a blue info box with instructions for webhook will pop up.
-In case user wants to start tracking again then the repository can be found at the end of the list with button initialize again.
+Under repositories tab user can see all his repositories (Figure~\ref{fig:repositories}).
+User can start tracking a new repository by clicking start tracking and then adding a webhook to the according OAuth platform.
+If start tracking is clicked and everything is successful, a blue info box with instructions for webhook setup will pop up.
+In case user wants to start tracking again then the repository can be found at the end of the list with a button initialize again.
 Tracking can also be stopped by clicking on the red button with trash can.
 
 \subsubsection{Delete account}\label{subsubsec:delete-account}
-Account deletion is under delete account tab (Figure~\ref{fig:delete_account}).
+Account deletion is under \textit{"Delete account"} tab (Figure~\ref{fig:delete_account}).
 To keep away accidental account deletion user has to write their name to the input box and then can submit.
-If account is deleted, user is redirected to the login page.
+If the account is deleted, the user is redirected to the \textit{"Login page"}.
 % TODO: Mis siis kui viimase OAuthi unlinkid? ka delete? tegelt vist oleks warning vms parem aga idk
 
 \subsection{Data visualization}\label{subsec:data-visualization}
 Data visualization is divided into three pages - dashboard, leaderboard and comparison.
-From sidebar user can navigate to necessary page and on top of the page user has selection of properties according to the graphs.
+From the sidebar the user can navigate to the necessary page and on top of the page user has selection of properties according to the graphs.
 
 \subsubsection{Dashboard}\label{subsubsec:dashboard}
 Dashboard is the main landing page if user is logged in.
@@ -459,22 +461,25 @@ User can choose between all the groups he/she has access to.
 Time period has start and end which cannot be apart more than a year for performance reasons.
 Intervals are days, weeks and months.
 
-First graph is a combination of line and bar charts which describes time spent in time and also shows how many users were active at the interval.
+The first graph is a combination of line and bar charts which describes time spent writing code in a period of time and also shows how many users were active at the interval.
 X-axis shows the period of time and Y-axis on shows the time spent during the period.
 Y-axis also shows active users count during the period.
 Line shows time spent and bar shows users count.
 
-Second graph is line chart which describes activity hours during the chosen period.
+The second graph is line chart which describes activity hours during the chosen period.
 According to the interval it shows daily activity, weekly activity or monthly activity.
 X-axis shows interval and Y-axis shows average time spent during this time.
 If interval is day then X-axis describes each hour, in case of week, X-axis describes each week day, etc.
 Y-axis also shows lines added and removed from code.
 This graph brings out the time frame when users are actively programming.
 
-Third graph is bar chart which describes time spent in folders or files.
-X-axis shows the period of time and Y-axis shows the time spent during the period.
+The third graph is a bar chart which describes time spent in folders or files.
+X-axis shows the time period and Y-axis shows the time spent during day/week/month depending on the chosen interval.
 Bars are stacked on each other and each bar describes one folder or file.
 This graph brings out on which tasks people spend most of their time on and is very useful for lecturers who want to see which homeworks take more time.
+The depth of how far into files tree the app goes to group files is set to 2, as this makes
+it usable for most of the subjects.
+It will be made configurable in the future.
 
 \subsubsection{Leaderboard}\label{subsubsec:leaderboard}
 Leaderboard contains four inputs and two tables where users and files/folders can be easily compared.
@@ -484,14 +489,17 @@ Depth determines how deep will the search go for files and folders.
 
 First table shows info about users in chosen group.
 Data is divided into 7 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour and lines per commit.
-By clicking on the column header the sequence will change accordingly.
+By clicking on the column header the contents of the table will be sorted accordingly.
 
 Second table shows info about file system.
 Data is divided into 8 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour, lines per commit and users.
 Sequence can also be changed by clicking on the column header.
 This table can be useful for comparing different tasks in university as they are usually placed in separate folders.
 
-At the end of the page there is export data button which downloads Comma Separated Values (CSV) file with data.
+At the end of the page there is export data button which allows downloading Comma Separated Values (CSV) file with data.
+The data is filtered by the same inputs that filter the data in tables but is grouped
+by also commits giving higher resolution that the tables described above.
+
 
 \subsubsection{Comparison}\label{subsubsec:comparison}
 Comparison page has four inputs and one graph.
@@ -501,6 +509,7 @@ Multiple groups can be selected to compare them.
 Graph draws out lines charts depending on amount of groups selected.
 X-axis shows the period of time and Y-axis shows time spent.
 Each line has different colour as it represents different group and makes the graph more understandable.
+The graph can be toggled to show either total time or average time per user.
 
 \subsection{Licencing}\label{subsec:licencing}
 It was decided in the beginning, that all the apps installed on client machine are made open source so that
@@ -538,7 +547,7 @@ The results of comparison are show in table~\ref{tab:open-source-licence-compari
     \label{tab:open-source-licence-comparison}
 \end{table}
 
-MIT licence is the most permissive of these three as it only states that it's copyright has to be included, and
+MIT licence is the most permissive of these three as it only states that its copyright has to be included, and
 the author provides no warranties.
 MIT is also the shortest, and the simplest in it's wording.
 This makes MIT licence ideal for libraries that are supposed to be included in other applications but may cause
