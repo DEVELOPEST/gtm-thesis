@@ -390,19 +390,19 @@ People with \textit{ADMIN} role can:
 Frontend is one-page web application.
 Users can log in and see their data according to their privileges.
 This application has two main parts - profile and data visualization.
-Under profile, users can change password, link OAuth accounts and delete an account and add repositories.
+Under profile users can change password, link OAuth accounts, delete account and add repositories.
 Data visualization is divided into 3 parts - \textit{"Dashboard"}, \textit{"Leaderboard"} and \textit{"Timeline comparison"}.
 In those tabs users can see their/others data as graphs and tables.
 
 \subsection{Authentication and authorization}\label{subsec:authentication-and-authorization}
 Authentication and authorization is implemented using a bearer token system.
-The user gets JSON Web Token (JWT) from API and stores it to the local storage and adds it to every request header.
+The user gets JSON Web Token (JWT) from the API and stores it in the local storage and adds it to every request header.
 The user has to log in from \textit{"Log in"} page.
 Login page view can be found in Figure~\ref{fig:login}.
 On success, client receives JWT from the backend and stores it in local storage.
 Then the user is automatically redirected to the main page.
 Users can log in with OAuth or username/password.
-In case of OAuth is chosen, the user is redirected to according OAuth platform for authentication.
+In the case of OAuth, the user is redirected to the OAuth platform for authentication.
 If The authentication is successful, the user is redirected to the frontend with JWT.
 JWT is saved on local storage and the user is redirected to the main page where he can access their data.
 Login and register user flows are described on Figure~\ref{fig:login-signup-diagram}.
@@ -417,7 +417,7 @@ Login and register user flows are described on Figure~\ref{fig:login-signup-diag
 \subsubsection{OAuth linking}\label{subsubsec:oauth-linking}
 It is also possible to link multiple OAuth platforms to one account (Figure~\ref{fig:link_accounts}).
 In that case, the user has to log in and head to the profile page where he can find the link  under \textit{"Accounts"} tab.
-If an account from OAuth platform is already linked then the backend unlinks it from this account, otherwise user is redirected to OAuth platform for authentication.
+If an account from OAuth platform is already linked then the backend unlinks it from this account, otherwise the user is redirected to OAuth platform for authentication.
 On success the user will be redirected to the frontend and the user can access new repositories that this OAuth platform account has.
 OAuth linking flow is described in Figure
 \ref{fig:account-linking}.
@@ -433,18 +433,18 @@ OAuth linking flow is described in Figure
 Users can also change password (Figure~\ref{fig:change_password}).
 In the \textit{"Profile"} view under the \textit{"Change password"} tab user has to fill all the fields correctly and the password will be changed.
 If the user does not have a password (OAuth registration), only new password fields have to be filled.
-Once you have already added a password, it's not possible to remove it to avoid the possibility to have inaccessible accounts.
+Once the user has added a password, it's not possible to remove it to avoid the possibility to have inaccessible accounts.
 
 \subsubsection{Repositories}\label{subsubsec:repositories}
-Under repositories tab user can see all his repositories (Figure~\ref{fig:repositories}).
+Under \textit{"Repositories"} tab user can see all his repositories (Figure~\ref{fig:repositories}).
 The user can start tracking a new repository by clicking \textit{"Start tracking"} and then adding a webhook to the according OAuth platform.
 If \textit{"Start tracking"} is clicked and everything is successful, a blue info box with instructions for webhook setup will pop up.
-In case the user wants to start tracking again then the repository can be found at the end of the list with a button initialize again.
+In case the user wants to start tracking again then the repository can be found at the end of the list with a button \textit{"initialize again"}.
 Tracking can also be stopped by clicking on the red button with a trash can.
 
 \subsubsection{Delete account}\label{subsubsec:delete-account}
 Account deletion is under \textit{"Delete account"} tab (Figure~\ref{fig:delete_account}).
-To keep away accidental account deletion user has to write their name to the input box and then can submit.
+To keep away accidental account deletion user has to write his/her name to the input box and then can submit.
 If the account is deleted, the user is redirected to the \textit{"Login page"}.
 % TODO: Mis siis kui viimase OAuthi unlinkid? ka delete? tegelt vist oleks warning vms parem aga idk
 
@@ -453,10 +453,10 @@ Data visualization is divided into three pages - \textit{"Dashboard"}, \textit{"
 From the sidebar, the user can navigate to the necessary page, and on top of the page user has a selection of properties according to the graphs.
 
 \subsubsection{Dashboard}\label{subsubsec:dashboard}
-\textit{"Dashboard"} is the main landing page if user is logged in.
+\textit{"Dashboard"} is the main landing page if the user is logged in.
 \textit{"Dashboard"} view can be found in Figure~\ref{fig:dashboard}.
 \textit{"Dashboard"} contains three graphs and inputs.
-From inputs, the user can change group, time period and interval.
+From the inputs, the user can change group, time period and interval.
 User can choose between all the groups he has access to.
 The time period has start and end which cannot be apart more than a year for performance reasons.
 Intervals are days, weeks and months.
@@ -476,7 +476,7 @@ This graph brings out the time frame when users are actively programming.
 The third graph is a bar chart that describes time spent in folders or files.
 The X-axis shows the time period, and the Y-axis shows the time spent during day/week/month depending on the chosen interval.
 Bars are stacked on each other and each bar describes one folder or file.
-This graph brings out on which tasks people spend most of their time on and is very useful for lecturers who want to see which homeworks take more time.
+This graph brings out which tasks are the most time-consuming and is very useful for lecturers who want to see which homeworks take more time.
 The depth of how far into files tree the app goes to group files is set to 2, as this makes
 it usable for most of the subjects.
 It will be made configurable in the future.
@@ -488,11 +488,11 @@ Inputs contain group selection, date selection and depth selection.
 Depth determines how deep will the search go for files and folders.
 
 The first table shows info about users in the chosen group.
-Data is divided into 7 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour and lines per commit.
+Data is divided into 7 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour and lines per commit. %TODO Kaldkirjas?
 By clicking on the column header the contents of the table will be sorted accordingly.
 
 The second table shows info about the project(s) file system.
-Data is divided into 8 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour, lines per commit and users.
+Data is divided into 8 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour, lines per commit and users. %TODO Kaldkirjas?
 The sequence can also be changed by clicking on the column header.
 This table can be useful for comparing different tasks in university as they are usually placed in separate folders.
 
@@ -504,7 +504,7 @@ by also commits giving higher resolution than the tables described above.
 \subsubsection{Comparison}\label{subsubsec:comparison}
 \textit{"Comparison"} page has four inputs and one graph.
 \textit{"Comparison"} view can be found in Figure~\ref{fig:comparison}.
-Inputs again are group selection, date selection and interval selection.
+Inputs are group selection, date selection and interval selection.
 Multiple groups can be selected to compare them.
 Graph draws out line charts depending on the amount of groups selected.
 The X-axis shows the period of time and Y-axis shows time spent.
