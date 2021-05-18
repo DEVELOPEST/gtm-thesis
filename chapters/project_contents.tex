@@ -418,11 +418,12 @@ Login and register user flows are described on Figure~\ref{fig:login-signup-diag
 \subsection{Profile}\label{subsec:profile}
 \subsubsection{OAuth linking}\label{subsubsec:oauth-linking}
 It is also possible to link multiple OAuth platforms to one account (Figure~\ref{fig:link_accounts}).
-In that case, the user has to log in and head to the profile page, where he can find the link  under \textit{"Accounts"} tab.
-If an account from OAuth platform is already linked then the backend unlinks it from this account, otherwise the user is redirected to OAuth platform for authentication.
-On success the user will be redirected to the frontend, and the user can access new repositories that this OAuth platform account has.
-OAuth linking flow is described in Figure
-\ref{fig:account-linking}.
+In that case, the user has to log in and head to the \textit{"Profile"} page, where he can find the link under the \textit{"Accounts"} tab.
+If an account from OAuth platform is already linked then the backend unlinks it from the account,
+otherwise the user is redirected to an appropriate OAuth platform for authentication.
+On success the user will be redirected to the frontend, and the user can access new repositories that this OAuth platform account has access to.
+The backend also fetches all user emails from the linked account to later identify user commits.
+OAuth linking flow is described in Figure~\ref{fig:account-linking}.
 
 \begin{figure}[H]
     \centering
