@@ -404,7 +404,7 @@ Then the user is automatically redirected to the main page.
 Users can log in with OAuth or username/password.
 In the case of OAuth, the user is redirected to the OAuth platform for authentication.
 If The authentication is successful, the user is redirected to the frontend with JWT.
-JWT is saved on local storage and the user is redirected to the main page where he can access their data.
+JWT is saved on local storage, and the user is redirected to the main page where he can access their data.
 Login and register user flows are described on Figure~\ref{fig:login-signup-diagram}.
 
 \begin{figure}[H]
@@ -418,7 +418,7 @@ Login and register user flows are described on Figure~\ref{fig:login-signup-diag
 It is also possible to link multiple OAuth platforms to one account (Figure~\ref{fig:link_accounts}).
 In that case, the user has to log in and head to the profile page where he can find the link  under \textit{"Accounts"} tab.
 If an account from OAuth platform is already linked then the backend unlinks it from this account, otherwise the user is redirected to OAuth platform for authentication.
-On success the user will be redirected to the frontend and the user can access new repositories that this OAuth platform account has.
+On success the user will be redirected to the frontend, and the user can access new repositories that this OAuth platform account has.
 OAuth linking flow is described in Figure
 \ref{fig:account-linking}.
 
@@ -439,14 +439,15 @@ Once the user has added a password, it's not possible to remove it to avoid the 
 Under \textit{"Repositories"} tab user can see all his repositories (Figure~\ref{fig:repositories}).
 The user can start tracking a new repository by clicking \textit{"Start tracking"} and then adding a webhook to the according OAuth platform.
 If \textit{"Start tracking"} is clicked and everything is successful, a blue info box with instructions for webhook setup will pop up.
-In case the user wants to start tracking again then the repository can be found at the end of the list with a button \textit{"initialize again"}.
+In case the user wants to start tracking again then the repository can be found at the end of the list with a button \textit{"Initialize again"}.
 Tracking can also be stopped by clicking on the red button with a trash can.
 
 \subsubsection{Delete account}\label{subsubsec:delete-account}
 Account deletion is under \textit{"Delete account"} tab (Figure~\ref{fig:delete_account}).
-To keep away accidental account deletion user has to write his/her name to the input box and then can submit.
+To keep away accidental account deletion user has to write his name to the input box and then can proceed with the deletion.
+Unlinking all OAuth logins from account, that has no password login enabled is also considered as a deletion as otherwise it would become
+an orphan account.
 If the account is deleted, the user is redirected to the \textit{"Login page"}.
-% TODO: Mis siis kui viimase OAuthi unlinkid? ka delete? tegelt vist oleks warning vms parem aga idk
 
 \subsection{Data visualization}\label{subsec:data-visualization}
 Data visualization is divided into three pages - \textit{"Dashboard"}, \textit{"Leaderboard"} and \textit{"Comparison"}.
@@ -488,15 +489,17 @@ Inputs contain group selection, date selection and depth selection.
 Depth determines how deep will the search go for files and folders.
 
 The first table shows info about users in the chosen group.
-Data is divided into 7 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour and lines per commit. %TODO Kaldkirjas?
+Data is divided into 7 columns - \textit{"Total time"}, \textit{"Commits"}, \textit{"Lines added"}, \textit{"Lines removed"},
+\textit{"Lines per hour"}, \textit{"Commits per hour"} and \textit{Lines per commit"}.
 By clicking on the column header the contents of the table will be sorted accordingly.
 
 The second table shows info about the project(s) file system.
-Data is divided into 8 columns - total time, commits, lines added, lines removed, lines per hour, commits per hour, lines per commit and users. %TODO Kaldkirjas?
+Data is divided into 8 columns - \textit{"Total time"}, \textit{"Commits"}, \textit{"Lines added"}, \textit{"Lines removed"},
+\textit{"Lines per hour"}, \textit{"Commits per hour"}, \textit{"Lines per commit"} and \textit{"Users"}.
 The sequence can also be changed by clicking on the column header.
 This table can be useful for comparing different tasks in university as they are usually placed in separate folders.
 
-At the end of the page, there is an export data button that allows downloading Comma Separated Values (CSV) file with data.
+At the end of the page, there is an \textit{"Export data"} button that allows downloading Comma Separated Values (CSV) file with data.
 The data is filtered by the same inputs that filter the data in tables but is grouped
 by also commits giving higher resolution than the tables described above.
 
