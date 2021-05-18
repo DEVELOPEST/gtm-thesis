@@ -130,7 +130,7 @@ We have added three levels to view time data:
 
 All smaller level features can be included while using a higher level option.
 Viewing data via CLI app is always possible, as it is the same app that is responsible for recording data.
-This can be done both only locally or with pushing and pulling notes from remotes. %TODO vaata see üle, jube segane
+The data is stored in Git notes, and it does not matter whether the notes are local or not for the CLI app to read them.
 You can also add logging time spent to commit messages in both of the scenarios as it simply works on top of the already
 existing system and only modifies the commit message.
 To use auto logging option you simply need to add \textit{--auto-log=[gitlab|jira]} option when initiating tracking. % for a repository.
@@ -144,18 +144,20 @@ User flow for making repository visible on GTM web application is shown in Figur
     \label{fig:add-tracking-user-flow}
 \end{figure}
 
-Firstly, to have the sync client access the data, you cannot have time data only stored locally. %TODO Lappab imo taiega :D
-Then to add a repository, you need to have linked appropriate Git server provider account via OAuth so that we can
+Firstly, to have the sync client access the data, time data cannot be only stored locally.
+To add a repository, the user needs to have linked appropriate Git server provider account via OAuth so that we can
 verify that you have the access to the repository.
-After that, you need to search for the repository from the web interface and click \textit{"Start tracking"} button.
+To add a repository, the user needs a linked OAuth account from the appropriate Git server provider.
+The OAuth login is used to verify the user's access to the repository.
+After that, the user need's to search for the repository from the web interface and click \textit{"Start tracking"} button.
 With that, the tracking is technically added, but to also automatically sync time data on every push to remote,
-you also need to add a webhook.
+the user needs to add a webhook to the Git repository.
 
 To make sure that the repository can be accessed by the user the request to an appropriate provider is made again
-when user has pressed the \textit{"Start tracking"} button.
+when the user has pressed the \textit{"Start tracking"} button.
 This check is required as the user could easily guess other peoples private repository clone URLs and then post
 it to our backend with his own JWT.
-This extra check also means you cannot add tracking to self-hosted Git servers that do not provide OAuth2.
+This extra check also means the user cannot add tracking to a self-hosted Git server that does not provide OAuth2.
 However, we were not able to find any better way to identify that the given user has access to some Git repository and
 therefore it was decided to not support any custom setups.
 
@@ -204,7 +206,7 @@ The configuration variables are described in Table~\ref{tab:gtm-sync-config}.
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{ | p{6cm} | p{6cm} |}
+    \begin{tabular}{ | p{6cm} | p{8cm} |}
         \hline
         \textbf{Variable} & \textbf{Description}\\
         \hline
@@ -292,7 +294,7 @@ All the endpoints can be found \href{https://cs.ttu.ee/services/gtm/api/swagger/
 \subsection{Security}\label{subsec:scurity}
 Our application holds data, that shall not be visible to all clients and therefore some kind of authentication and authorization methods are required.
 For the data stored in Git notes, we decided no extra security is required, as the time data is not more sensitive than the actual code.
-The security of source code stored in a Git repository is handled by a client himself and Git providers. %TODO himself/themselves?
+The security of source code stored in a Git repository is handled by a clients themselves and Git providers.
 If they wish to have additional protection for Git notes, they can configure it themselves.
 We only provide the option to have notes only stored locally (not pushed to origin).
 
@@ -458,8 +460,8 @@ From the sidebar, the user can navigate to the necessary page, where on top of t
 \textit{"Dashboard"} view can be found in Figure~\ref{fig:dashboard}.
 \textit{"Dashboard"} contains three graphs and inputs.
 From the inputs, the user can change group, time period and interval.
-User can choose between all the groups he has access to. %TODO he has access/they have access
-The time period has start and end which cannot be apart more than a year for performance reasons. %TODO sonastus
+The user can choose between all the groups he has access to.
+The time period has a start, and an end which cannot be apart more than a year for performance reasons.
 Intervals are days, weeks and months.
 
 The first graph is a combination of a line and a bar charts, which describes time spent writing code in a period of time and also shows how many users were active at the interval.
@@ -596,7 +598,7 @@ For gtm-sync it was decided to licence it under LGPLv3.
 As all the dependencies are licensed under MIT licence (many also dual-licensed under Apache 2 Licence), they are LGPLv3 compatible.
 As gtm-sync is pretty much a requirement to get data from Git notes to our back end, we want to make sure it,
 and its potential successors stay publicly available.
-We would like someone to base his closed source (and potentially non-free) application on gtm-sync. %TODO his/their
+We would like someone to base their closed source (and potentially non-free) application on gtm-sync.
 However, we do want to allow others to use gtm-sync as a library without requiring them to open source their project.
 If we allow users to use it as a library more freely, we also increase the chance to have other users contribute towards gtm-sync
 rather than their closed source fork or alternative.
@@ -610,5 +612,5 @@ We strongly want these applications to stay open source also in the future, so a
 Although both of them are applications, not libraries we chose to use LGPLv3 instead of GPLv3, as technically some parts
 could be also used as libraries and that's fine with us.
 
-If someone wishes to use it without open sourcing his code, there is always an option to ask us as dual licensing is also a possibility. %TODO his/their?
+If someone wishes to use it without open sourcing their code, there is always an option to ask us as dual licensing is also a possibility.
 Then we can decide whether to allow it or not, but generally, we want the code to stay open source.

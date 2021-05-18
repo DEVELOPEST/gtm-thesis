@@ -50,7 +50,6 @@ This reduces the number of merge conflicts and also makes building CI/CD easier.
 
 
 \section{Client CLI app}\label{sec:cli-app}
-%TODO(Tavo): We should somewhere state what are gtm-core, gtm-api, gtm-*
 This is the main app on the client machine.
 The app is responsible for storing events sent by an editor to files and then later also combining the stored information into Git Note.
 You can also see all main stats, such as time spent on a commit via CLI app.
@@ -204,7 +203,6 @@ Backend also has a database that stores all the necessary data for the applicati
 
 In our case the backend receives data from the sync client via REST API requests and stores the data in the database.
 End users can interact with the backend though frontend via REST API requests.
-%TODO: Kas peaks märkima, et paar endpointi (sync omad) on ka token authiga n-ö programmidele kättesaadavad?
 
 The backend application has been built with Rust programming language using Rocket framework.
 Rust is a relatively new low-level statically-typed programming language that is focused on performance and safety.
@@ -218,9 +216,16 @@ Since Rust was chosen for sync client, we decided to choose it for the backend a
 Backend code base has been built following Domain Driven Design (DDD).
 DDD is a concept that centers the development and code structure around the business domain.
 It helps to keep the code more organized, maintainable and extendable~\cite{domain-driven-design}.
-% TODO: More explanation for DDD, some reference
 
 A layered architecture can be found on Figure~\ref{fig:backend-layered-diagram}.
+Controllers are used for handling HTTP requests and parsing parameters.
+Once the parameters are parsed, appropriate method is called from service layer.
+The service layer is responsible for business logic.
+To store the data into the database, appropriate repository's methods are called as all database operations are done in
+the repository layer.
+Some service methods also do external API requests.
+When the controller receives a response from the service, it encodes it and sends it back to the client.
+
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/backend_layered_diagram}
     \caption{Backend architecture}
@@ -258,10 +263,9 @@ Folder structure is displayed in Table~\ref{tab:gtm-api-folder-structure}.
 \subsection{Database design}\label{subsec:database-design}
 One requirement for choosing the database, was that we needed it to have bindings for our Object-relational mapper (ORM),
 so we could easily use it in our application.
-This requirement narrowed the search down to SQLite, MySQL and PostgreSQL as they were the only languages with full support in Diesel.
+This requirement narrowed the search down to SQLite, MySQL and PostgreSQL as they were the only languages with a full support in Diesel.
 There are other ORM-s written for Rust, but Diesel is one of the most popular ones, so we decided to go with it as
 there was no need to use some other database.
-% TODO: S6nastus paremaks
 
 SQLite was ruled out as it is not strongly typed, and does not have the same amount of features PostgreSQL and MySQL have.
 For deciding between MySQL and PostgreSQL it came down to personal preference as both of them are strongly typed and
@@ -327,7 +331,7 @@ User emails retrieved from OAuth providers are stored in the \textit{emails} tab
 
 \section{Frontend}\label{sec:frontend}
 A frontend is a software program or website that the user interacts with.
-In our case, frontend is a website where the user can see time tracking data according to their privileges. %TODO his/her or their?
+In our case, frontend is a website where users can see time tracking data according to their privileges.
 Although technically also CLI app can be considered frontend, when we refer to frontend we only mean the website.
 
 The frontend has been built using ReactJS library.
@@ -416,5 +420,4 @@ Design patterns such as graph sizes, colours, spacings, fonts etc. were chosen i
 State management does not have a certain winner.
 Choosing a state management library comes down to personal preference.
 We decided to use Easy-Peasy, which is built on the most popular state management library Redux.
-Easy Peasy was chosen over Redux because Redux has a steep learning curve but Easy-Peasy is easy to use.
-%TODO: Vb contents alla?
+Easy-Peasy was chosen over Redux because Redux has a steep learning curve but Easy-Peasy is easy to use.
