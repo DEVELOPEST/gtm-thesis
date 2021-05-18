@@ -111,7 +111,7 @@ Gtm-core folder structure is displayed in Table
 Although the app was already working we still needed to do many bug fixes and add some features it didn't have.
 The biggest change in design was that we moved copied in dependencies to Git submodules.
 Although this seems like a small step, it turned out to be very complex to build Go app linked with C library dynamically.
-As we didn't manage to get all Git submodules dependencies to properly work in Windows environments
+As we were not able to get all Git submodules dependencies to work properly in Windows environments,
 we decided to leave it separately fetched and built in CI/CD workflow file.
 Nonetheless, all "snapshot" dependencies were removed.
 We also added stress tests to verify the effect of using gtm-core with large amounts of commits.
@@ -162,8 +162,8 @@ Sync client is run on a network, where it can access Git repositories.
 On Git push, Git webhook sends a request to gtm-sync via HTTP request.
 Then gtm-sync fetches Git repository with its time data, extracts required data and syncs it up to Backend.
 
-The gtm-sync application was written in Rust as it had a more up-to-date library for \textit{libgit2} than both Java and Go, required for interacting with git.
-Although we did not have prior experience with Rust we preferred it to C/C++ as it is memory safe and it has higher-level libraries that can be
+The gtm-sync application was written in Rust as it had a more up-to-date library for \textit{libgit2} than both Java and Go, required for interacting with Git.
+Although we did not have prior experience with Rust we preferred it to C/C++ as it is memory safe and has higher-level libraries that can be
 used for building a web server and API client.
 Python and NodeJS that also provide convenient higher-level functions were ruled out because they produce very
 big memory footprint compared to Rust, and they also run a lot slower.
@@ -202,17 +202,17 @@ Backend is a collection of code that runs on the server.
 It receives requests from clients and sends appropriate data back to the clients based on the business logic.
 Backend also has a database that stores all the necessary data for the application.
 
-In our case backend receives data from the sync client via REST API requests and stores the data in the database.
+In our case the backend receives data from the sync client via REST API requests and stores the data in the database.
 End users can interact with the backend though frontend via REST API requests.
 %TODO: Kas peaks märkima, et paar endpointi (sync omad) on ka token authiga n-ö programmidele kättesaadavad?
 
-Backend application has been built with Rust programming language using Rocket framework.
-Rust is a relatively new low-level statically-typed programming language that's focused on performance and safety.
+The backend application has been built with Rust programming language using Rocket framework.
+Rust is a relatively new low-level statically-typed programming language that is focused on performance and safety.
 It gives almost the same speed as C, but guarantees both memory and thread-safety.
-It also follows many more functional patterns than Java/C/C++/Go which makes writing code easier and safer once mastered.
-Since we needed a fast backend with minimal overhead for processing large datasets Rust was the best choice.
-Java, C/C++ and GO were also considered, but the lightweightness of Rust overweights Java whilst memory safety overweights C/C++.
-Since Rust was chosen for sync client we decided to choose it for the backend as well.
+It also follows many more functional patterns than Java/C/C++/GO, which makes writing code easier and safer once mastered.
+Since we needed a fast backend with minimal overhead for processing large datasets, Rust was the best choice.
+Java, C/C++ and GO were also considered, but the lightweightness of Rust overweights Java, whilst memory safety overweights C/C++.
+Since Rust was chosen for sync client, we decided to choose it for the backend as well.
 
 \subsection{Backend design}\label{subsec:backend-design}
 Backend code base has been built following Domain Driven Design (DDD).
@@ -256,28 +256,28 @@ Folder structure is displayed in Table~\ref{tab:gtm-api-folder-structure}.
 \end{table}
 
 \subsection{Database design}\label{subsec:database-design}
-One requirement when choosing the database was that we needed it to have bindings for our Object-relational mapper (ORM),
+One requirement for choosing the database, was that we needed it to have bindings for our Object-relational mapper (ORM),
 so we could easily use it in our application.
 This requirement narrowed the search down to SQLite, MySQL and PostgreSQL as they were the only languages with full support in Diesel.
 There are other ORM-s written for Rust, but Diesel is one of the most popular ones, so we decided to go with it as
 there was no need to use some other database.
 % TODO: S6nastus paremaks
 
-SQLite was ruled out as it is not strongly typed, and it does not have the same amount of features PostgreSQL and MySQL have.
-For choosing between MySQL and PostgreSQL it came down to personal preference as both of them are strongly typed and
+SQLite was ruled out as it is not strongly typed, and does not have the same amount of features PostgreSQL and MySQL have.
+For deciding between MySQL and PostgreSQL it came down to personal preference as both of them are strongly typed and
 support all the required features, including recursive queries.
 Both of them are also open source.
 
-We decided to go with PostgreSQL as we had prior experience with it.
+We decided to go with PostgreSQL, as we had prior experience with it.
 
 As we are running the application in "beta", we decided to run the database in a docker container on our development machine to
 reduce the cost of upkeep.
-For data persistence, we have mounted database files volume to host machine.
+For data persistence, we have mounted database files volume to the host machine.
 
 \subsubsection{Database versioning}\label{subsubsec:database-versioning}
-As we have users data in our database it is important to also persist it through database schema updates.
+As we have users data in our database, it is important to also persist it through database schema updates.
 For this, we use migrations and let Diesel handle the updates.
-Every time database change is required, we add new migration with both up and down scripts that can be used by Diesel
+Every time database change is required, we add a new migration with both up and down scripts that can be used by Diesel
 to run the migration or revert it.
 Diesel is configured to automatically run updates added to the release.
 As reverting database changes can result in a loss of data, it has to be done manually via Diesel CLI app.
@@ -289,29 +289,29 @@ The structure of the database schema is described in Figures~\ref{fig:erd-schema
 Time data follows the structure of the Git commits tree and file tree.
 The \textit{repositories} table contains general information about the Git repository such as name and the sync client
 responsible for tracking it.
-Then the \textit{commits} table has the information about commits such as author, timestamp and commit message.
+The \textit{commits} table has the information about commits such as author, timestamp and commit message.
 Each \textit{commits} table entry also has a reference to the repository it is committed to.
 Every commit has zero or more files that were edited in it.
 These files are contained in \textit{files} table, and they contain information about files added and deleted.
-To have more accurate data about when the time was spent separate table is needed as there is no guarantee that
+To have more accurate data about when the time was spent, separate table is needed as there is no guarantee that
 the time spent editing files is spent just before the commit timestamp.
-For this, we have a table called \textit{timeline} which olds timestamps and durations of every consecutive edit as
+For this, we have a table called \textit{timeline}, which holds timestamps and durations of every consecutive edit as
 well as a reference to a file in which the time was spent.
 
-The \textit{users} and \textit{roles} table are responsible for persisting user login credentials, roles and connected OAuth accounts.
+The \textit{users} and \textit{roles} tables are responsible for persisting user login credentials, roles and connected OAuth accounts.
 As we allow the user to optionally register only via OAuth, the password field is nullable.
-Users that have no password can only log in via OAuth, but they can also add a password at any time.
+Users that have no password, can only log in via OAuth, but they can also add a password at any time.
 
 Every user can have multiple rows with role \textit{USER} being added to every user by default.
 There are three roles in total: \textit{USER}, \textit{LECTURER} and \textit{ADMIN}.
-Currently, there are no rules in the database for any of the roles which means all checks are done in software.
+Currently, there are no rules in the database for any of the roles, which means all checks are done in software.
 More detailed description about roles can be found in~\nameref{subsec:roles} subsection.
 
-Every user also has zero or more OAuth logins stored in \textit{logins} table.
+Every user also has zero or more OAuth logins stored in the \textit{logins} table.
 There is a limit that every user can have at maximum one OAuth login per login type.
-If one already exists, it is updated instead of adding new.
+If one already exists, it is updated instead of adding a new.
 
-User emails retrieved from OAuth providers are stored in \textit{emails} table to avoid unnecessary web requests.
+User emails retrieved from OAuth providers are stored in the \textit{emails} table to avoid unnecessary web requests.
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/erd_schema_user}
@@ -327,14 +327,14 @@ User emails retrieved from OAuth providers are stored in \textit{emails} table t
 
 \section{Frontend}\label{sec:frontend}
 A frontend is a software program or website that the user interacts with.
-In our case frontend is a website where the user can see time tracking data according to the privileges.
+In our case, frontend is a website where the user can see time tracking data according to their privileges. %TODO his/her or their?
 Although technically also CLI app can be considered frontend, when we refer to frontend we only mean the website.
 
-The frontend has been build using ReactJS library.
-According to the State of Frontend 2020 report, ReactJS is the most used JavaScript framework and also the framework which developers want to learn or keep using the most.
-It is faster than Angular, and its somewhat functional style was more pealing for us than the style of Vue.
-It was chosen by Marten, who's mostly responsible for frontend development and had some prior experience with it.
-Most popular frontend frameworks by popularity are shown in Figure~\ref{fig:frontend-framework-popularity}.
+The frontend has been built using ReactJS library.
+According to the State of Frontend 2020 report, ReactJS is the most used JavaScript framework and also the framework, which developers want to learn or keep using the most.
+It is faster than Angular, and its somewhat functional style was more appealing for us than the style of Vue.
+It was chosen by Marten, who is mostly responsible for frontend development and has had some prior experience with it.
+The most popular frontend frameworks are shown in Figure~\ref{fig:frontend-framework-popularity} sorted from most favored to less.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/frontend_framework_popularity}
@@ -344,11 +344,11 @@ Most popular frontend frameworks by popularity are shown in Figure~\ref{fig:fron
 
 \subsection{Code design}\label{subsec:code-design}
 Frontend code is written following the main principles promoted by ReactJS community and documentation.
-For an example component's names use \textit{PascalCase}, helper files use \textit{camelCase}, folders use \textit{camelCase}.
+For an example, component's names use \textit{PascalCase}, helper files use \textit{camelCase}, folders use \textit{camelCase}.
 Code is divided into multiple files/components to prevent code repetition, inline CSS is avoided, the liner is used to make code easier to use, service calls are in the separate file, etc.
-To improve code quality and readability TypeScript was chosen as it is a strongly typed language which JavaScript is not.
+To improve code quality and readability TypeScript was chosen, as it is a strongly typed language, which JavaScript is not.
 This decision was not made at the beginning of the project but as the code kept growing and readability suffered the decision was made.
-One of the biggest reasons to switch from JavaScript to TypeScript was that due to being a strongly typed language,
+One of the biggest reason for the switch from JavaScript to TypeScript was that due to being a strongly typed language,
 TypeScript has better IDE support.
 Folder structure is displayed in Table
 \ref{tab:gtm-front-folder-structure}.
@@ -389,7 +389,7 @@ Folder structure is displayed in Table
 \end{table}
 
 \subsection{User interface design}\label{subsec:user-interface-design}
-User interface must be built keeping user in mind.
+User interface must be built keeping the user in mind.
 User experience is the most important part of a web application.
 If the user does not have a good experience with the interface, it might be the end of the interaction between the user and the application.
 Since the team did not have any professional designers, CoreUI was a great choice to make the design process much easier.
@@ -415,6 +415,6 @@ Design patterns such as graph sizes, colours, spacings, fonts etc. were chosen i
 \subsection{State management}\label{subsec:state-management}
 State management does not have a certain winner.
 Choosing a state management library comes down to personal preference.
-We decided to use Easy-Peasy which is built on the most popular state management library Redux.
+We decided to use Easy-Peasy, which is built on the most popular state management library Redux.
 Easy Peasy was chosen over Redux because Redux has a steep learning curve but Easy-Peasy is easy to use.
 %TODO: Vb contents alla?
